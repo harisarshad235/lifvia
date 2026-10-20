@@ -1,122 +1,402 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#020617" />
+  <meta name="theme-color" id="meta-theme-color" content="#090D16" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="/manifest.json" />
-  <title>PaisaFlow PKR — Personal Finance & Budgeting Suite</title>
+  <title>PaisaFlow PKR — Personal Finance & Budgeting</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            brand: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857' }
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
           }
         }
       }
     };
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    html[data-theme="light"] {
+      --bg-canvas: #F4F6F9;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F8FAFC;
+      --bg-subtle: #EEF2F6;
+      --border-subtle: #E2E8F0;
+      --border-strong: #CBD5E1;
+      --text-primary: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #64748B;
+      --accent: #059669;
+      --accent-hover: #047857;
+      --accent-soft: rgba(5, 150, 105, 0.10);
+      --accent-border: rgba(5, 150, 105, 0.28);
+      --danger: #DC2626;
+      --danger-soft: rgba(220, 38, 38, 0.08);
+      --warning: #D97706;
+      --warning-soft: rgba(217, 119, 6, 0.10);
+      --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+      --shadow-modal: 0 20px 40px -12px rgba(15, 23, 42, 0.18);
+      color-scheme: light;
+    }
+
+    html[data-theme="dark"] {
+      --bg-canvas: #090D16;
+      --bg-surface: #111827;
+      --bg-elevated: #172033;
+      --bg-subtle: #1E293B;
+      --border-subtle: #1E293B;
+      --border-strong: #334155;
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --text-muted: #64748B;
+      --accent: #10B981;
+      --accent-hover: #059669;
+      --accent-soft: rgba(16, 185, 129, 0.12);
+      --accent-border: rgba(16, 185, 129, 0.30);
+      --danger: #F87171;
+      --danger-soft: rgba(248, 113, 113, 0.12);
+      --warning: #FBBF24;
+      --warning-soft: rgba(251, 191, 36, 0.12);
+      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
+      --shadow-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.65);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      margin: 0;
+      transition: background-color 180ms ease, color 180ms ease;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+
+    .surface-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+    }
+
+    .surface-elevated {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+    }
+
+    .input-field {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.8125rem;
+      width: 100%;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+    .input-field::placeholder {
+      color: var(--text-muted);
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      font-weight: 600;
+      font-size: 0.78rem;
+      border-radius: 10px;
+      padding: 0.52rem 0.9rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 150ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .btn:active {
+      transform: scale(0.97);
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #FFFFFF;
+      border: 1px solid transparent;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+    }
+    .btn-secondary:hover {
+      background-color: var(--bg-subtle);
+    }
+
+    .btn-danger-ghost {
+      background-color: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid transparent;
+    }
+    .btn-danger-ghost:hover {
+      background-color: var(--danger);
+      color: #FFFFFF;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      transition: transform 140ms var(--ease-out), background-color 140ms ease, color 140ms ease;
+    }
+    .nav-item:active {
+      transform: scale(0.98);
+    }
+    .nav-item:hover {
+      background-color: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+    .nav-item.active {
+      background-color: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent-border);
+      font-weight: 600;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      flex: 1;
+      padding: 0.45rem 0.2rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: transform 140ms var(--ease-out), color 140ms ease;
+    }
+    .mobile-nav-item:active {
+      transform: scale(0.94);
+    }
+    .mobile-nav-item.active {
+      color: var(--accent);
+    }
+
+    .modal-backdrop {
+      background-color: rgba(9, 13, 22, 0.65);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-panel {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      box-shadow: var(--shadow-modal);
+      animation: modalEnter 200ms var(--ease-out) forwards;
+    }
+
+    @keyframes modalEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .toast-item {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-modal);
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      animation: toastEnter 220ms var(--ease-out) forwards;
+    }
+
+    @keyframes toastEnter {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="min-h-screen pb-20 md:pb-0">
+
+  <!-- TOAST STACK (Sonner-style feedback) -->
+  <div id="toast-container" class="fixed bottom-20 md:bottom-6 right-4 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- ===================================================================== -->
   <!-- VIEW 1: AUTHENTICATION PAGE (LOGIN & REGISTRATION)                    -->
   <!-- ===================================================================== -->
-  <div id="auth-screen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-    <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-      <div class="flex items-center gap-3.5">
-        <div class="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-xl">₨</div>
-        <div>
-          <h1 class="font-bold text-lg tracking-tight text-white">PaisaFlow <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">PKR</span></h1>
-          <p class="text-xs text-slate-400">Personal Cloud Money Management Suite</p>
-        </div>
+  <div id="auth-screen" class="min-h-screen flex flex-col justify-between p-4 sm:p-6">
+    <!-- Top Bar with Theme Switcher -->
+    <div class="max-w-5xl w-full mx-auto flex items-center justify-between py-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base mono" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">₨</div>
+        <span class="font-bold text-sm tracking-tight">PaisaFlow PKR</span>
+      </div>
+      <button onclick="toggleTheme()" class="btn btn-secondary" aria-label="Toggle color theme">
+        <span id="auth-theme-icon"></span>
+        <span id="auth-theme-label" class="text-xs">Light Mode</span>
+      </button>
+    </div>
+
+    <div class="w-full max-w-[420px] mx-auto surface-card p-6 sm:p-8 space-y-6 my-6" style="box-shadow: var(--shadow-modal);">
+      <div class="space-y-1.5">
+        <h1 class="font-bold text-xl tracking-tight">Personal Finance Ledger</h1>
+        <p class="text-xs" style="color: var(--text-muted);">Zero-based envelopes, multi-account balances, shared bills, and net worth in PKR.</p>
       </div>
 
       <!-- Auth Mode Switcher -->
-      <div class="grid grid-cols-2 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-        <button id="tab-btn-login" onclick="setAuthMode('login')" class="py-2 rounded-lg transition bg-emerald-600 text-white">
+      <div class="grid grid-cols-2 p-1 rounded-xl text-xs font-semibold" style="background: var(--bg-subtle); border: 1px solid var(--border-subtle);">
+        <button id="tab-btn-login" onclick="setAuthMode('login')" class="py-2 rounded-lg transition">
           Sign In
         </button>
-        <button id="tab-btn-register" onclick="setAuthMode('register')" class="py-2 rounded-lg transition text-slate-400 hover:text-white">
+        <button id="tab-btn-register" onclick="setAuthMode('register')" class="py-2 rounded-lg transition">
           Create Account
         </button>
       </div>
 
-      <div id="auth-error" class="hidden bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs px-3.5 py-2.5 rounded-xl"></div>
+      <div id="auth-error" class="hidden text-xs px-3.5 py-2.5 rounded-xl font-medium" style="background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger);"></div>
 
       <!-- Login Form -->
       <form id="login-form" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4 text-xs">
         <div>
-          <label class="block text-slate-300 mb-1.5 font-medium">Email Address</label>
-          <input id="login-email" type="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+          <label for="login-email" class="block mb-1.5 font-medium" style="color: var(--text-secondary);">Email Address</label>
+          <input id="login-email" type="email" required placeholder="name@domain.com" class="input-field" />
         </div>
         <div>
-          <label class="block text-slate-300 mb-1.5 font-medium">Password</label>
-          <input id="login-password" type="password" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+          <label for="login-password" class="block mb-1.5 font-medium" style="color: var(--text-secondary);">Password</label>
+          <input id="login-password" type="password" required minlength="6" placeholder="Enter your password" class="input-field" />
         </div>
-        <button id="login-submit-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-emerald-950/50">
-          Sign In to Your Workspace
+        <button id="login-submit-btn" type="submit" class="btn btn-primary w-full py-2.5 text-xs">
+          Sign In to Workspace
         </button>
       </form>
 
       <!-- Register Form -->
       <form id="register-form" onsubmit="handleAuthSubmit(event, 'register')" class="hidden space-y-4 text-xs">
         <div>
-          <label class="block text-slate-300 mb-1.5 font-medium">Full Name</label>
-          <input id="reg-name" type="text" required placeholder="e.g. Haris Arshad" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+          <label for="reg-name" class="block mb-1.5 font-medium" style="color: var(--text-secondary);">Full Name</label>
+          <input id="reg-name" type="text" required placeholder="e.g. Haris Arshad" class="input-field" />
         </div>
         <div>
-          <label class="block text-slate-300 mb-1.5 font-medium">Email Address</label>
-          <input id="reg-email" type="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+          <label for="reg-email" class="block mb-1.5 font-medium" style="color: var(--text-secondary);">Email Address</label>
+          <input id="reg-email" type="email" required placeholder="name@domain.com" class="input-field" />
         </div>
         <div>
-          <label class="block text-slate-300 mb-1.5 font-medium">Create Password (min. 6 chars)</label>
-          <input id="reg-password" type="password" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+          <label for="reg-password" class="block mb-1.5 font-medium" style="color: var(--text-secondary);">Create Password (min. 6 characters)</label>
+          <input id="reg-password" type="password" required minlength="6" placeholder="At least 6 characters" class="input-field" />
         </div>
-        <button id="reg-submit-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-emerald-950/50">
+        <button id="reg-submit-btn" type="submit" class="btn btn-primary w-full py-2.5 text-xs">
           Create Fresh PKR Account
         </button>
       </form>
 
-      <div class="pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 text-center space-y-1">
-        <p>🔒 Each registered user gets an isolated, private database in <strong>Cloudflare D1</strong>.</p>
-        <p>Starts 100% fresh at <span class="mono text-emerald-400">Rs. 0</span> with zero dummy data.</p>
+      <div class="pt-4 border-t text-[11px] text-center space-y-2.5" style="border-color: var(--border-subtle); color: var(--text-muted);">
+        <p>Isolated per-user database on Cloudflare D1 • Starts fresh at <span class="mono font-semibold" style="color: var(--accent);">Rs. 0</span></p>
+        <div>
+          <a href="https://github.com/harisarshad235/paisaflow-pkr/releases/download/v1.0.0/PaisaFlow-PKR.apk" download="PaisaFlow-PKR.apk" class="btn btn-secondary w-full py-2 text-xs">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Android APK (3.95 MB)</span>
+          </a>
+        </div>
       </div>
+    </div>
+
+    <div class="text-center text-[11px] py-2" style="color: var(--text-muted);">
+      PaisaFlow PKR • Built for Web & Android
     </div>
   </div>
 
   <!-- ===================================================================== -->
   <!-- VIEW 2: DEDICATED LOGOUT PAGE                                         -->
   <!-- ===================================================================== -->
-  <div id="logout-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl text-center space-y-5">
-      <div class="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl mx-auto">
-        ✓
+  <div id="logout-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-md surface-card p-8 text-center space-y-5" style="box-shadow: var(--shadow-modal);">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <div class="space-y-1.5">
-        <h2 class="text-xl font-bold text-white">You Have Logged Out</h2>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Your session has been securely closed and your financial data is safely stored in your personal Cloudflare D1 database.
+        <h2 class="text-xl font-bold tracking-tight">Signed Out Securely</h2>
+        <p class="text-xs leading-relaxed" style="color: var(--text-muted);">
+          Your session has been closed and your ledger is safely stored in your private Cloudflare D1 database.
         </p>
       </div>
-      <div class="pt-2 space-y-2.5 text-xs">
-        <button onclick="showAuthFromLogout('login')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl transition">
+      <div class="pt-2 space-y-2.5">
+        <button onclick="showAuthFromLogout('login')" class="btn btn-primary w-full py-2.5">
           Sign In Again
         </button>
-        <button onclick="showAuthFromLogout('register')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 rounded-xl border border-slate-700 transition">
-          Register a New User Account
+        <button onclick="showAuthFromLogout('register')" class="btn btn-secondary w-full py-2.5">
+          Create Another Account
         </button>
       </div>
     </div>
@@ -127,158 +407,179 @@
   <!-- ===================================================================== -->
   <div id="app-shell" class="hidden min-h-screen flex flex-col md:flex-row">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-full md:w-64 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 flex-shrink-0 flex flex-col justify-between">
+    <!-- Desktop Sidebar Navigation -->
+    <aside class="hidden md:flex md:w-64 flex-shrink-0 flex-col justify-between border-r" style="background: var(--bg-surface); border-color: var(--border-subtle);">
       <div>
-        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+        <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border-subtle);">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-lg">₨</div>
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base mono" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">₨</div>
             <div>
-              <h1 class="font-bold text-base tracking-tight text-white">PaisaFlow <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">PKR</span></h1>
-              <p class="text-xs text-slate-400 truncate max-w-[140px]" id="sidebar-user-name">My Workspace</p>
+              <div class="font-bold text-sm tracking-tight flex items-center gap-1.5">
+                <span>PaisaFlow</span>
+                <span class="text-[10px] mono px-1.5 py-0.5 rounded font-semibold" style="background: var(--accent-soft); color: var(--accent);">PKR</span>
+              </div>
+              <p class="text-xs truncate max-w-[140px]" style="color: var(--text-muted);" id="sidebar-user-name">Workspace</p>
             </div>
           </div>
         </div>
 
-        <nav class="p-3 space-y-1 flex md:block overflow-x-auto" id="nav-tabs">
-          <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>📊</span> Dashboard & Analytics
+        <nav class="p-3 space-y-1" aria-label="Main Navigation">
+          <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            <span>Dashboard</span>
           </button>
-          <button onclick="switchTab('accounts')" data-tab="accounts" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>🏦</span> Accounts & Wallets
+          <button onclick="switchTab('accounts')" data-tab="accounts" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+            <span>Accounts & Wallets</span>
           </button>
-          <button onclick="switchTab('transactions')" data-tab="transactions" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>💳</span> Transactions & CSV
+          <button onclick="switchTab('transactions')" data-tab="transactions" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <span>Transactions & CSV</span>
           </button>
-          <button onclick="switchTab('budgets')" data-tab="budgets" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>✉️</span> Zero-Based Budgets
+          <button onclick="switchTab('budgets')" data-tab="budgets" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span>Envelope Budgets</span>
           </button>
-          <button onclick="switchTab('splits')" data-tab="splits" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>🤝</span> Bill Splitter
+          <button onclick="switchTab('splits')" data-tab="splits" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Bill Splitter</span>
           </button>
-          <button onclick="switchTab('goals')" data-tab="goals" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>🎯</span> Savings Goals
+          <button onclick="switchTab('goals')" data-tab="goals" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <span>Savings Goals</span>
           </button>
-          <button onclick="switchTab('wealth')" data-tab="wealth" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
-            <span>📈</span> Net Worth & Recurring
+          <button onclick="switchTab('wealth')" data-tab="wealth" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <span>Net Worth & Bills</span>
           </button>
         </nav>
       </div>
 
-      <div class="p-4 border-t border-slate-800 space-y-2.5 hidden md:block">
-        <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700/50">
-          <div class="text-xs text-slate-400">Total Net Worth</div>
-          <div class="text-lg font-bold mono text-emerald-400 mt-0.5" id="sidebar-networth">Rs. 0</div>
-          <div id="sync-status-badge" class="text-[11px] text-emerald-400 mt-1 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <div class="p-4 border-t space-y-2.5" style="border-color: var(--border-subtle);">
+        <div class="surface-elevated p-3">
+          <div class="text-[11px] font-medium" style="color: var(--text-muted);">Total Net Worth</div>
+          <div class="text-lg font-bold mono mt-0.5" style="color: var(--accent);" id="sidebar-networth">Rs. 0</div>
+          <div id="sync-status-badge" class="text-[11px] mt-1 flex items-center gap-1.5" style="color: var(--text-muted);">
+            <span class="w-2 h-2 rounded-full" style="background: var(--accent);"></span>
             <span>Cloudflare D1 Synced</span>
           </div>
         </div>
-        <div class="bg-slate-950/70 rounded-lg p-2.5 border border-slate-800 flex items-center justify-between">
+
+        <div class="surface-elevated p-2.5 flex items-center justify-between">
           <div class="truncate pr-2">
-            <div id="sidebar-user-email" class="text-[11px] text-slate-300 font-medium truncate">user@example.com</div>
-            <div class="text-[10px] text-slate-500">Private D1 Database</div>
+            <div id="sidebar-user-email" class="text-[11px] font-medium truncate">user@example.com</div>
+            <div class="text-[10px]" style="color: var(--text-muted);">Private D1 Ledger</div>
           </div>
-          <button onclick="logoutUser()" class="text-xs bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-rose-500/30 transition flex-shrink-0">
+          <button onclick="logoutUser()" class="btn btn-danger-ghost px-2.5 py-1 text-[11px]">
             Log Out
           </button>
         </div>
+
         <div class="flex gap-2">
-          <button onclick="exportBackupJSON()" class="flex-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-2 rounded border border-slate-700">Backup JSON</button>
-          <button onclick="clearAllMyData()" class="flex-1 text-xs bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 text-slate-400 py-1.5 px-2 rounded border border-slate-700">Wipe All</button>
+          <button onclick="exportBackupJSON()" class="btn btn-secondary flex-1 py-1.5 text-[11px]">Backup</button>
+          <button onclick="clearAllMyData()" class="btn btn-secondary flex-1 py-1.5 text-[11px]">Wipe All</button>
         </div>
       </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Content Column -->
     <main class="flex-1 overflow-y-auto">
       <!-- Top Header -->
-      <header class="sticky top-0 z-20 backdrop-blur-md bg-slate-950/80 border-b border-slate-800 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 id="page-title" class="text-lg font-semibold text-white">Dashboard & Analytics</h2>
-          <p id="page-subtitle" class="text-xs text-slate-400">Real-time overview of your PKR accounts, budgets, and cash flow</p>
+      <header class="sticky top-0 z-20 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3" style="background: color-mix(in srgb, var(--bg-surface) 88%, transparent); border-color: var(--border-subtle);">
+        <div class="flex items-center gap-3">
+          <div class="md:hidden w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm mono" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">₨</div>
+          <div>
+            <h1 id="page-title" class="text-base sm:text-lg font-bold tracking-tight">Dashboard</h1>
+            <p id="page-subtitle" class="text-xs hidden sm:block" style="color: var(--text-muted);">Overview of your PKR accounts, budgets, and cash flow</p>
+          </div>
         </div>
-        <div class="flex items-center gap-2.5">
-          <button onclick="openTransactionModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/50">
-            <span>＋</span> Log Transaction
+
+        <div class="flex items-center gap-2">
+          <button onclick="openTransactionModal()" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Log Entry</span>
           </button>
-          <button onclick="openTransferModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 transition">
-            ⇄ Transfer
+          <button onclick="openTransferModal()" class="btn btn-secondary hidden sm:inline-flex">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/></svg>
+            <span>Transfer</span>
           </button>
-          <button onclick="logoutUser()" class="bg-slate-900 hover:bg-rose-950/80 text-slate-300 hover:text-rose-200 text-xs font-medium px-3 py-2 rounded-lg border border-slate-800 hover:border-rose-500/40 transition">
-            Log Out
+          <button onclick="toggleTheme()" class="btn btn-secondary px-2.5" aria-label="Toggle Light and Dark Theme" title="Toggle Light / Dark Theme">
+            <span id="header-theme-icon"></span>
+            <span id="header-theme-label" class="hidden lg:inline text-xs">Theme</span>
+          </button>
+          <button onclick="logoutUser()" class="btn btn-secondary px-2.5" title="Log Out">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span class="hidden sm:inline text-xs">Log Out</span>
           </button>
         </div>
       </header>
 
-      <div class="p-6 max-w-7xl mx-auto space-y-6">
+      <div class="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
 
         <!-- TAB 1: DASHBOARD -->
         <section id="tab-dashboard" class="tab-panel space-y-6">
-          <div id="dashboard-onboarding" class="hidden bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400">Welcome to Your Fresh Workspace</span>
-              <h3 class="text-lg font-bold text-white mt-0.5">Start by adding your first Bank Account or Wallet</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Your database starts 100% clean with zero dummy data. Add your accounts, set envelope budgets, and log transactions.</p>
+          <div id="dashboard-onboarding" class="hidden surface-card p-5 flex flex-wrap items-center justify-between gap-4" style="border-color: var(--accent-border); background: var(--accent-soft);">
+            <div class="space-y-1">
+              <h2 class="text-base font-bold">Add Your First Bank Account or Wallet</h2>
+              <p class="text-xs" style="color: var(--text-secondary);">Your ledger starts clean at Rs. 0. Create an account (e.g., Meezan Bank, SadaPay, Cash) to begin tracking.</p>
             </div>
-            <div class="flex items-center gap-2.5">
-              <button onclick="promptAddAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-lg">
-                ＋ Add First Account (PKR)
-              </button>
-            </div>
+            <button onclick="openPromptModal('account')" class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Add First Account</span>
+            </button>
           </div>
 
           <div id="dashboard-alerts" class="space-y-2"></div>
 
-          <!-- KPI Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div class="text-xs text-slate-400">Liquid Account Balance</div>
-              <div id="kpi-liquid" class="text-xl font-bold mono text-white mt-1">Rs. 0</div>
-              <div class="text-[11px] text-slate-500 mt-1">Across all wallets & banks</div>
+          <!-- KPI Ledger Strip -->
+          <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+            <div class="surface-card p-4">
+              <div class="text-xs font-medium" style="color: var(--text-muted);">Liquid Balance</div>
+              <div id="kpi-liquid" class="text-lg sm:text-xl font-bold mono mt-1">Rs. 0</div>
+              <div class="text-[11px] mt-1" style="color: var(--text-muted);">Wallets & banks</div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div class="text-xs text-slate-400">Total Income</div>
-              <div id="kpi-income" class="text-xl font-bold mono text-emerald-400 mt-1">Rs. 0</div>
-              <div id="kpi-savings-rate" class="text-[11px] text-emerald-500/80 mt-1">Savings Rate: 0%</div>
+            <div class="surface-card p-4">
+              <div class="text-xs font-medium" style="color: var(--text-muted);">Total Income</div>
+              <div id="kpi-income" class="text-lg sm:text-xl font-bold mono mt-1" style="color: var(--accent);">Rs. 0</div>
+              <div id="kpi-savings-rate" class="text-[11px] mt-1" style="color: var(--text-muted);">Savings Rate: 0%</div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div class="text-xs text-slate-400">Total Expenses</div>
-              <div id="kpi-expense" class="text-xl font-bold mono text-rose-400 mt-1">Rs. 0</div>
-              <div id="kpi-budget-used" class="text-[11px] text-slate-400 mt-1">0% of monthly budget</div>
+            <div class="surface-card p-4">
+              <div class="text-xs font-medium" style="color: var(--text-muted);">Total Expenses</div>
+              <div id="kpi-expense" class="text-lg sm:text-xl font-bold mono mt-1" style="color: var(--danger);">Rs. 0</div>
+              <div id="kpi-budget-used" class="text-[11px] mt-1" style="color: var(--text-muted);">0% of budget</div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div class="text-xs text-slate-400">Ready to Assign (YNAB)</div>
-              <div id="kpi-rta" class="text-xl font-bold mono text-amber-400 mt-1">Rs. 0</div>
-              <div class="text-[11px] text-slate-500 mt-1">Unallocated envelope cash</div>
+            <div class="surface-card p-4">
+              <div class="text-xs font-medium" style="color: var(--text-muted);">Ready to Assign</div>
+              <div id="kpi-rta" class="text-lg sm:text-xl font-bold mono mt-1" style="color: var(--warning);">Rs. 0</div>
+              <div class="text-[11px] mt-1" style="color: var(--text-muted);">Envelope pool</div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div class="text-xs text-slate-400">Splitwise Net Balance</div>
-              <div id="kpi-splits" class="text-xl font-bold mono text-sky-400 mt-1">Rs. 0</div>
-              <div id="kpi-splits-sub" class="text-[11px] text-slate-500 mt-1">Shared expenses</div>
+            <div class="surface-card p-4 col-span-2 lg:col-span-1">
+              <div class="text-xs font-medium" style="color: var(--text-muted);">Shared Split Net</div>
+              <div id="kpi-splits" class="text-lg sm:text-xl font-bold mono mt-1">Rs. 0</div>
+              <div id="kpi-splits-sub" class="text-[11px] mt-1" style="color: var(--text-muted);">All settled up</div>
             </div>
           </div>
 
           <!-- Charts Row -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
-              <div class="flex items-center justify-between mb-4">
+            <div class="lg:col-span-2 surface-card p-5">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div>
-                  <h3 class="text-sm font-semibold text-white">Monthly Cash Flow & Net Savings (PKR)</h3>
-                  <p class="text-xs text-slate-400">Real income vs. expenses from your logged transactions</p>
+                  <h2 class="text-sm font-bold">Monthly Cash Flow (PKR)</h2>
+                  <p class="text-xs" style="color: var(--text-muted);">Computed from your logged income and expenses</p>
                 </div>
-                <div class="flex items-center gap-3 text-xs">
-                  <span class="flex items-center gap-1.5 text-emerald-400"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span> Income</span>
-                  <span class="flex items-center gap-1.5 text-rose-400"><span class="w-2.5 h-2.5 rounded-sm bg-rose-500 inline-block"></span> Expenses</span>
+                <div class="flex items-center gap-4 text-xs font-medium">
+                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background: var(--accent);"></span> Income</span>
+                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background: var(--danger);"></span> Expenses</span>
                 </div>
               </div>
-              <div id="cashflow-chart" class="h-56 flex items-end gap-3 pt-6 px-2 border-b border-slate-800"></div>
+              <div id="cashflow-chart" class="h-52 flex items-end gap-3 pt-6 px-2 border-b" style="border-color: var(--border-subtle);"></div>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+            <div class="surface-card p-5 flex flex-col justify-between">
               <div>
-                <h3 class="text-sm font-semibold text-white">Spending by Category</h3>
-                <p class="text-xs text-slate-400 mb-4">Breakdown of your logged expenses</p>
+                <h2 class="text-sm font-bold">Category Spending</h2>
+                <p class="text-xs mb-4" style="color: var(--text-muted);">Share of total expenses</p>
                 <div id="category-breakdown-list" class="space-y-3"></div>
               </div>
             </div>
@@ -286,61 +587,61 @@
 
           <!-- Bottom Overview Row -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <div class="surface-card p-5">
               <div class="flex items-center justify-between mb-3">
-                <h3 class="text-sm font-semibold text-white">Recent Transactions</h3>
-                <button onclick="switchTab('transactions')" class="text-xs text-emerald-400 hover:underline">View all →</button>
+                <h2 class="text-sm font-bold">Recent Transactions</h2>
+                <button onclick="switchTab('transactions')" class="text-xs font-semibold hover:underline" style="color: var(--accent);">View all</button>
               </div>
-              <div id="dashboard-recent-tx" class="divide-y divide-slate-800/70"></div>
+              <div id="dashboard-recent-tx" class="divide-y" style="border-color: var(--border-subtle);"></div>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <div class="surface-card p-5">
               <div class="flex items-center justify-between mb-3">
-                <h3 class="text-sm font-semibold text-white">Upcoming Recurring Bills & Subscriptions</h3>
-                <button onclick="switchTab('wealth')" class="text-xs text-emerald-400 hover:underline">Manage →</button>
+                <h2 class="text-sm font-bold">Recurring Bills & Subscriptions</h2>
+                <button onclick="switchTab('wealth')" class="text-xs font-semibold hover:underline" style="color: var(--accent);">Manage</button>
               </div>
-              <div id="dashboard-upcoming-bills" class="divide-y divide-slate-800/70"></div>
+              <div id="dashboard-upcoming-bills" class="divide-y" style="border-color: var(--border-subtle);"></div>
             </div>
           </div>
         </section>
 
         <!-- TAB 2: TRANSACTIONS & CSV -->
         <section id="tab-transactions" class="tab-panel hidden space-y-5">
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="surface-card p-4 flex flex-wrap items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-2.5 flex-1">
-              <input id="tx-search" oninput="renderTransactions()" type="text" placeholder="Search payee, note, category..." class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white w-56 focus:outline-none focus:border-emerald-500" />
-              <select id="tx-filter-type" onchange="renderTransactions()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+              <input id="tx-search" oninput="renderTransactions()" type="search" aria-label="Search transactions" placeholder="Search payee or category..." class="input-field sm:w-56" />
+              <select id="tx-filter-type" onchange="renderTransactions()" aria-label="Filter by type" class="input-field sm:w-36">
                 <option value="all">All Types</option>
                 <option value="income">Income (+)</option>
                 <option value="expense">Expense (-)</option>
                 <option value="transfer">Transfer (⇄)</option>
               </select>
-              <select id="tx-filter-account" onchange="renderTransactions()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"></select>
-              <select id="tx-filter-category" onchange="renderTransactions()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"></select>
+              <select id="tx-filter-account" onchange="renderTransactions()" aria-label="Filter by account" class="input-field sm:w-44"></select>
+              <select id="tx-filter-category" onchange="renderTransactions()" aria-label="Filter by category" class="input-field sm:w-48"></select>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="exportTransactionsCSV()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700">⬇ Export CSV</button>
-              <label class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 cursor-pointer">
-                ⬆ Import CSV
+              <button onclick="exportTransactionsCSV()" class="btn btn-secondary">Export CSV</button>
+              <label class="btn btn-secondary cursor-pointer">
+                <span>Import CSV</span>
                 <input type="file" accept=".csv" onchange="importTransactionsCSV(event)" class="hidden" />
               </label>
             </div>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+          <div class="surface-card overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
                 <thead>
-                  <tr class="border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                  <tr class="border-b text-[11px] uppercase tracking-wider font-semibold" style="border-color: var(--border-subtle); background: var(--bg-elevated); color: var(--text-muted);">
                     <th class="py-3 px-4">Date</th>
                     <th class="py-3 px-4">Payee / Description</th>
                     <th class="py-3 px-4">Category</th>
                     <th class="py-3 px-4">Account</th>
                     <th class="py-3 px-4 text-right">Amount (PKR)</th>
-                    <th class="py-3 px-4 text-right">Actions</th>
+                    <th class="py-3 px-4 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody id="tx-table-body" class="divide-y divide-slate-800/70 text-xs"></tbody>
+                <tbody id="tx-table-body" class="divide-y text-xs" style="border-color: var(--border-subtle);"></tbody>
               </table>
             </div>
           </div>
@@ -348,77 +649,77 @@
 
         <!-- TAB 3: ZERO-BASED / ENVELOPE BUDGETING -->
         <section id="tab-budgets" class="tab-panel hidden space-y-5">
-          <div class="bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+          <div class="surface-card p-5 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400">Zero-Based Envelope Budgeting (YNAB Style)</span>
-              <h3 class="text-2xl font-bold mono text-white mt-1" id="budget-rta-banner">Rs. 0 Ready to Assign</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Give every rupee a job. Assign your income across category envelopes below.</p>
+              <h2 class="text-xl font-bold mono" id="budget-rta-banner">Rs. 0 Ready to Assign</h2>
+              <p class="text-xs mt-0.5" style="color: var(--text-muted);">Zero-based envelope budgeting: assign your income to category envelopes below.</p>
             </div>
-            <div class="flex items-center gap-2.5">
-              <button onclick="coverOverspending()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-medium px-3.5 py-2 rounded-lg">
-                🛡️ Cover Overspending
+            <div class="flex items-center gap-2">
+              <button onclick="coverOverspending()" class="btn btn-secondary">
+                Cover Overspending
               </button>
-              <button onclick="promptAddCategory()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
-                ＋ New Envelope Category
+              <button onclick="openPromptModal('category')" class="btn btn-primary">
+                + New Envelope
               </button>
             </div>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 bg-slate-950/50">
-                  <th class="py-3 px-4">Envelope Category</th>
-                  <th class="py-3 px-4 text-right">Assigned (Budgeted)</th>
-                  <th class="py-3 px-4 text-right">Activity (Spent)</th>
-                  <th class="py-3 px-4 text-right">Available in Envelope</th>
-                  <th class="py-3 px-4 w-56">Envelope Progress</th>
-                </tr>
-              </thead>
-              <tbody id="budget-table-body" class="divide-y divide-slate-800/70 text-xs"></tbody>
-            </table>
+          <div class="surface-card overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b text-[11px] uppercase tracking-wider font-semibold" style="border-color: var(--border-subtle); background: var(--bg-elevated); color: var(--text-muted);">
+                    <th class="py-3 px-4">Envelope Category</th>
+                    <th class="py-3 px-4 text-right">Assigned (PKR)</th>
+                    <th class="py-3 px-4 text-right">Activity (Spent)</th>
+                    <th class="py-3 px-4 text-right">Available</th>
+                    <th class="py-3 px-4 w-56">Utilization</th>
+                  </tr>
+                </thead>
+                <tbody id="budget-table-body" class="divide-y text-xs" style="border-color: var(--border-subtle);"></tbody>
+              </table>
+            </div>
           </div>
         </section>
 
         <!-- TAB 4: ACCOUNTS & WALLETS -->
         <section id="tab-accounts" class="tab-panel hidden space-y-5">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 class="text-sm font-semibold text-white">Multi-Account Balances</h3>
-              <p class="text-xs text-slate-400">Bank accounts, digital wallets (SadaPay/NayaPay), cash, and credit cards</p>
+              <h2 class="text-sm font-bold">Multi-Account Wallets & Banks</h2>
+              <p class="text-xs" style="color: var(--text-muted);">Track checking, savings, digital wallets (SadaPay/NayaPay), cash, and credit cards</p>
             </div>
-            <button onclick="promptAddAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
-              ＋ Add Account / Wallet
-            </button>
+            <div class="flex items-center gap-2">
+              <button onclick="openTransferModal()" class="btn btn-secondary">Transfer Funds</button>
+              <button onclick="openPromptModal('account')" class="btn btn-primary">+ Add Account</button>
+            </div>
           </div>
           <div id="accounts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
         </section>
 
-        <!-- TAB 5: BILL & SHARED EXPENSE SPLITTER (SPLITWISE STYLE) -->
+        <!-- TAB 5: BILL & SHARED EXPENSE SPLITTER -->
         <section id="tab-splits" class="tab-panel hidden space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div class="surface-card p-5 space-y-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-sm font-semibold text-white">People & Net Balances</h3>
-                  <p class="text-xs text-slate-400">Who owes you vs. who you owe</p>
+                  <h2 class="text-sm font-bold">People & Net Balances</h2>
+                  <p class="text-xs" style="color: var(--text-muted);">Who owes you vs. who you owe</p>
                 </div>
-                <button onclick="promptAddFriend()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700">＋ Person</button>
+                <button onclick="openPromptModal('friend')" class="btn btn-secondary py-1.5 px-2.5 text-xs">+ Person</button>
               </div>
               <div id="split-friends-list" class="space-y-2.5"></div>
             </div>
 
-            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div class="lg:col-span-2 surface-card p-5 space-y-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-sm font-semibold text-white">Shared Bills & Split Expenses</h3>
-                  <p class="text-xs text-slate-400">Split dinners, utilities, fuel, or group trips in PKR</p>
+                  <h2 class="text-sm font-bold">Shared Bills & Split Expenses</h2>
+                  <p class="text-xs" style="color: var(--text-muted);">Split dinners, utilities, fuel, or group trips equally in PKR</p>
                 </div>
-                <button onclick="openSplitModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
-                  ＋ Add Shared Bill
-                </button>
+                <button onclick="openSplitModal()" class="btn btn-primary">+ Add Shared Bill</button>
               </div>
-              <div id="split-bills-list" class="divide-y divide-slate-800/70"></div>
+              <div id="split-bills-list" class="divide-y" style="border-color: var(--border-subtle);"></div>
             </div>
           </div>
         </section>
@@ -427,12 +728,10 @@
         <section id="tab-goals" class="tab-panel hidden space-y-5">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-semibold text-white">Savings Goals & Sinking Funds</h3>
-              <p class="text-xs text-slate-400">Track dedicated funds for Emergency, Hajj/Umrah, Car, or Gadgets</p>
+              <h2 class="text-sm font-bold">Savings Goals & Sinking Funds</h2>
+              <p class="text-xs" style="color: var(--text-muted);">Track dedicated targets for Emergency Fund, Travel, Car, or Upgrades</p>
             </div>
-            <button onclick="promptAddGoal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
-              ＋ New Savings Goal
-            </button>
+            <button onclick="openPromptModal('goal')" class="btn btn-primary">+ New Goal</button>
           </div>
           <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         </section>
@@ -440,159 +739,204 @@
         <!-- TAB 7: NET WORTH, INVESTMENTS & RECURRING BILLS -->
         <section id="tab-wealth" class="tab-panel hidden space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div class="surface-card p-5 space-y-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-sm font-semibold text-white">Investments & Assets Portfolio</h3>
-                  <p class="text-xs text-slate-400">Gold, Mutual Funds, PSX Stocks, Real Estate & Crypto</p>
+                  <h2 class="text-sm font-bold">Investments & Assets Portfolio</h2>
+                  <p class="text-xs" style="color: var(--text-muted);">Gold, Mutual Funds, PSX Stocks, Real Estate & Crypto</p>
                 </div>
-                <button onclick="promptAddInvestment()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                  ＋ Add Asset
-                </button>
+                <button onclick="openPromptModal('investment')" class="btn btn-primary py-1.5 px-3">+ Add Asset</button>
               </div>
-              <div id="investments-list" class="divide-y divide-slate-800/70"></div>
+              <div id="investments-list" class="divide-y" style="border-color: var(--border-subtle);"></div>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div class="surface-card p-5 space-y-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-sm font-semibold text-white">Recurring Bills & Subscriptions</h3>
-                  <p class="text-xs text-slate-400">Utilities, internet, rent, streaming & memberships</p>
+                  <h2 class="text-sm font-bold">Recurring Bills & Subscriptions</h2>
+                  <p class="text-xs" style="color: var(--text-muted);">Utilities, internet, rent, streaming & memberships</p>
                 </div>
-                <button onclick="promptAddSubscription()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-700">
-                  ＋ Add Recurring
-                </button>
+                <button onclick="openPromptModal('subscription')" class="btn btn-secondary py-1.5 px-3">+ Add Recurring</button>
               </div>
-              <div id="subscriptions-list" class="divide-y divide-slate-800/70"></div>
+              <div id="subscriptions-list" class="divide-y" style="border-color: var(--border-subtle);"></div>
             </div>
           </div>
         </section>
 
       </div>
     </main>
+
+    <!-- Mobile Bottom Navigation Bar (< 768px) -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 border-t flex items-center justify-around px-1 py-1" style="background: var(--bg-surface); border-color: var(--border-subtle);" aria-label="Mobile Navigation">
+      <button onclick="switchTab('dashboard')" data-tab="dashboard" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span>Home</span>
+      </button>
+      <button onclick="switchTab('accounts')" data-tab="accounts" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+        <span>Accounts</span>
+      </button>
+      <button onclick="switchTab('transactions')" data-tab="transactions" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Ledger</span>
+      </button>
+      <button onclick="switchTab('budgets')" data-tab="budgets" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>Budgets</span>
+      </button>
+      <button onclick="switchTab('splits')" data-tab="splits" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Splits</span>
+      </button>
+      <button onclick="switchTab('goals')" data-tab="goals" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Goals</span>
+      </button>
+      <button onclick="switchTab('wealth')" data-tab="wealth" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span>Wealth</span>
+      </button>
+    </nav>
   </div>
 
   <!-- MODAL: ADD TRANSACTION -->
-  <div id="tx-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-semibold text-white text-sm">Log Transaction (PKR)</h3>
-        <button onclick="closeModal('tx-modal')" class="text-slate-400 hover:text-white text-sm">✕</button>
+  <div id="tx-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="modal-panel max-w-md w-full p-5 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-subtle);">
+        <h3 class="font-bold text-sm">Log Transaction (PKR)</h3>
+        <button onclick="closeModal('tx-modal')" aria-label="Close modal" class="text-sm px-2 py-1 rounded hover:opacity-75">✕</button>
       </div>
       <form onsubmit="submitTransaction(event)" class="space-y-3 text-xs">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-400 mb-1">Type</label>
-            <select id="tx-type" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Type</label>
+            <select id="tx-type" class="input-field">
               <option value="expense">Expense (-)</option>
               <option value="income">Income (+)</option>
             </select>
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">Date</label>
-            <input id="tx-date" type="date" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Date</label>
+            <input id="tx-date" type="date" required class="input-field" />
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-400 mb-1">Amount (PKR)</label>
-            <input id="tx-amount" type="number" min="1" step="any" required placeholder="e.g. 4500" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white mono" />
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Amount (PKR)</label>
+            <input id="tx-amount" type="number" min="1" step="any" required placeholder="e.g. 4500" class="input-field mono" />
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">Account</label>
-            <select id="tx-account" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Account</label>
+            <select id="tx-account" required class="input-field"></select>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Category</label>
-          <select id="tx-category" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+          <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Category</label>
+          <select id="tx-category" required class="input-field"></select>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Payee / Description</label>
-          <input id="tx-payee" type="text" required placeholder="Description..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+          <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Payee / Description</label>
+          <input id="tx-payee" type="text" required placeholder="e.g. Groceries, Salary, Fuel" class="input-field" />
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeModal('tx-modal')" class="px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Save Transaction</button>
+          <button type="button" onclick="closeModal('tx-modal')" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Entry</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL: ACCOUNT TRANSFER -->
-  <div id="transfer-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-semibold text-white text-sm">Transfer Between Accounts</h3>
-        <button onclick="closeModal('transfer-modal')" class="text-slate-400 hover:text-white text-sm">✕</button>
+  <div id="transfer-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="modal-panel max-w-md w-full p-5 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-subtle);">
+        <h3 class="font-bold text-sm">Transfer Between Accounts</h3>
+        <button onclick="closeModal('transfer-modal')" aria-label="Close modal" class="text-sm px-2 py-1 rounded hover:opacity-75">✕</button>
       </div>
       <form onsubmit="submitTransfer(event)" class="space-y-3 text-xs">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-400 mb-1">From Account</label>
-            <select id="tr-from" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">From Account</label>
+            <select id="tr-from" required class="input-field"></select>
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">To Account</label>
-            <select id="tr-to" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">To Account</label>
+            <select id="tr-to" required class="input-field"></select>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Amount (PKR)</label>
-          <input id="tr-amount" type="number" min="1" required placeholder="e.g. 15000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white mono" />
+          <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Amount (PKR)</label>
+          <input id="tr-amount" type="number" min="1" required placeholder="e.g. 15000" class="input-field mono" />
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Note</label>
-          <input id="tr-note" type="text" placeholder="Optional transfer note" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+          <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Note</label>
+          <input id="tr-note" type="text" placeholder="Optional transfer note" class="input-field" />
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeModal('transfer-modal')" class="px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Transfer Funds</button>
+          <button type="button" onclick="closeModal('transfer-modal')" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Transfer Funds</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL: SPLIT EXPENSE -->
-  <div id="split-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-semibold text-white text-sm">Add Shared Bill (Splitwise)</h3>
-        <button onclick="closeModal('split-modal')" class="text-slate-400 hover:text-white text-sm">✕</button>
+  <div id="split-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="modal-panel max-w-md w-full p-5 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-subtle);">
+        <h3 class="font-bold text-sm">Add Shared Bill (Splitwise)</h3>
+        <button onclick="closeModal('split-modal')" aria-label="Close modal" class="text-sm px-2 py-1 rounded hover:opacity-75">✕</button>
       </div>
       <form onsubmit="submitSplitBill(event)" class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">Description</label>
-          <input id="sp-desc" type="text" required placeholder="e.g. Shared Dinner, Utilities, Trip Fuel" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+          <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Description</label>
+          <input id="sp-desc" type="text" required placeholder="e.g. Group Dinner, Utilities, Trip Fuel" class="input-field" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-400 mb-1">Total Bill (PKR)</label>
-            <input id="sp-amount" type="number" min="1" required placeholder="e.g. 6000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white mono" />
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Total Bill (PKR)</label>
+            <input id="sp-amount" type="number" min="1" required placeholder="e.g. 6000" class="input-field mono" />
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">Paid By</label>
-            <select id="sp-payer" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Paid By</label>
+            <select id="sp-payer" class="input-field"></select>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Split Equally With (select people involved alongside You)</label>
-          <div id="sp-friends-checkboxes" class="grid grid-cols-2 gap-2 bg-slate-950 p-3 rounded-lg border border-slate-800"></div>
+          <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Split Equally With (alongside You)</label>
+          <div id="sp-friends-checkboxes" class="grid grid-cols-2 gap-2 surface-elevated p-3"></div>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeModal('split-modal')" class="px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Save Split</button>
+          <button type="button" onclick="closeModal('split-modal')" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Split</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- UNIVERSAL INLINE FORM MODAL (Replaces browser prompt() for Web & Android APK) -->
+  <div id="custom-prompt-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="modal-panel max-w-md w-full p-5 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-subtle);">
+        <h3 id="cp-title" class="font-bold text-sm">Add Item</h3>
+        <button onclick="closeModal('custom-prompt-modal')" aria-label="Close modal" class="text-sm px-2 py-1 rounded hover:opacity-75">✕</button>
+      </div>
+      <form id="cp-form" onsubmit="submitCustomPrompt(event)" class="space-y-3 text-xs">
+        <div id="cp-fields" class="space-y-3"></div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('custom-prompt-modal')" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // Wipe legacy dummy-data key if present
     localStorage.removeItem('PAISAFLOW_PKR_STATE_V1');
 
     const TOKEN_KEY = 'PAISAFLOW_AUTH_TOKEN_V2';
     const USER_KEY = 'PAISAFLOW_AUTH_USER_V2';
+    const THEME_KEY = 'PAISAFLOW_THEME_PREF';
     const API_BASE = (window.location.protocol === 'capacitor:' || window.location.protocol === 'file:' || (window.location.hostname === 'localhost' && !window.location.port))
       ? 'https://paisaflow-pkr.pages.dev'
       : '';
@@ -600,6 +944,71 @@
     let currentUser = null;
     let authToken = localStorage.getItem(TOKEN_KEY) || null;
     let activeTab = 'dashboard';
+    let currentPromptContext = null;
+
+    // =========================================================================
+    // THEME ENGINE (LIGHT & DARK MODE)
+    // =========================================================================
+    const SUN_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+    const MOON_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      root.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+      const metaTheme = document.getElementById('meta-theme-color');
+      if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#090D16' : '#F4F6F9');
+
+      const nextIcon = theme === 'dark' ? SUN_SVG : MOON_SVG;
+      const nextLabel = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+      const authIcon = document.getElementById('auth-theme-icon');
+      const authLabel = document.getElementById('auth-theme-label');
+      if (authIcon) authIcon.innerHTML = nextIcon;
+      if (authLabel) authLabel.textContent = nextLabel;
+
+      const headerIcon = document.getElementById('header-theme-icon');
+      const headerLabel = document.getElementById('header-theme-label');
+      if (headerIcon) headerIcon.innerHTML = nextIcon;
+      if (headerLabel) headerLabel.textContent = nextLabel;
+
+      localStorage.setItem(THEME_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      showToast(`Switched to ${next === 'dark' ? 'Dark' : 'Light'} theme`);
+    }
+
+    // Initialize saved theme immediately
+    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+
+    // =========================================================================
+    // SONNER-STYLE TOAST FEEDBACK
+    // =========================================================================
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const el = document.createElement('div');
+      el.className = 'toast-item';
+      el.innerHTML = `
+        <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: var(--accent);"></span>
+        <span>${message}</span>
+      `;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(8px)';
+        el.style.transition = 'opacity 160ms ease, transform 160ms ease';
+        setTimeout(() => el.remove(), 170);
+      }, 2600);
+    }
 
     function getFreshState() {
       return {
@@ -649,15 +1058,20 @@
       if (mode === 'login') {
         loginForm.classList.remove('hidden');
         regForm.classList.add('hidden');
-        loginBtn.className = 'py-2 rounded-lg transition bg-emerald-600 text-white';
-        regBtn.className = 'py-2 rounded-lg transition text-slate-400 hover:text-white';
+        loginBtn.style.background = 'var(--accent)';
+        loginBtn.style.color = '#FFFFFF';
+        regBtn.style.background = 'transparent';
+        regBtn.style.color = 'var(--text-muted)';
       } else {
         loginForm.classList.add('hidden');
         regForm.classList.remove('hidden');
-        regBtn.className = 'py-2 rounded-lg transition bg-emerald-600 text-white';
-        loginBtn.className = 'py-2 rounded-lg transition text-slate-400 hover:text-white';
+        regBtn.style.background = 'var(--accent)';
+        regBtn.style.color = '#FFFFFF';
+        loginBtn.style.background = 'transparent';
+        loginBtn.style.color = 'var(--text-muted)';
       }
     }
+    setAuthMode('login');
 
     function showAuthError(msg) {
       const el = document.getElementById('auth-error');
@@ -687,7 +1101,7 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          return showAuthError(data.error || 'Authentication failed. Please try again.');
+          return showAuthError(data.error || 'Authentication failed. Please check your credentials.');
         }
 
         authToken = data.token;
@@ -699,8 +1113,9 @@
         localStorage.setItem(getUserStorageKey(), JSON.stringify(state));
 
         enterAuthenticatedApp();
+        showToast(`Welcome, ${currentUser.name}`);
       } catch (err) {
-        showAuthError('Network error connecting to server: ' + err.message);
+        showAuthError('Unable to reach server: ' + err.message);
       }
     }
 
@@ -761,7 +1176,6 @@
         if (!data.user) throw new Error('No user');
         currentUser = data.user;
 
-        // Fetch user's state from D1
         const stateRes = await fetch(API_BASE + '/api/state', {
           headers: { 'Authorization': 'Bearer ' + authToken }
         });
@@ -796,11 +1210,11 @@
           body: JSON.stringify(state)
         });
         if (res.ok && badge) {
-          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>Cloudflare D1 Synced</span>`;
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full" style="background: var(--accent);"></span><span>Cloudflare D1 Synced</span>`;
         }
       } catch (e) {
         if (badge) {
-          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span><span>Saved Locally (Offline)</span>`;
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full" style="background: var(--warning);"></span><span>Saved Locally (Offline)</span>`;
         }
       }
     }
@@ -814,9 +1228,10 @@
     }
 
     function clearAllMyData() {
-      if (confirm('Are you sure you want to wipe all data in your account and start completely fresh at Rs. 0?')) {
+      if (confirm('Reset your entire ledger back to Rs. 0?')) {
         state = getFreshState();
         saveState();
+        showToast('Workspace reset to Rs. 0');
       }
     }
 
@@ -828,22 +1243,22 @@
       document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
       document.getElementById(`tab-${tab}`).classList.remove('hidden');
 
-      document.querySelectorAll('.nav-btn').forEach(btn => {
+      document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(btn => {
         if (btn.dataset.tab === tab) {
-          btn.className = 'nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+          btn.classList.add('active');
         } else {
-          btn.className = 'nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap text-slate-400 hover:bg-slate-800/60 hover:text-slate-200';
+          btn.classList.remove('active');
         }
       });
 
       const titles = {
-        dashboard: ['Dashboard & Analytics', 'Real-time overview of your PKR accounts, budgets, and cash flow'],
+        dashboard: ['Dashboard', 'Overview of your PKR accounts, budgets, and cash flow'],
         accounts: ['Accounts & Wallets', 'Manage Pakistani bank accounts, digital wallets, cash, and credit cards'],
-        transactions: ['Transactions & CSV Manager', 'Search, filter, import, and export all income, expenses, and transfers'],
-        budgets: ['Zero-Based Envelope Budgeting', 'YNAB-style monthly category envelopes with overspend protection'],
-        splits: ['Bill & Shared Expense Splitter', 'Splitwise-style group bills, roommate balances, and 1-click settle up'],
-        goals: ['Savings Goals & Sinking Funds', 'Track dedicated targets with automatic progress calculation'],
-        wealth: ['Net Worth, Investments & Subscriptions', 'Track assets, unrealized gains, and recurring monthly bills']
+        transactions: ['Transactions & CSV', 'Search, filter, import, and export all income, expenses, and transfers'],
+        budgets: ['Envelope Budgets', 'Zero-based monthly category envelopes with overspend protection'],
+        splits: ['Bill Splitter', 'Track shared group bills, roommate balances, and 1-click settlements'],
+        goals: ['Savings Goals', 'Track dedicated sinking funds with automatic progress calculation'],
+        wealth: ['Net Worth & Bills', 'Track assets, unrealized gains, and recurring monthly bills']
       };
       document.getElementById('page-title').textContent = titles[tab][0];
       document.getElementById('page-subtitle').textContent = titles[tab][1];
@@ -903,9 +1318,9 @@
       state.categories.filter(c => c.type === 'expense').forEach(c => {
         const spent = getCategorySpent(c.name);
         if (c.budgeted > 0 && spent > c.budgeted) {
-          alerts.push(`<div class="bg-rose-950/50 border border-rose-500/40 text-rose-200 px-4 py-2.5 rounded-xl text-xs flex items-center justify-between">
-            <span>⚠️ <strong>Overspend Alert:</strong> Envelope <em>${c.name}</em> exceeded its budget by <strong class="mono">${formatPKR(spent - c.budgeted)}</strong>.</span>
-            <button onclick="switchTab('budgets')" class="underline text-rose-300 font-medium">Cover Overspending →</button>
+          alerts.push(`<div class="px-4 py-2.5 rounded-xl text-xs flex items-center justify-between" style="background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger);">
+            <span><strong>Overspend Alert:</strong> Envelope <em>${c.name}</em> exceeded its budget by <strong class="mono">${formatPKR(spent - c.budgeted)}</strong>.</span>
+            <button onclick="switchTab('budgets')" class="underline font-semibold">Cover Overspending</button>
           </div>`);
         }
       });
@@ -913,7 +1328,6 @@
     }
 
     function renderCharts() {
-      // Compute last 6 months strictly from the user's real transactions (0 dummy data)
       const now = new Date();
       const months = [];
       for (let i = 5; i >= 0; i--) {
@@ -931,14 +1345,14 @@
 
       const maxVal = Math.max(...months.map(m => Math.max(m.inc, m.exp)), 1);
       document.getElementById('cashflow-chart').innerHTML = months.map(m => {
-        const incH = m.inc > 0 ? Math.max(6, Math.round((m.inc / maxVal) * 160)) : 2;
-        const expH = m.exp > 0 ? Math.max(6, Math.round((m.exp / maxVal) * 160)) : 2;
+        const incH = m.inc > 0 ? Math.max(6, Math.round((m.inc / maxVal) * 150)) : 3;
+        const expH = m.exp > 0 ? Math.max(6, Math.round((m.exp / maxVal) * 150)) : 3;
         return `<div class="flex-1 flex flex-col items-center gap-2">
-          <div class="w-full flex items-end justify-center gap-1.5 h-40">
-            <div title="Income: ${formatPKR(m.inc)}" style="height:${incH}px" class="w-5 ${m.inc > 0 ? 'bg-emerald-500/80 hover:bg-emerald-400' : 'bg-slate-800'} rounded-t transition-all"></div>
-            <div title="Expense: ${formatPKR(m.exp)}" style="height:${expH}px" class="w-5 ${m.exp > 0 ? 'bg-rose-500/80 hover:bg-rose-400' : 'bg-slate-800'} rounded-t transition-all"></div>
+          <div class="w-full flex items-end justify-center gap-1.5 h-36">
+            <div title="Income: ${formatPKR(m.inc)}" style="height:${incH}px; background: ${m.inc > 0 ? 'var(--accent)' : 'var(--border-subtle)'};" class="w-4 sm:w-5 rounded-t transition-all"></div>
+            <div title="Expense: ${formatPKR(m.exp)}" style="height:${expH}px; background: ${m.exp > 0 ? 'var(--danger)' : 'var(--border-subtle)'};" class="w-4 sm:w-5 rounded-t transition-all"></div>
           </div>
-          <span class="text-[11px] text-slate-400 font-medium">${m.label}</span>
+          <span class="text-[11px] font-medium" style="color: var(--text-muted);">${m.label}</span>
         </div>`;
       }).join('');
 
@@ -948,20 +1362,19 @@
         .filter(c => c.spent > 0)
         .sort((a, b) => b.spent - a.spent);
       const totalExp = expCats.reduce((s, c) => s + c.spent, 0) || 1;
-      const colors = ['bg-emerald-500', 'bg-sky-500', 'bg-amber-500', 'bg-purple-500', 'bg-rose-500', 'bg-indigo-500'];
 
-      document.getElementById('category-breakdown-list').innerHTML = expCats.slice(0, 6).map((c, idx) => {
+      document.getElementById('category-breakdown-list').innerHTML = expCats.slice(0, 6).map(c => {
         const pct = Math.round((c.spent / totalExp) * 100);
         return `<div>
           <div class="flex justify-between text-xs mb-1">
-            <span class="text-slate-300 truncate pr-2">${c.name}</span>
-            <span class="mono text-slate-200 font-medium">${formatPKR(c.spent)} <span class="text-slate-500">(${pct}%)</span></span>
+            <span class="truncate pr-2 font-medium">${c.name}</span>
+            <span class="mono font-semibold">${formatPKR(c.spent)} <span style="color: var(--text-muted);">(${pct}%)</span></span>
           </div>
-          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-            <div class="${colors[idx % colors.length]} h-full rounded-full" style="width:${pct}%"></div>
+          <div class="w-full h-2 rounded-full overflow-hidden" style="background: var(--bg-subtle);">
+            <div class="h-full rounded-full" style="width:${pct}%; background: var(--accent);"></div>
           </div>
         </div>`;
-      }).join('') || `<p class="text-xs text-slate-500 py-8 text-center">No expenses logged yet.</p>`;
+      }).join('') || `<p class="text-xs py-8 text-center" style="color: var(--text-muted);">No expenses logged yet.</p>`;
     }
 
     function renderDashboardLists() {
@@ -969,27 +1382,27 @@
       document.getElementById('dashboard-recent-tx').innerHTML = recent.map(t => `
         <div class="py-2.5 flex items-center justify-between text-xs">
           <div>
-            <div class="font-medium text-slate-200">${t.payee}</div>
-            <div class="text-[11px] text-slate-500">${t.date} • ${t.category}</div>
+            <div class="font-semibold">${t.payee}</div>
+            <div class="text-[11px]" style="color: var(--text-muted);">${t.date} • ${t.category}</div>
           </div>
-          <div class="mono font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+          <div class="mono font-semibold" style="color: ${t.type === 'income' ? 'var(--accent)' : 'var(--danger)'};">
             ${t.type === 'income' ? '+' : '-'}${formatPKR(t.amount)}
           </div>
         </div>
-      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No transactions logged yet.</p>`;
+      `).join('') || `<p class="text-xs py-6 text-center" style="color: var(--text-muted);">No transactions logged yet.</p>`;
 
       document.getElementById('dashboard-upcoming-bills').innerHTML = state.subscriptions.map(s => `
         <div class="py-2.5 flex items-center justify-between text-xs">
           <div>
-            <div class="font-medium text-slate-200">${s.name}</div>
-            <div class="text-[11px] text-slate-500">Due Day ${s.dueDay} of month • ${s.cycle}</div>
+            <div class="font-semibold">${s.name}</div>
+            <div class="text-[11px]" style="color: var(--text-muted);">Due Day ${s.dueDay} • ${s.cycle}</div>
           </div>
           <div class="flex items-center gap-2.5">
-            <span class="mono font-semibold text-amber-400">${formatPKR(s.amount)}</span>
-            <button onclick="paySubscription('${s.id}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-2 py-1 rounded text-[11px] transition">Pay & Log</button>
+            <span class="mono font-semibold" style="color: var(--warning);">${formatPKR(s.amount)}</span>
+            <button onclick="paySubscription('${s.id}')" class="btn btn-secondary py-1 px-2 text-[11px]">Pay & Log</button>
           </div>
         </div>
-      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No recurring bills added yet.</p>`;
+      `).join('') || `<p class="text-xs py-6 text-center" style="color: var(--text-muted);">No recurring bills added yet.</p>`;
     }
 
     function populateFilterAndModalSelects() {
@@ -1030,25 +1443,25 @@
 
       document.getElementById('tx-table-body').innerHTML = rows.map(t => {
         const acc = state.accounts.find(a => a.id === t.accountId);
-        return `<tr class="hover:bg-slate-800/40">
-          <td class="py-3 px-4 mono text-slate-400">${t.date}</td>
-          <td class="py-3 px-4 font-medium text-white">${t.payee}</td>
-          <td class="py-3 px-4"><span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[11px]">${t.category}</span></td>
-          <td class="py-3 px-4 text-slate-300">${acc ? acc.name : 'Account'}</td>
-          <td class="py-3 px-4 text-right mono font-semibold ${t.type === 'income' ? 'text-emerald-400' : t.type === 'transfer' ? 'text-sky-400' : 'text-rose-400'}">
+        return `<tr>
+          <td class="py-3 px-4 mono" style="color: var(--text-muted);">${t.date}</td>
+          <td class="py-3 px-4 font-semibold">${t.payee}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[11px] font-medium" style="background: var(--bg-subtle); color: var(--text-secondary);">${t.category}</span></td>
+          <td class="py-3 px-4" style="color: var(--text-secondary);">${acc ? acc.name : 'Account'}</td>
+          <td class="py-3 px-4 text-right mono font-semibold" style="color: ${t.type === 'income' ? 'var(--accent)' : t.type === 'transfer' ? 'var(--text-primary)' : 'var(--danger)'};">
             ${t.type === 'income' ? '+' : t.type === 'expense' ? '-' : '⇄ '}${formatPKR(t.amount)}
           </td>
           <td class="py-3 px-4 text-right">
-            <button onclick="deleteTransaction('${t.id}')" class="text-slate-500 hover:text-rose-400">Delete</button>
+            <button onclick="deleteTransaction('${t.id}')" class="text-xs font-medium hover:underline" style="color: var(--danger);">Delete</button>
           </td>
         </tr>`;
-      }).join('') || `<tr><td colspan="6" class="py-8 text-center text-slate-500">No transactions yet. Click <strong>"＋ Log Transaction"</strong> to add your first entry.</td></tr>`;
+      }).join('') || `<tr><td colspan="6" class="py-8 text-center" style="color: var(--text-muted);">No transactions found. Click <strong>"Log Entry"</strong> to record a transaction.</td></tr>`;
     }
 
     function renderBudgets(readyToAssign) {
       const banner = document.getElementById('budget-rta-banner');
       banner.textContent = `${formatPKR(readyToAssign)} Ready to Assign`;
-      banner.className = `text-2xl font-bold mono mt-1 ${readyToAssign >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      banner.style.color = readyToAssign >= 0 ? 'var(--accent)' : 'var(--danger)';
 
       document.getElementById('budget-table-body').innerHTML = state.categories
         .filter(c => c.type === 'expense')
@@ -1056,22 +1469,22 @@
           const spent = getCategorySpent(c.name);
           const avail = c.budgeted - spent;
           const pct = c.budgeted > 0 ? Math.min(100, Math.round((spent / c.budgeted) * 100)) : (spent > 0 ? 100 : 0);
-          const barColor = avail < 0 ? 'bg-rose-500' : pct > 85 ? 'bg-amber-500' : 'bg-emerald-500';
-          return `<tr class="hover:bg-slate-800/40">
-            <td class="py-3.5 px-4 font-medium text-white">${c.name}</td>
+          const barColor = avail < 0 ? 'var(--danger)' : pct > 85 ? 'var(--warning)' : 'var(--accent)';
+          return `<tr>
+            <td class="py-3.5 px-4 font-semibold">${c.name}</td>
             <td class="py-3.5 px-4 text-right">
-              <input type="number" value="${c.budgeted}" onchange="updateCategoryBudget('${c.id}', this.value)"
-                class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1 text-right mono text-xs text-white w-28 focus:border-emerald-500 focus:outline-none" />
+              <input type="number" value="${c.budgeted}" aria-label="Assigned budget for ${c.name}" onchange="updateCategoryBudget('${c.id}', this.value)"
+                class="input-field text-right mono w-28 inline-block py-1 px-2" />
             </td>
-            <td class="py-3.5 px-4 text-right mono text-slate-300">${formatPKR(spent)}</td>
-            <td class="py-3.5 px-4 text-right mono font-semibold ${avail < 0 ? 'text-rose-400' : 'text-emerald-400'}">
+            <td class="py-3.5 px-4 text-right mono" style="color: var(--text-secondary);">${formatPKR(spent)}</td>
+            <td class="py-3.5 px-4 text-right mono font-semibold" style="color: ${avail < 0 ? 'var(--danger)' : 'var(--accent)'};">
               ${formatPKR(avail)}
             </td>
             <td class="py-3.5 px-4">
-              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div class="${barColor} h-full rounded-full transition-all" style="width:${pct}%"></div>
+              <div class="w-full h-2 rounded-full overflow-hidden" style="background: var(--bg-subtle);">
+                <div class="h-full rounded-full transition-all" style="width:${pct}%; background: ${barColor};"></div>
               </div>
-              <div class="text-[10px] text-slate-400 mt-1">${pct}% used ${avail < 0 ? '• OVERBUDGET!' : ''}</div>
+              <div class="text-[10px] mt-1" style="color: var(--text-muted);">${pct}% used ${avail < 0 ? '• Overbudget' : ''}</div>
             </td>
           </tr>`;
         }).join('');
@@ -1079,86 +1492,86 @@
 
     function renderAccounts() {
       document.getElementById('accounts-grid').innerHTML = state.accounts.map(a => `
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div class="surface-card p-5 flex flex-col justify-between">
           <div class="flex items-start justify-between">
             <div>
-              <span class="text-[11px] uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-400">${a.type}</span>
-              <h4 class="text-base font-semibold text-white mt-2">${a.name}</h4>
+              <span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded" style="background: var(--bg-subtle); color: var(--text-secondary);">${a.type}</span>
+              <h3 class="text-base font-bold mt-2">${a.name}</h3>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="adjustAccountBalance('${a.id}')" class="text-xs text-slate-400 hover:text-emerald-400">Adjust</button>
-              <button onclick="deleteAccount('${a.id}')" class="text-xs text-slate-500 hover:text-rose-400">✕</button>
+              <button onclick="openPromptModal('adjustAccount', '${a.id}')" class="text-xs font-medium hover:underline" style="color: var(--accent);">Adjust</button>
+              <button onclick="deleteAccount('${a.id}')" aria-label="Delete account ${a.name}" class="text-xs px-1.5 py-0.5 rounded hover:opacity-75" style="color: var(--text-muted);">✕</button>
             </div>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-baseline justify-between">
-            <span class="text-xs text-slate-400">Current Balance</span>
-            <span class="text-lg font-bold mono ${a.balance >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatPKR(a.balance)}</span>
+          <div class="mt-4 pt-3 border-t flex items-baseline justify-between" style="border-color: var(--border-subtle);">
+            <span class="text-xs" style="color: var(--text-muted);">Current Balance</span>
+            <span class="text-lg font-bold mono" style="color: ${a.balance >= 0 ? 'var(--accent)' : 'var(--danger)'};">${formatPKR(a.balance)}</span>
           </div>
         </div>
       `).join('') || `
-        <div class="col-span-3 bg-slate-900/60 border border-dashed border-slate-800 rounded-xl p-8 text-center space-y-3">
-          <p class="text-xs text-slate-400">You haven't added any bank accounts or wallets yet.</p>
-          <button onclick="promptAddAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-4 py-2 rounded-lg">＋ Add Your First Account</button>
+        <div class="col-span-3 surface-card p-8 text-center space-y-3">
+          <p class="text-xs" style="color: var(--text-muted);">No bank accounts or wallets added yet.</p>
+          <button onclick="openPromptModal('account')" class="btn btn-primary">+ Add Your First Account</button>
         </div>
       `;
     }
 
     function renderSplits() {
       document.getElementById('split-friends-list').innerHTML = state.friends.map(f => `
-        <div class="bg-slate-950/60 border border-slate-800 rounded-lg p-3 flex items-center justify-between">
+        <div class="surface-elevated p-3 flex items-center justify-between">
           <div>
-            <div class="text-xs font-medium text-white">${f.name}</div>
-            <div class="text-[11px] ${f.balance > 0 ? 'text-emerald-400' : f.balance < 0 ? 'text-rose-400' : 'text-slate-500'}">
+            <div class="text-xs font-semibold">${f.name}</div>
+            <div class="text-[11px]" style="color: ${f.balance > 0 ? 'var(--accent)' : f.balance < 0 ? 'var(--danger)' : 'var(--text-muted)'};">
               ${f.balance > 0 ? `Owes you ${formatPKR(f.balance)}` : f.balance < 0 ? `You owe ${formatPKR(Math.abs(f.balance))}` : 'Settled up'}
             </div>
           </div>
-          ${f.balance !== 0 ? `<button onclick="settleFriend('${f.id}')" class="text-[11px] bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-2.5 py-1 rounded border border-emerald-500/30 transition">Settle Up</button>` : ''}
+          ${f.balance !== 0 ? `<button onclick="settleFriend('${f.id}')" class="btn btn-secondary py-1 px-2.5 text-[11px]">Settle Up</button>` : ''}
         </div>
-      `).join('') || `<p class="text-xs text-slate-500 py-4 text-center">Click "＋ Person" to add friends or roommates.</p>`;
+      `).join('') || `<p class="text-xs py-4 text-center" style="color: var(--text-muted);">Click "+ Person" to add friends or roommates.</p>`;
 
       document.getElementById('split-bills-list').innerHTML = state.splits.map(s => `
         <div class="py-3 flex items-center justify-between text-xs">
           <div>
-            <div class="font-medium text-white">${s.desc}</div>
-            <div class="text-[11px] text-slate-400">${s.date} • Paid by <strong>${s.payer}</strong> • Split with: ${(s.participants || []).join(', ')}</div>
+            <div class="font-semibold">${s.desc}</div>
+            <div class="text-[11px]" style="color: var(--text-muted);">${s.date} • Paid by <strong>${s.payer}</strong> • Split with: ${(s.participants || []).join(', ')}</div>
           </div>
           <div class="text-right">
-            <div class="mono font-semibold text-white">Total: ${formatPKR(s.total)}</div>
-            <div class="text-[11px] mono text-emerald-400">${formatPKR(s.sharePerPerson)} / person</div>
+            <div class="mono font-semibold">Total: ${formatPKR(s.total)}</div>
+            <div class="text-[11px] mono" style="color: var(--accent);">${formatPKR(s.sharePerPerson)} / person</div>
           </div>
         </div>
-      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No shared bills logged yet.</p>`;
+      `).join('') || `<p class="text-xs py-6 text-center" style="color: var(--text-muted);">No shared bills logged yet.</p>`;
     }
 
     function renderGoals() {
       document.getElementById('goals-grid').innerHTML = state.goals.map(g => {
         const pct = g.target > 0 ? Math.min(100, Math.round((g.saved / g.target) * 100)) : 0;
         const rem = Math.max(0, g.target - g.saved);
-        return `<div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between space-y-4">
+        return `<div class="surface-card p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-white text-sm">${g.name}</h4>
-              <span class="text-xs mono text-emerald-400 font-bold">${pct}%</span>
+              <h3 class="font-bold text-sm">${g.name}</h3>
+              <span class="text-xs mono font-bold" style="color: var(--accent);">${pct}%</span>
             </div>
-            <p class="text-[11px] text-slate-400 mt-0.5">Target Date: ${g.deadline} • Remaining: ${formatPKR(rem)}</p>
-            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mt-3">
-              <div class="bg-emerald-500 h-full rounded-full transition-all" style="width:${pct}%"></div>
+            <p class="text-[11px] mt-0.5" style="color: var(--text-muted);">Target Date: ${g.deadline} • Remaining: ${formatPKR(rem)}</p>
+            <div class="w-full h-2.5 rounded-full overflow-hidden mt-3" style="background: var(--bg-subtle);">
+              <div class="h-full rounded-full transition-all" style="width:${pct}%; background: var(--accent);"></div>
             </div>
           </div>
-          <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
+          <div class="flex items-center justify-between pt-3 border-t text-xs" style="border-color: var(--border-subtle);">
             <div class="mono">
-              <span class="text-white font-semibold">${formatPKR(g.saved)}</span>
-              <span class="text-slate-500"> / ${formatPKR(g.target)}</span>
+              <span class="font-semibold">${formatPKR(g.saved)}</span>
+              <span style="color: var(--text-muted);"> / ${formatPKR(g.target)}</span>
             </div>
-            <button onclick="contributeGoal('${g.id}')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-3 py-1 rounded-lg border border-emerald-500/30 transition">
-              ＋ Contribute
+            <button onclick="openPromptModal('contributeGoal', '${g.id}')" class="btn btn-secondary py-1 px-3 text-xs">
+              + Contribute
             </button>
           </div>
         </div>`;
       }).join('') || `
-        <div class="col-span-3 bg-slate-900/60 border border-dashed border-slate-800 rounded-xl p-8 text-center space-y-3">
-          <p class="text-xs text-slate-400">No savings goals created yet.</p>
-          <button onclick="promptAddGoal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-4 py-2 rounded-lg">＋ Create First Savings Goal</button>
+        <div class="col-span-3 surface-card p-8 text-center space-y-3">
+          <p class="text-xs" style="color: var(--text-muted);">No savings goals created yet.</p>
+          <button onclick="openPromptModal('goal')" class="btn btn-primary">+ Create First Savings Goal</button>
         </div>
       `;
     }
@@ -1169,40 +1582,236 @@
         const gainPct = inv.costBasis > 0 ? ((gain / inv.costBasis) * 100).toFixed(1) : 0;
         return `<div class="py-3 flex items-center justify-between text-xs">
           <div>
-            <span class="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${inv.category}</span>
-            <div class="font-medium text-white mt-1">${inv.name}</div>
-            <div class="text-[11px] text-slate-500">Cost Basis: ${formatPKR(inv.costBasis)} • <button onclick="updateAssetValue('${inv.id}')" class="text-emerald-400 hover:underline">Update Value</button></div>
+            <span class="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded" style="background: var(--bg-subtle); color: var(--text-secondary);">${inv.category}</span>
+            <div class="font-semibold mt-1">${inv.name}</div>
+            <div class="text-[11px]" style="color: var(--text-muted);">Cost Basis: ${formatPKR(inv.costBasis)} • <button onclick="openPromptModal('updateAsset', '${inv.id}')" class="font-semibold hover:underline" style="color: var(--accent);">Update Value</button></div>
           </div>
           <div class="text-right">
-            <div class="mono font-bold text-white text-sm">${formatPKR(inv.currentValue)}</div>
-            <div class="text-[11px] mono ${gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+            <div class="mono font-bold text-sm">${formatPKR(inv.currentValue)}</div>
+            <div class="text-[11px] mono" style="color: ${gain >= 0 ? 'var(--accent)' : 'var(--danger)'};">
               ${gain >= 0 ? '+' : ''}${formatPKR(gain)} (${gainPct}%)
             </div>
           </div>
         </div>`;
-      }).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No investments or assets added yet.</p>`;
+      }).join('') || `<p class="text-xs py-6 text-center" style="color: var(--text-muted);">No investments or assets added yet.</p>`;
 
       document.getElementById('subscriptions-list').innerHTML = state.subscriptions.map(s => `
         <div class="py-3 flex items-center justify-between text-xs">
           <div>
-            <div class="font-medium text-white">${s.name}</div>
-            <div class="text-[11px] text-slate-400">${s.category} • Due day ${s.dueDay} (${s.cycle})</div>
+            <div class="font-semibold">${s.name}</div>
+            <div class="text-[11px]" style="color: var(--text-muted);">${s.category} • Due day ${s.dueDay} (${s.cycle})</div>
           </div>
           <div class="flex items-center gap-3">
-            <span class="mono font-semibold text-amber-400">${formatPKR(s.amount)}</span>
-            <button onclick="paySubscription('${s.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-[11px]">Pay & Log</button>
+            <span class="mono font-semibold" style="color: var(--warning);">${formatPKR(s.amount)}</span>
+            <button onclick="paySubscription('${s.id}')" class="btn btn-primary py-1 px-2.5 text-[11px]">Pay & Log</button>
           </div>
         </div>
-      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No recurring bills or subscriptions added yet.</p>`;
+      `).join('') || `<p class="text-xs py-6 text-center" style="color: var(--text-muted);">No recurring bills or subscriptions added yet.</p>`;
     }
 
     // =========================================================================
-    // USER ACTIONS & MODALS
+    // UNIVERSAL INLINE MODAL SYSTEM (Replaces native prompt/alert)
     // =========================================================================
+    function openPromptModal(type, targetId = null) {
+      currentPromptContext = { type, targetId };
+      const titleEl = document.getElementById('cp-title');
+      const fieldsEl = document.getElementById('cp-fields');
+
+      if (type === 'account') {
+        titleEl.textContent = 'Add Account or Wallet';
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Account Name</label>
+            <input id="cp-f1" type="text" required placeholder="e.g. Meezan Bank, SadaPay, Cash Wallet" class="input-field" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Account Type</label>
+              <select id="cp-f2" class="input-field">
+                <option value="Bank">Bank</option>
+                <option value="Wallet">Digital Wallet</option>
+                <option value="Savings">Savings</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Opening Balance (PKR)</label>
+              <input id="cp-f3" type="number" step="any" value="0" required class="input-field mono" />
+            </div>
+          </div>
+        `;
+      } else if (type === 'adjustAccount') {
+        const acc = state.accounts.find(a => a.id === targetId);
+        if (!acc) return;
+        titleEl.textContent = `Adjust Balance — ${acc.name}`;
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">New Current Balance (PKR)</label>
+            <input id="cp-f1" type="number" step="any" value="${acc.balance}" required class="input-field mono" />
+          </div>
+        `;
+      } else if (type === 'category') {
+        titleEl.textContent = 'New Envelope Category';
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Category Name</label>
+            <input id="cp-f1" type="text" required placeholder="e.g. Education, Car Maintenance" class="input-field" />
+          </div>
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Monthly Assigned Budget (PKR)</label>
+            <input id="cp-f2" type="number" min="0" value="0" required class="input-field mono" />
+          </div>
+        `;
+      } else if (type === 'friend') {
+        titleEl.textContent = 'Add Person to Splitwise';
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Person / Roommate Name</label>
+            <input id="cp-f1" type="text" required placeholder="e.g. Ali Raza" class="input-field" />
+          </div>
+        `;
+      } else if (type === 'goal') {
+        titleEl.textContent = 'Create Savings Goal';
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Goal Name</label>
+            <input id="cp-f1" type="text" required placeholder="e.g. Emergency Fund, Umrah Trip" class="input-field" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Target Amount (PKR)</label>
+              <input id="cp-f2" type="number" min="1" required placeholder="e.g. 500000" class="input-field mono" />
+            </div>
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Target Date</label>
+              <input id="cp-f3" type="date" value="2027-06-30" required class="input-field" />
+            </div>
+          </div>
+        `;
+      } else if (type === 'contributeGoal') {
+        const g = state.goals.find(x => x.id === targetId);
+        if (!g) return;
+        titleEl.textContent = `Contribute to ${g.name}`;
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Contribution Amount (PKR)</label>
+            <input id="cp-f1" type="number" min="1" required placeholder="e.g. 25000" class="input-field mono" />
+          </div>
+        `;
+      } else if (type === 'investment') {
+        titleEl.textContent = 'Add Investment / Asset';
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Asset Name</label>
+            <input id="cp-f1" type="text" required placeholder="e.g. 1 Tola Gold, Al Meezan Mutual Fund" class="input-field" />
+          </div>
+          <div class="grid grid-cols-3 gap-2.5">
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Class</label>
+              <select id="cp-f2" class="input-field">
+                <option value="Gold">Gold</option>
+                <option value="Mutual Fund">Mutual Fund</option>
+                <option value="Stocks">PSX Stocks</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Crypto">Crypto</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Cost (PKR)</label>
+              <input id="cp-f3" type="number" min="0" required placeholder="200000" class="input-field mono" />
+            </div>
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Current Value</label>
+              <input id="cp-f4" type="number" min="0" required placeholder="230000" class="input-field mono" />
+            </div>
+          </div>
+        `;
+      } else if (type === 'updateAsset') {
+        const inv = state.investments.find(x => x.id === targetId);
+        if (!inv) return;
+        titleEl.textContent = `Update Market Value — ${inv.name}`;
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Current Market Value (PKR)</label>
+            <input id="cp-f1" type="number" min="0" value="${inv.currentValue}" required class="input-field mono" />
+          </div>
+        `;
+      } else if (type === 'subscription') {
+        titleEl.textContent = 'Add Recurring Bill / Subscription';
+        fieldsEl.innerHTML = `
+          <div>
+            <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Bill / Subscription Name</label>
+            <input id="cp-f1" type="text" required placeholder="e.g. K-Electric, StormFiber, Netflix" class="input-field" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Monthly Amount (PKR)</label>
+              <input id="cp-f2" type="number" min="1" required placeholder="e.g. 6800" class="input-field mono" />
+            </div>
+            <div>
+              <label class="block mb-1 font-medium" style="color: var(--text-secondary);">Due Day (1–31)</label>
+              <input id="cp-f3" type="number" min="1" max="31" value="15" required class="input-field mono" />
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('custom-prompt-modal').classList.remove('hidden');
+      document.getElementById('custom-prompt-modal').classList.add('flex');
+      setTimeout(() => document.getElementById('cp-f1')?.focus(), 50);
+    }
+
+    function submitCustomPrompt(e) {
+      e.preventDefault();
+      if (!currentPromptContext) return;
+      const { type, targetId } = currentPromptContext;
+      const v1 = document.getElementById('cp-f1')?.value;
+      const v2 = document.getElementById('cp-f2')?.value;
+      const v3 = document.getElementById('cp-f3')?.value;
+      const v4 = document.getElementById('cp-f4')?.value;
+
+      if (type === 'account') {
+        state.accounts.push({ id: 'acc-' + Date.now(), name: v1.trim(), type: v2, balance: Number(v3) || 0 });
+        showToast(`Added account "${v1.trim()}"`);
+      } else if (type === 'adjustAccount') {
+        const acc = state.accounts.find(a => a.id === targetId);
+        if (acc) acc.balance = Number(v1) || 0;
+        showToast('Account balance updated');
+      } else if (type === 'category') {
+        const b = Number(v2) || 0;
+        state.categories.push({ id: 'cat-' + Date.now(), name: v1.trim(), type: 'expense', budgeted: b, target: b });
+        showToast(`Created envelope "${v1.trim()}"`);
+      } else if (type === 'friend') {
+        state.friends.push({ id: 'fr-' + Date.now(), name: v1.trim(), balance: 0 });
+        showToast(`Added ${v1.trim()} to Splitwise`);
+      } else if (type === 'goal') {
+        state.goals.push({ id: 'gl-' + Date.now(), name: v1.trim(), target: Number(v2) || 0, saved: 0, deadline: v3 });
+        showToast(`Created goal "${v1.trim()}"`);
+      } else if (type === 'contributeGoal') {
+        const g = state.goals.find(x => x.id === targetId);
+        if (g) g.saved += Number(v1) || 0;
+        showToast(`Added ${formatPKR(v1)} to ${g?.name}`);
+      } else if (type === 'investment') {
+        state.investments.push({ id: 'inv-' + Date.now(), name: v1.trim(), category: v2, costBasis: Number(v3) || 0, currentValue: Number(v4) || 0 });
+        showToast(`Added asset "${v1.trim()}"`);
+      } else if (type === 'updateAsset') {
+        const inv = state.investments.find(x => x.id === targetId);
+        if (inv) inv.currentValue = Number(v1) || 0;
+        showToast('Market value updated');
+      } else if (type === 'subscription') {
+        state.subscriptions.push({ id: 'sub-' + Date.now(), name: v1.trim(), amount: Number(v2) || 0, cycle: 'Monthly', dueDay: Number(v3) || 15, category: state.categories[1]?.name || 'General' });
+        showToast(`Added recurring bill "${v1.trim()}"`);
+      }
+
+      closeModal('custom-prompt-modal');
+      saveState();
+    }
+
     function openTransactionModal() {
       if (state.accounts.length === 0) {
-        alert('Please add your first Bank Account or Wallet before logging a transaction.');
-        return promptAddAccount();
+        showToast('Add your first Bank Account or Wallet first');
+        return openPromptModal('account');
       }
       document.getElementById('tx-date').value = new Date().toISOString().slice(0, 10);
       document.getElementById('tx-modal').classList.remove('hidden');
@@ -1211,7 +1820,8 @@
 
     function openTransferModal() {
       if (state.accounts.length < 2) {
-        return alert('Please add at least 2 accounts to transfer funds between them.');
+        showToast('Add at least 2 accounts to transfer between them');
+        return openPromptModal('account');
       }
       document.getElementById('transfer-modal').classList.remove('hidden');
       document.getElementById('transfer-modal').classList.add('flex');
@@ -1219,12 +1829,12 @@
 
     function openSplitModal() {
       if (state.friends.length === 0) {
-        alert('Please add at least one person ("＋ Person") first to split a bill.');
-        return promptAddFriend();
+        showToast('Add a person first to split a shared bill');
+        return openPromptModal('friend');
       }
       document.getElementById('sp-payer').innerHTML = `<option value="You">You</option>` + state.friends.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
       document.getElementById('sp-friends-checkboxes').innerHTML = state.friends.map(f => `
-        <label class="flex items-center gap-2 text-slate-200 cursor-pointer">
+        <label class="flex items-center gap-2 cursor-pointer text-xs">
           <input type="checkbox" name="sp-friend" value="${f.name}" checked class="accent-emerald-500" />
           <span>${f.name}</span>
         </label>
@@ -1254,6 +1864,7 @@
       closeModal('tx-modal');
       e.target.reset();
       saveState();
+      showToast(`Logged ${formatPKR(amount)} (${payee})`);
     }
 
     function submitTransfer(e) {
@@ -1262,7 +1873,7 @@
       const toId = document.getElementById('tr-to').value;
       const amount = Number(document.getElementById('tr-amount').value);
       const note = document.getElementById('tr-note').value.trim() || 'Account Transfer';
-      if (fromId === toId) return alert('Please choose two different accounts.');
+      if (fromId === toId) return showToast('Choose two different accounts');
 
       const fromAcc = state.accounts.find(a => a.id === fromId);
       const toAcc = state.accounts.find(a => a.id === toId);
@@ -1281,6 +1892,7 @@
       closeModal('transfer-modal');
       e.target.reset();
       saveState();
+      showToast(`Transferred ${formatPKR(amount)}`);
     }
 
     function deleteTransaction(id) {
@@ -1293,6 +1905,7 @@
       }
       state.transactions.splice(idx, 1);
       saveState();
+      showToast('Transaction removed');
     }
 
     function updateCategoryBudget(id, val) {
@@ -1307,33 +1920,7 @@
         if (spent > c.budgeted) c.budgeted = spent;
       });
       saveState();
-    }
-
-    function promptAddCategory() {
-      const name = prompt('Enter new envelope category name (e.g., Education, Car Maintenance):');
-      if (!name) return;
-      const budget = Number(prompt('Monthly PKR budget target:', '0')) || 0;
-      state.categories.push({ id: 'cat-' + Date.now(), name: name.trim(), type: 'expense', budgeted: budget, target: budget });
-      saveState();
-    }
-
-    function promptAddAccount() {
-      const name = prompt('Account or Wallet Name (e.g., Meezan Bank, SadaPay, Cash Wallet):');
-      if (!name) return;
-      const type = prompt('Type (Bank, Wallet, Cash, Savings, Credit Card):', 'Bank') || 'Bank';
-      const balance = Number(prompt('Opening Balance in PKR:', '0')) || 0;
-      state.accounts.push({ id: 'acc-' + Date.now(), name: name.trim(), type, balance });
-      saveState();
-    }
-
-    function adjustAccountBalance(id) {
-      const acc = state.accounts.find(a => a.id === id);
-      if (!acc) return;
-      const next = prompt(`Update current balance for ${acc.name} (PKR):`, acc.balance);
-      if (next !== null) {
-        acc.balance = Number(next) || 0;
-        saveState();
-      }
+      showToast('Covered overspent envelopes');
     }
 
     function deleteAccount(id) {
@@ -1342,14 +1929,8 @@
       if (confirm(`Delete account "${acc.name}"?`)) {
         state.accounts = state.accounts.filter(a => a.id !== id);
         saveState();
+        showToast(`Deleted "${acc.name}"`);
       }
-    }
-
-    function promptAddFriend() {
-      const name = prompt('Friend or roommate name:');
-      if (!name) return;
-      state.friends.push({ id: 'fr-' + Date.now(), name: name.trim(), balance: 0 });
-      saveState();
     }
 
     function submitSplitBill(e) {
@@ -1358,7 +1939,7 @@
       const total = Number(document.getElementById('sp-amount').value);
       const payer = document.getElementById('sp-payer').value;
       const selected = Array.from(document.querySelectorAll('input[name="sp-friend"]:checked')).map(el => el.value);
-      if (selected.length === 0) return alert('Select at least one person to split with.');
+      if (selected.length === 0) return showToast('Select at least one person');
 
       const totalPeople = selected.length + 1;
       const share = Math.round(total / totalPeople);
@@ -1385,6 +1966,7 @@
       closeModal('split-modal');
       e.target.reset();
       saveState();
+      showToast(`Split "${desc}" (${formatPKR(share)}/person)`);
     }
 
     function settleFriend(id) {
@@ -1406,61 +1988,15 @@
       }
       fr.balance = 0;
       saveState();
-    }
-
-    function promptAddGoal() {
-      const name = prompt('Goal / Sinking Fund Name:');
-      if (!name) return;
-      const target = Number(prompt('Target Amount (PKR):', '100000')) || 100000;
-      const deadline = prompt('Target Date (YYYY-MM-DD):', '2027-06-30') || '2027-06-30';
-      state.goals.push({ id: 'gl-' + Date.now(), name: name.trim(), target, saved: 0, deadline });
-      saveState();
-    }
-
-    function contributeGoal(id) {
-      const g = state.goals.find(x => x.id === id);
-      if (!g) return;
-      const amt = Number(prompt(`Contribute PKR to "${g.name}":`, '10000'));
-      if (!amt || amt <= 0) return;
-      g.saved += amt;
-      saveState();
-    }
-
-    function promptAddInvestment() {
-      const name = prompt('Asset Name (e.g., 1 Tola Gold, Al Meezan Mutual Fund):');
-      if (!name) return;
-      const category = prompt('Asset Class (Gold, Mutual Fund, Stocks, Real Estate, Crypto):', 'Mutual Fund') || 'Asset';
-      const costBasis = Number(prompt('Purchase Cost Basis (PKR):', '0')) || 0;
-      const currentValue = Number(prompt('Current Market Value (PKR):', String(costBasis))) || costBasis;
-      state.investments.push({ id: 'inv-' + Date.now(), name: name.trim(), category, costBasis, currentValue });
-      saveState();
-    }
-
-    function updateAssetValue(id) {
-      const inv = state.investments.find(x => x.id === id);
-      if (!inv) return;
-      const next = prompt(`Update current PKR market value for "${inv.name}":`, inv.currentValue);
-      if (next !== null) {
-        inv.currentValue = Number(next) || 0;
-        saveState();
-      }
-    }
-
-    function promptAddSubscription() {
-      const name = prompt('Recurring Bill / Subscription Name:');
-      if (!name) return;
-      const amount = Number(prompt('Monthly Amount (PKR):', '0')) || 0;
-      const dueDay = Number(prompt('Billing Day of Month (1-31):', '15')) || 15;
-      state.subscriptions.push({ id: 'sub-' + Date.now(), name: name.trim(), amount, cycle: 'Monthly', dueDay, category: state.categories[1]?.name || 'General' });
-      saveState();
+      showToast(`Settled up with ${fr.name}`);
     }
 
     function paySubscription(id) {
       const sub = state.subscriptions.find(s => s.id === id);
       if (!sub) return;
       if (state.accounts.length === 0) {
-        alert('Please add a Bank Account or Wallet first.');
-        return promptAddAccount();
+        showToast('Add a Bank Account or Wallet first');
+        return openPromptModal('account');
       }
       state.transactions.push({
         id: 'tx-' + Date.now(),
@@ -1473,7 +2009,7 @@
       });
       state.accounts[0].balance -= sub.amount;
       saveState();
-      alert(`Logged ${formatPKR(sub.amount)} payment for ${sub.name}!`);
+      showToast(`Paid & logged ${formatPKR(sub.amount)} for ${sub.name}`);
     }
 
     function exportTransactionsCSV() {
@@ -1489,6 +2025,7 @@
       a.href = url;
       a.download = `paisaflow-pkr-transactions-${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
+      showToast('Exported CSV');
     }
 
     function importTransactionsCSV(event) {
@@ -1521,7 +2058,7 @@
           }
         }
         saveState();
-        alert(`Imported ${imported} transactions in PKR!`);
+        showToast(`Imported ${imported} transactions`);
       };
       reader.readAsText(file);
     }
@@ -1532,9 +2069,9 @@
       a.href = URL.createObjectURL(blob);
       a.download = `paisaflow-pkr-backup.json`;
       a.click();
+      showToast('Backup JSON downloaded');
     }
 
-    // Initialize session check on load
     checkInitialSession();
   </script>
 </body>
