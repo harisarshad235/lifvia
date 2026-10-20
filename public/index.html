@@ -410,9 +410,9 @@
   <!-- ===================================================================== -->
   <div id="app-shell" class="hidden min-h-screen flex flex-col md:flex-row">
 
-    <!-- Desktop Sidebar Navigation -->
-    <aside class="hidden md:flex md:w-64 flex-shrink-0 flex-col justify-between border-r" style="background: var(--bg-surface); border-color: var(--border-subtle);">
-      <div>
+    <!-- Desktop Sidebar Navigation (pinned: does not scroll with page) -->
+    <aside class="hidden md:flex md:w-64 flex-shrink-0 flex-col justify-between border-r md:sticky md:top-0 md:h-screen md:self-start" style="background: var(--bg-surface); border-color: var(--border-subtle);">
+      <div class="min-h-0 flex flex-col">
         <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border-subtle);">
           <div class="flex items-center gap-3">
             <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo w-9 h-9 rounded-xl shadow-sm" />
@@ -426,7 +426,7 @@
           </div>
         </div>
 
-        <nav class="p-3 space-y-1" aria-label="Main Navigation">
+        <nav class="p-3 space-y-1 overflow-y-auto min-h-0" aria-label="Main Navigation">
           <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
             <span>Dashboard</span>
@@ -462,19 +462,18 @@
         <div class="surface-elevated p-3">
           <div class="text-[11px] font-medium" style="color: var(--text-muted);">Total Net Worth</div>
           <div class="text-lg font-bold mono mt-0.5" style="color: var(--accent);" id="sidebar-networth">Rs. 0</div>
-          <div id="sync-status-badge" class="text-[11px] mt-1 flex items-center gap-1.5" style="color: var(--text-muted);">
-            <span class="w-2 h-2 rounded-full" style="background: var(--accent);"></span>
-            <span>Cloudflare D1 Synced</span>
-          </div>
         </div>
 
-        <div class="surface-elevated p-2.5 flex items-center justify-between">
-          <div class="truncate pr-2">
-            <div id="sidebar-user-email" class="text-[11px] font-medium truncate">user@example.com</div>
-            <div class="text-[10px]" style="color: var(--text-muted);">Private D1 Ledger</div>
-          </div>
-          <button onclick="logoutUser()" class="btn btn-danger-ghost px-2.5 py-1 text-[11px]">
-            Log Out
+        <div class="surface-elevated p-2.5 flex items-center gap-2.5">
+          <button onclick="openProfileModal()" class="flex items-center gap-2.5 min-w-0 flex-1 text-left rounded-lg -m-1 p-1 transition-colors hover:bg-[var(--bg-subtle)]" aria-label="Edit profile" title="Edit profile">
+            <span class="avatar-slot w-9 h-9 flex-shrink-0" data-size="36"></span>
+            <span class="min-w-0">
+              <span id="sidebar-user-display" class="block text-xs font-semibold truncate">Your Name</span>
+              <span id="sidebar-user-email" class="block text-[11px] truncate" style="color: var(--text-muted);">user@example.com</span>
+            </span>
+          </button>
+          <button onclick="logoutUser()" class="btn btn-danger-ghost p-2 flex-shrink-0" aria-label="Log out" title="Log out">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </button>
         </div>
 
@@ -510,9 +509,8 @@
             <span id="header-theme-icon"></span>
             <span id="header-theme-label" class="hidden lg:inline text-xs">Theme</span>
           </button>
-          <button onclick="logoutUser()" class="btn btn-secondary px-2.5" title="Log Out">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            <span class="hidden sm:inline text-xs">Log Out</span>
+          <button onclick="openProfileModal()" class="rounded-full flex-shrink-0 transition-transform active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style="outline-color: var(--accent);" aria-label="Open profile" title="Profile">
+            <span class="avatar-slot w-9 h-9 block" data-size="36"></span>
           </button>
         </div>
       </header>
@@ -917,6 +915,97 @@
     </div>
   </div>
 
+  <!-- MODAL: PROFILE & ACCOUNT SETTINGS -->
+  <div id="profile-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+    <div class="modal-panel max-w-lg w-full max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b px-5 py-3.5" style="border-color: var(--border-subtle);">
+        <h3 id="profile-title" class="font-bold text-sm">Profile & Account</h3>
+        <button onclick="closeModal('profile-modal')" aria-label="Close profile" class="text-sm px-2 py-1 rounded hover:opacity-75">✕</button>
+      </div>
+
+      <div class="overflow-y-auto px-5 py-5 space-y-6">
+        <!-- Photo -->
+        <div class="flex items-center gap-4">
+          <div class="relative flex-shrink-0">
+            <span id="profile-avatar-preview" class="block w-20 h-20"></span>
+            <label for="profile-photo-input" class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-transform active:scale-95" style="background: var(--accent); color: #fff; border: 3px solid var(--bg-surface);" title="Change photo" aria-label="Change profile photo">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            </label>
+            <input id="profile-photo-input" type="file" accept="image/*" class="hidden" onchange="handleProfilePhoto(event)" />
+          </div>
+          <div class="min-w-0 space-y-1.5">
+            <div id="profile-heading-name" class="font-bold text-base truncate">Your Name</div>
+            <div id="profile-member-since" class="text-[11px]" style="color: var(--text-muted);">Member since —</div>
+            <div class="flex gap-2 pt-0.5">
+              <label for="profile-photo-input" class="btn btn-secondary py-1 px-2.5 text-[11px] cursor-pointer">Upload photo</label>
+              <button type="button" id="profile-remove-photo" onclick="removeProfilePhoto()" class="btn btn-secondary py-1 px-2.5 text-[11px]">Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <form id="profile-form" onsubmit="saveProfile(event)" class="space-y-3 text-xs">
+          <h4 class="text-xs font-bold uppercase tracking-wide" style="color: var(--text-muted);">Personal details</h4>
+          <div>
+            <label for="pf-name" class="block mb-1 font-medium" style="color: var(--text-secondary);">Full name</label>
+            <input id="pf-name" type="text" required maxlength="60" class="input-field" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="pf-email" class="block mb-1 font-medium" style="color: var(--text-secondary);">Email</label>
+              <input id="pf-email" type="email" required class="input-field" />
+            </div>
+            <div>
+              <label for="pf-phone" class="block mb-1 font-medium" style="color: var(--text-secondary);">Phone (optional)</label>
+              <input id="pf-phone" type="tel" maxlength="32" placeholder="+92 3xx xxxxxxx" class="input-field" />
+            </div>
+          </div>
+          <div id="profile-error" class="hidden text-xs px-3 py-2 rounded-lg font-medium" style="background: var(--danger-soft); color: var(--danger);"></div>
+          <div class="flex justify-end">
+            <button id="profile-save-btn" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+
+        <!-- Password -->
+        <form onsubmit="changePassword(event)" class="space-y-3 text-xs pt-5 border-t" style="border-color: var(--border-subtle);">
+          <h4 class="text-xs font-bold uppercase tracking-wide" style="color: var(--text-muted);">Change password</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="pw-current" class="block mb-1 font-medium" style="color: var(--text-secondary);">Current password</label>
+              <input id="pw-current" type="password" required autocomplete="current-password" class="input-field" />
+            </div>
+            <div>
+              <label for="pw-new" class="block mb-1 font-medium" style="color: var(--text-secondary);">New password</label>
+              <input id="pw-new" type="password" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters" class="input-field" />
+            </div>
+          </div>
+          <div id="password-error" class="hidden text-xs px-3 py-2 rounded-lg font-medium" style="background: var(--danger-soft); color: var(--danger);"></div>
+          <div class="flex justify-end">
+            <button type="submit" class="btn btn-secondary">Update password</button>
+          </div>
+        </form>
+
+        <!-- Session & danger zone -->
+        <div class="space-y-3 text-xs pt-5 border-t" style="border-color: var(--border-subtle);">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <div class="font-semibold">Sign out</div>
+              <div class="text-[11px]" style="color: var(--text-muted);">End this session on this device.</div>
+            </div>
+            <button onclick="closeModal('profile-modal'); logoutUser();" class="btn btn-secondary">Log out</button>
+          </div>
+          <div class="flex items-center justify-between gap-3 rounded-xl p-3" style="background: var(--danger-soft);">
+            <div>
+              <div class="font-semibold" style="color: var(--danger);">Delete account</div>
+              <div class="text-[11px]" style="color: var(--text-secondary);">Permanently erases your profile and all ledger data.</div>
+            </div>
+            <button onclick="deleteAccount()" class="btn btn-danger-ghost" style="border-color: var(--danger);">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- UNIVERSAL INLINE FORM MODAL (Replaces browser prompt() for Web & Android APK) -->
   <div id="custom-prompt-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
     <div class="modal-panel max-w-md w-full p-5 space-y-4">
@@ -1133,9 +1222,197 @@
 
       document.getElementById('sidebar-user-name').textContent = currentUser.name;
       document.getElementById('sidebar-user-email').textContent = currentUser.email;
+      renderProfileUI();
 
       switchTab('dashboard');
       renderAll();
+    }
+
+    // =========================================================================
+    // PROFILE: AVATAR, DETAILS, PASSWORD, ACCOUNT DELETION
+    // =========================================================================
+    let pendingAvatar; // undefined = unchanged, null = removed, string = new data URL
+
+    function escapeHTML(str) {
+      return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function getInitials(name) {
+      const parts = String(name || '?').trim().split(/\s+/).filter(Boolean);
+      return ((parts[0]?.[0] || '?') + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+    }
+
+    function avatarMarkup(src, name, sizePx) {
+      const fontSize = Math.max(11, Math.round(sizePx * 0.38));
+      if (src) {
+        return `<img src="${src}" alt="${escapeHTML(name)}" class="w-full h-full rounded-full object-cover" style="border: 1px solid var(--border-strong);" />`;
+      }
+      return `<span class="w-full h-full rounded-full flex items-center justify-center font-bold select-none" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border); font-size: ${fontSize}px;">${escapeHTML(getInitials(name))}</span>`;
+    }
+
+    function renderProfileUI() {
+      if (!currentUser) return;
+      document.querySelectorAll('.avatar-slot').forEach(el => {
+        el.innerHTML = avatarMarkup(currentUser.avatar, currentUser.name, Number(el.dataset.size) || 36);
+      });
+      const display = document.getElementById('sidebar-user-display');
+      if (display) display.textContent = currentUser.name;
+      document.getElementById('sidebar-user-name').textContent = currentUser.name;
+      document.getElementById('sidebar-user-email').textContent = currentUser.email;
+      localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+    }
+
+    function renderProfilePreview() {
+      const src = pendingAvatar === undefined ? currentUser.avatar : pendingAvatar;
+      const name = document.getElementById('pf-name').value || currentUser.name;
+      document.getElementById('profile-avatar-preview').innerHTML = avatarMarkup(src, name, 80);
+      document.getElementById('profile-heading-name').textContent = name;
+      document.getElementById('profile-remove-photo').classList.toggle('hidden', !src);
+    }
+
+    function openProfileModal() {
+      if (!currentUser) return;
+      pendingAvatar = undefined;
+      document.getElementById('pf-name').value = currentUser.name || '';
+      document.getElementById('pf-email').value = currentUser.email || '';
+      document.getElementById('pf-phone').value = currentUser.phone || '';
+      document.getElementById('pw-current').value = '';
+      document.getElementById('pw-new').value = '';
+      document.getElementById('profile-error').classList.add('hidden');
+      document.getElementById('password-error').classList.add('hidden');
+      const since = currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('en-PK', { month: 'long', year: 'numeric' }) : '—';
+      document.getElementById('profile-member-since').textContent = `Member since ${since}`;
+      renderProfilePreview();
+      document.getElementById('pf-name').oninput = renderProfilePreview;
+      const modal = document.getElementById('profile-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    // Downscale to a 256px square JPEG so it stays small in D1 and loads instantly
+    function resizeImageToDataURL(file, size = 256) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Could not read file'));
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = () => reject(new Error('Unsupported image format'));
+          img.onload = () => {
+            const side = Math.min(img.width, img.height);
+            const sx = (img.width - side) / 2;
+            const sy = (img.height - side) / 2;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+            resolve(canvas.toDataURL('image/jpeg', 0.85));
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleProfilePhoto(event) {
+      const file = event.target.files?.[0];
+      event.target.value = '';
+      if (!file) return;
+      if (!file.type.startsWith('image/')) return showToast('Please choose an image file');
+      if (file.size > 15 * 1024 * 1024) return showToast('Image is too large (max 15 MB)');
+      try {
+        pendingAvatar = await resizeImageToDataURL(file);
+        renderProfilePreview();
+        showToast('Photo ready — tap "Save changes" to apply');
+      } catch (err) {
+        showToast(err.message);
+      }
+    }
+
+    function removeProfilePhoto() {
+      pendingAvatar = null;
+      renderProfilePreview();
+    }
+
+    async function authAction(payload) {
+      const res = await fetch(API_BASE + '/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+      return data;
+    }
+
+    async function saveProfile(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('profile-error');
+      const btn = document.getElementById('profile-save-btn');
+      errEl.classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      try {
+        const data = await authAction({
+          action: 'updateProfile',
+          name: document.getElementById('pf-name').value.trim(),
+          email: document.getElementById('pf-email').value.trim(),
+          phone: document.getElementById('pf-phone').value.trim(),
+          avatar: pendingAvatar === undefined ? (currentUser.avatar || null) : pendingAvatar
+        });
+        currentUser = data.user;
+        pendingAvatar = undefined;
+        renderProfileUI();
+        closeModal('profile-modal');
+        showToast('Profile updated');
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save changes';
+      }
+    }
+
+    async function changePassword(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('password-error');
+      errEl.classList.add('hidden');
+      try {
+        await authAction({
+          action: 'changePassword',
+          currentPassword: document.getElementById('pw-current').value,
+          newPassword: document.getElementById('pw-new').value
+        });
+        document.getElementById('pw-current').value = '';
+        document.getElementById('pw-new').value = '';
+        showToast('Password updated — other devices were signed out');
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    async function deleteAccount() {
+      const confirmText = prompt('This permanently deletes your profile and ALL ledger data.\n\nEnter your password to confirm:');
+      if (!confirmText) return;
+      try {
+        await authAction({ action: 'deleteAccount', password: confirmText });
+        localStorage.removeItem(getUserStorageKey());
+        closeModal('profile-modal');
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+        authToken = null;
+        currentUser = null;
+        state = getFreshState();
+        document.getElementById('app-shell').classList.add('hidden');
+        document.getElementById('auth-screen').classList.remove('hidden');
+        setAuthMode('register');
+        showToast('Your account has been deleted');
+      } catch (err) {
+        showToast(err.message);
+      }
     }
 
     async function logoutUser() {

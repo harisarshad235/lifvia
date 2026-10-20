@@ -56,7 +56,7 @@ export async function onRequestGet(context) {
     }
 
     const row = await env.DB.prepare(`
-      SELECT u.id, u.name, u.email, u.created_at
+      SELECT u.id, u.name, u.email, u.phone, u.avatar, u.created_at
       FROM sessions s
       JOIN users u ON u.id = s.user_id
       WHERE s.token = ? AND s.expires_at > ?
@@ -144,7 +144,7 @@ export async function onRequestPost(context) {
       const email = String(body.email || '').trim().toLowerCase();
       const password = String(body.password || '');
 
-      const user = await env.DB.prepare('SELECT id, name, email, password_hash, salt, created_at FROM users WHERE email = ?').bind(email).first();
+      const user = await env.DB.prepare('SELECT id, name, email, phone, avatar, password_hash, salt, created_at FROM users WHERE email = ?').bind(email).first();
       if (!user) {
         return new Response(JSON.stringify({ error: 'Invalid email or password.' }), {
           status: 401,
@@ -172,12 +172,82 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({
         ok: true,
         token,
-        user: { id: user.id, name: user.name, email: user.email, created_at: user.created_at },
+        user: { id: user.id, name: user.name, email: user.email, phone: user.phone, avatar: user.avatar, created_at: user.created_at },
         state
       }), {
         status: 200,
         headers: CORS_HEADERS
       });
+    }
+
+    // ---- Authenticated profile actions ----
+    if (action === 'updateProfile' || action === 'changePassword' || action === 'deleteAccount') {
+      const token = getBearerToken(request);
+      const session = token ? await env.DB.prepare(
+        'SELECT user_id FROM sessions WHERE token = ? AND expires_at > ?'
+      ).bind(token, new Date().toISOString()).first() : null;
+      if (!session) {
+        return new Response(JSON.stringify({ error: 'Your session has expired. Please sign in again.' }), { status: 401, headers: CORS_HEADERS });
+      }
+      const userId = session.user_id;
+
+      if (action === 'updateProfile') {
+        const name = String(body.name || '').trim();
+        const email = String(body.email || '').trim().toLowerCase();
+        const phone = String(body.phone || '').trim().slice(0, 32);
+        const avatar = body.avatar ? String(body.avatar) : null;
+
+        if (!name || !email) {
+          return new Response(JSON.stringify({ error: 'Name and email are required.' }), { status: 400, headers: CORS_HEADERS });
+        }
+        if (avatar && (!avatar.startsWith('data:image/') || avatar.length > 400000)) {
+          return new Response(JSON.stringify({ error: 'Profile photo must be an image under 300 KB.' }), { status: 400, headers: CORS_HEADERS });
+        }
+        const clash = await env.DB.prepare('SELECT id FROM users WHERE email = ? AND id != ?').bind(email, userId).first();
+        if (clash) {
+          return new Response(JSON.stringify({ error: 'That email is already used by another account.' }), { status: 409, headers: CORS_HEADERS });
+        }
+
+        await env.DB.prepare('UPDATE users SET name = ?, email = ?, phone = ?, avatar = ? WHERE id = ?')
+          .bind(name, email, phone || null, avatar, userId).run();
+        const user = await env.DB.prepare('SELECT id, name, email, phone, avatar, created_at FROM users WHERE id = ?').bind(userId).first();
+        return new Response(JSON.stringify({ ok: true, user }), { status: 200, headers: CORS_HEADERS });
+      }
+
+      if (action === 'changePassword') {
+        const currentPassword = String(body.currentPassword || '');
+        const newPassword = String(body.newPassword || '');
+        if (newPassword.length < 6) {
+          return new Response(JSON.stringify({ error: 'New password must be at least 6 characters.' }), { status: 400, headers: CORS_HEADERS });
+        }
+        const u = await env.DB.prepare('SELECT password_hash, salt FROM users WHERE id = ?').bind(userId).first();
+        if (!u || (await hashPassword(currentPassword, u.salt)) !== u.password_hash) {
+          return new Response(JSON.stringify({ error: 'Current password is incorrect.' }), { status: 401, headers: CORS_HEADERS });
+        }
+        const salt = crypto.randomUUID().replace(/-/g, '');
+        const hash = await hashPassword(newPassword, salt);
+        await env.DB.batch([
+          env.DB.prepare('UPDATE users SET password_hash = ?, salt = ? WHERE id = ?').bind(hash, salt, userId),
+          env.DB.prepare('DELETE FROM sessions WHERE user_id = ? AND token != ?').bind(userId, token)
+        ]);
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: CORS_HEADERS });
+      }
+
+      if (action === 'deleteAccount') {
+        const password = String(body.password || '');
+        const u = await env.DB.prepare('SELECT password_hash, salt FROM users WHERE id = ?').bind(userId).first();
+        if (!u || (await hashPassword(password, u.salt)) !== u.password_hash) {
+          return new Response(JSON.stringify({ error: 'Password is incorrect.' }), { status: 401, headers: CORS_HEADERS });
+        }
+        const tables = ['Account', 'Category', '"Transaction"', 'Friend', 'SplitBill', 'SavingsGoal', 'Investment', 'Subscription'];
+        await env.DB.batch([
+          ...tables.map(t => env.DB.prepare(`DELETE FROM ${t} WHERE userId = ?`).bind(userId)),
+          env.DB.prepare('DELETE FROM user_states WHERE user_id = ?').bind(userId),
+          env.DB.prepare('DELETE FROM sessions WHERE user_id = ?').bind(userId),
+          env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId)
+        ]);
+        return new Response(JSON.stringify({ ok: true }), { status: 200, headers: CORS_HEADERS });
+      }
     }
 
     if (action === 'logout') {
