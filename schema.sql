@@ -1,0 +1,105 @@
+DROP TABLE IF EXISTS Account;
+DROP TABLE IF EXISTS Category;
+DROP TABLE IF EXISTS "Transaction";
+DROP TABLE IF EXISTS Friend;
+DROP TABLE IF EXISTS SplitBill;
+DROP TABLE IF EXISTS SavingsGoal;
+DROP TABLE IF EXISTS Investment;
+DROP TABLE IF EXISTS Subscription;
+DROP TABLE IF EXISTS app_state;
+
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  salt TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  token TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_states (
+  user_id TEXT PRIMARY KEY,
+  state_json TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Account (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  balance REAL NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS Category (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  budgeted REAL NOT NULL DEFAULT 0,
+  target REAL NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS "Transaction" (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  date TEXT NOT NULL,
+  payee TEXT NOT NULL,
+  category TEXT NOT NULL,
+  accountId TEXT NOT NULL,
+  type TEXT NOT NULL,
+  amount REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Friend (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  name TEXT NOT NULL,
+  balance REAL NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS SplitBill (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  date TEXT NOT NULL,
+  desc TEXT NOT NULL,
+  total REAL NOT NULL,
+  payer TEXT NOT NULL,
+  participants TEXT NOT NULL,
+  sharePerPerson REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS SavingsGoal (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  name TEXT NOT NULL,
+  target REAL NOT NULL,
+  saved REAL NOT NULL DEFAULT 0,
+  deadline TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Investment (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  costBasis REAL NOT NULL,
+  currentValue REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Subscription (
+  id TEXT PRIMARY KEY,
+  userId TEXT NOT NULL,
+  name TEXT NOT NULL,
+  amount REAL NOT NULL,
+  cycle TEXT NOT NULL,
+  dueDay INTEGER NOT NULL,
+  category TEXT NOT NULL
+);

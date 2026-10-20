@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>PaisaFlow PKR — Personal Finance & Budgeting Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857' }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 1: AUTHENTICATION PAGE (LOGIN & REGISTRATION)                    -->
+  <!-- ===================================================================== -->
+  <div id="auth-screen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-xl">₨</div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight text-white">PaisaFlow <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">PKR</span></h1>
+          <p class="text-xs text-slate-400">Personal Cloud Money Management Suite</p>
+        </div>
+      </div>
+
+      <!-- Auth Mode Switcher -->
+      <div class="grid grid-cols-2 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+        <button id="tab-btn-login" onclick="setAuthMode('login')" class="py-2 rounded-lg transition bg-emerald-600 text-white">
+          Sign In
+        </button>
+        <button id="tab-btn-register" onclick="setAuthMode('register')" class="py-2 rounded-lg transition text-slate-400 hover:text-white">
+          Create Account
+        </button>
+      </div>
+
+      <div id="auth-error" class="hidden bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs px-3.5 py-2.5 rounded-xl"></div>
+
+      <!-- Login Form -->
+      <form id="login-form" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1.5 font-medium">Email Address</label>
+          <input id="login-email" type="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1.5 font-medium">Password</label>
+          <input id="login-password" type="password" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+        </div>
+        <button id="login-submit-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-emerald-950/50">
+          Sign In to Your Workspace
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" onsubmit="handleAuthSubmit(event, 'register')" class="hidden space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1.5 font-medium">Full Name</label>
+          <input id="reg-name" type="text" required placeholder="e.g. Haris Arshad" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1.5 font-medium">Email Address</label>
+          <input id="reg-email" type="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1.5 font-medium">Create Password (min. 6 chars)</label>
+          <input id="reg-password" type="password" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
+        </div>
+        <button id="reg-submit-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-emerald-950/50">
+          Create Fresh PKR Account
+        </button>
+      </form>
+
+      <div class="pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 text-center space-y-1">
+        <p>🔒 Each registered user gets an isolated, private database in <strong>Cloudflare D1</strong>.</p>
+        <p>Starts 100% fresh at <span class="mono text-emerald-400">Rs. 0</span> with zero dummy data.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 2: DEDICATED LOGOUT PAGE                                         -->
+  <!-- ===================================================================== -->
+  <div id="logout-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl text-center space-y-5">
+      <div class="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl mx-auto">
+        ✓
+      </div>
+      <div class="space-y-1.5">
+        <h2 class="text-xl font-bold text-white">You Have Logged Out</h2>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Your session has been securely closed and your financial data is safely stored in your personal Cloudflare D1 database.
+        </p>
+      </div>
+      <div class="pt-2 space-y-2.5 text-xs">
+        <button onclick="showAuthFromLogout('login')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl transition">
+          Sign In Again
+        </button>
+        <button onclick="showAuthFromLogout('register')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 rounded-xl border border-slate-700 transition">
+          Register a New User Account
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 3: MAIN APPLICATION SHELL                                        -->
+  <!-- ===================================================================== -->
+  <div id="app-shell" class="hidden min-h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 flex-shrink-0 flex flex-col justify-between">
+      <div>
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-lg">₨</div>
+            <div>
+              <h1 class="font-bold text-base tracking-tight text-white">PaisaFlow <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">PKR</span></h1>
+              <p class="text-xs text-slate-400 truncate max-w-[140px]" id="sidebar-user-name">My Workspace</p>
+            </div>
+          </div>
+        </div>
+
+        <nav class="p-3 space-y-1 flex md:block overflow-x-auto" id="nav-tabs">
+          <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>📊</span> Dashboard & Analytics
+          </button>
+          <button onclick="switchTab('accounts')" data-tab="accounts" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>🏦</span> Accounts & Wallets
+          </button>
+          <button onclick="switchTab('transactions')" data-tab="transactions" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>💳</span> Transactions & CSV
+          </button>
+          <button onclick="switchTab('budgets')" data-tab="budgets" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>✉️</span> Zero-Based Budgets
+          </button>
+          <button onclick="switchTab('splits')" data-tab="splits" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>🤝</span> Bill Splitter
+          </button>
+          <button onclick="switchTab('goals')" data-tab="goals" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>🎯</span> Savings Goals
+          </button>
+          <button onclick="switchTab('wealth')" data-tab="wealth" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap">
+            <span>📈</span> Net Worth & Recurring
+          </button>
+        </nav>
+      </div>
+
+      <div class="p-4 border-t border-slate-800 space-y-2.5 hidden md:block">
+        <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700/50">
+          <div class="text-xs text-slate-400">Total Net Worth</div>
+          <div class="text-lg font-bold mono text-emerald-400 mt-0.5" id="sidebar-networth">Rs. 0</div>
+          <div id="sync-status-badge" class="text-[11px] text-emerald-400 mt-1 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Cloudflare D1 Synced</span>
+          </div>
+        </div>
+        <div class="bg-slate-950/70 rounded-lg p-2.5 border border-slate-800 flex items-center justify-between">
+          <div class="truncate pr-2">
+            <div id="sidebar-user-email" class="text-[11px] text-slate-300 font-medium truncate">user@example.com</div>
+            <div class="text-[10px] text-slate-500">Private D1 Database</div>
+          </div>
+          <button onclick="logoutUser()" class="text-xs bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-rose-500/30 transition flex-shrink-0">
+            Log Out
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="exportBackupJSON()" class="flex-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-2 rounded border border-slate-700">Backup JSON</button>
+          <button onclick="clearAllMyData()" class="flex-1 text-xs bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 text-slate-400 py-1.5 px-2 rounded border border-slate-700">Wipe All</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto">
+      <!-- Top Header -->
+      <header class="sticky top-0 z-20 backdrop-blur-md bg-slate-950/80 border-b border-slate-800 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 id="page-title" class="text-lg font-semibold text-white">Dashboard & Analytics</h2>
+          <p id="page-subtitle" class="text-xs text-slate-400">Real-time overview of your PKR accounts, budgets, and cash flow</p>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button onclick="openTransactionModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/50">
+            <span>＋</span> Log Transaction
+          </button>
+          <button onclick="openTransferModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 transition">
+            ⇄ Transfer
+          </button>
+          <button onclick="logoutUser()" class="bg-slate-900 hover:bg-rose-950/80 text-slate-300 hover:text-rose-200 text-xs font-medium px-3 py-2 rounded-lg border border-slate-800 hover:border-rose-500/40 transition">
+            Log Out
+          </button>
+        </div>
+      </header>
+
+      <div class="p-6 max-w-7xl mx-auto space-y-6">
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-panel space-y-6">
+          <div id="dashboard-onboarding" class="hidden bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400">Welcome to Your Fresh Workspace</span>
+              <h3 class="text-lg font-bold text-white mt-0.5">Start by adding your first Bank Account or Wallet</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Your database starts 100% clean with zero dummy data. Add your accounts, set envelope budgets, and log transactions.</p>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <button onclick="promptAddAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-lg">
+                ＋ Add First Account (PKR)
+              </button>
+            </div>
+          </div>
+
+          <div id="dashboard-alerts" class="space-y-2"></div>
+
+          <!-- KPI Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <div class="text-xs text-slate-400">Liquid Account Balance</div>
+              <div id="kpi-liquid" class="text-xl font-bold mono text-white mt-1">Rs. 0</div>
+              <div class="text-[11px] text-slate-500 mt-1">Across all wallets & banks</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <div class="text-xs text-slate-400">Total Income</div>
+              <div id="kpi-income" class="text-xl font-bold mono text-emerald-400 mt-1">Rs. 0</div>
+              <div id="kpi-savings-rate" class="text-[11px] text-emerald-500/80 mt-1">Savings Rate: 0%</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <div class="text-xs text-slate-400">Total Expenses</div>
+              <div id="kpi-expense" class="text-xl font-bold mono text-rose-400 mt-1">Rs. 0</div>
+              <div id="kpi-budget-used" class="text-[11px] text-slate-400 mt-1">0% of monthly budget</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <div class="text-xs text-slate-400">Ready to Assign (YNAB)</div>
+              <div id="kpi-rta" class="text-xl font-bold mono text-amber-400 mt-1">Rs. 0</div>
+              <div class="text-[11px] text-slate-500 mt-1">Unallocated envelope cash</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <div class="text-xs text-slate-400">Splitwise Net Balance</div>
+              <div id="kpi-splits" class="text-xl font-bold mono text-sky-400 mt-1">Rs. 0</div>
+              <div id="kpi-splits-sub" class="text-[11px] text-slate-500 mt-1">Shared expenses</div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Monthly Cash Flow & Net Savings (PKR)</h3>
+                  <p class="text-xs text-slate-400">Real income vs. expenses from your logged transactions</p>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="flex items-center gap-1.5 text-emerald-400"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span> Income</span>
+                  <span class="flex items-center gap-1.5 text-rose-400"><span class="w-2.5 h-2.5 rounded-sm bg-rose-500 inline-block"></span> Expenses</span>
+                </div>
+              </div>
+              <div id="cashflow-chart" class="h-56 flex items-end gap-3 pt-6 px-2 border-b border-slate-800"></div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm font-semibold text-white">Spending by Category</h3>
+                <p class="text-xs text-slate-400 mb-4">Breakdown of your logged expenses</p>
+                <div id="category-breakdown-list" class="space-y-3"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Overview Row -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-white">Recent Transactions</h3>
+                <button onclick="switchTab('transactions')" class="text-xs text-emerald-400 hover:underline">View all →</button>
+              </div>
+              <div id="dashboard-recent-tx" class="divide-y divide-slate-800/70"></div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-white">Upcoming Recurring Bills & Subscriptions</h3>
+                <button onclick="switchTab('wealth')" class="text-xs text-emerald-400 hover:underline">Manage →</button>
+              </div>
+              <div id="dashboard-upcoming-bills" class="divide-y divide-slate-800/70"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: TRANSACTIONS & CSV -->
+        <section id="tab-transactions" class="tab-panel hidden space-y-5">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2.5 flex-1">
+              <input id="tx-search" oninput="renderTransactions()" type="text" placeholder="Search payee, note, category..." class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white w-56 focus:outline-none focus:border-emerald-500" />
+              <select id="tx-filter-type" onchange="renderTransactions()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+                <option value="all">All Types</option>
+                <option value="income">Income (+)</option>
+                <option value="expense">Expense (-)</option>
+                <option value="transfer">Transfer (⇄)</option>
+              </select>
+              <select id="tx-filter-account" onchange="renderTransactions()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"></select>
+              <select id="tx-filter-category" onchange="renderTransactions()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"></select>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="exportTransactionsCSV()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700">⬇ Export CSV</button>
+              <label class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 cursor-pointer">
+                ⬆ Import CSV
+                <input type="file" accept=".csv" onchange="importTransactionsCSV(event)" class="hidden" />
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4">Payee / Description</th>
+                    <th class="py-3 px-4">Category</th>
+                    <th class="py-3 px-4">Account</th>
+                    <th class="py-3 px-4 text-right">Amount (PKR)</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tx-table-body" class="divide-y divide-slate-800/70 text-xs"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: ZERO-BASED / ENVELOPE BUDGETING -->
+        <section id="tab-budgets" class="tab-panel hidden space-y-5">
+          <div class="bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400">Zero-Based Envelope Budgeting (YNAB Style)</span>
+              <h3 class="text-2xl font-bold mono text-white mt-1" id="budget-rta-banner">Rs. 0 Ready to Assign</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Give every rupee a job. Assign your income across category envelopes below.</p>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <button onclick="coverOverspending()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-medium px-3.5 py-2 rounded-lg">
+                🛡️ Cover Overspending
+              </button>
+              <button onclick="promptAddCategory()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
+                ＋ New Envelope Category
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 bg-slate-950/50">
+                  <th class="py-3 px-4">Envelope Category</th>
+                  <th class="py-3 px-4 text-right">Assigned (Budgeted)</th>
+                  <th class="py-3 px-4 text-right">Activity (Spent)</th>
+                  <th class="py-3 px-4 text-right">Available in Envelope</th>
+                  <th class="py-3 px-4 w-56">Envelope Progress</th>
+                </tr>
+              </thead>
+              <tbody id="budget-table-body" class="divide-y divide-slate-800/70 text-xs"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 4: ACCOUNTS & WALLETS -->
+        <section id="tab-accounts" class="tab-panel hidden space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-white">Multi-Account Balances</h3>
+              <p class="text-xs text-slate-400">Bank accounts, digital wallets (SadaPay/NayaPay), cash, and credit cards</p>
+            </div>
+            <button onclick="promptAddAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
+              ＋ Add Account / Wallet
+            </button>
+          </div>
+          <div id="accounts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- TAB 5: BILL & SHARED EXPENSE SPLITTER (SPLITWISE STYLE) -->
+        <section id="tab-splits" class="tab-panel hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">People & Net Balances</h3>
+                  <p class="text-xs text-slate-400">Who owes you vs. who you owe</p>
+                </div>
+                <button onclick="promptAddFriend()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700">＋ Person</button>
+              </div>
+              <div id="split-friends-list" class="space-y-2.5"></div>
+            </div>
+
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Shared Bills & Split Expenses</h3>
+                  <p class="text-xs text-slate-400">Split dinners, utilities, fuel, or group trips in PKR</p>
+                </div>
+                <button onclick="openSplitModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
+                  ＋ Add Shared Bill
+                </button>
+              </div>
+              <div id="split-bills-list" class="divide-y divide-slate-800/70"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 6: SAVINGS GOALS & SINKING FUNDS -->
+        <section id="tab-goals" class="tab-panel hidden space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-white">Savings Goals & Sinking Funds</h3>
+              <p class="text-xs text-slate-400">Track dedicated funds for Emergency, Hajj/Umrah, Car, or Gadgets</p>
+            </div>
+            <button onclick="promptAddGoal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3.5 py-2 rounded-lg">
+              ＋ New Savings Goal
+            </button>
+          </div>
+          <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </section>
+
+        <!-- TAB 7: NET WORTH, INVESTMENTS & RECURRING BILLS -->
+        <section id="tab-wealth" class="tab-panel hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Investments & Assets Portfolio</h3>
+                  <p class="text-xs text-slate-400">Gold, Mutual Funds, PSX Stocks, Real Estate & Crypto</p>
+                </div>
+                <button onclick="promptAddInvestment()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg">
+                  ＋ Add Asset
+                </button>
+              </div>
+              <div id="investments-list" class="divide-y divide-slate-800/70"></div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Recurring Bills & Subscriptions</h3>
+                  <p class="text-xs text-slate-400">Utilities, internet, rent, streaming & memberships</p>
+                </div>
+                <button onclick="promptAddSubscription()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-700">
+                  ＋ Add Recurring
+                </button>
+              </div>
+              <div id="subscriptions-list" class="divide-y divide-slate-800/70"></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD TRANSACTION -->
+  <div id="tx-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-semibold text-white text-sm">Log Transaction (PKR)</h3>
+        <button onclick="closeModal('tx-modal')" class="text-slate-400 hover:text-white text-sm">✕</button>
+      </div>
+      <form onsubmit="submitTransaction(event)" class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Type</label>
+            <select id="tx-type" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+              <option value="expense">Expense (-)</option>
+              <option value="income">Income (+)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Date</label>
+            <input id="tx-date" type="date" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Amount (PKR)</label>
+            <input id="tx-amount" type="number" min="1" step="any" required placeholder="e.g. 4500" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white mono" />
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Account</label>
+            <select id="tx-account" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Category</label>
+          <select id="tx-category" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Payee / Description</label>
+          <input id="tx-payee" type="text" required placeholder="Description..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('tx-modal')" class="px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ACCOUNT TRANSFER -->
+  <div id="transfer-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-semibold text-white text-sm">Transfer Between Accounts</h3>
+        <button onclick="closeModal('transfer-modal')" class="text-slate-400 hover:text-white text-sm">✕</button>
+      </div>
+      <form onsubmit="submitTransfer(event)" class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">From Account</label>
+            <select id="tr-from" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">To Account</label>
+            <select id="tr-to" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Amount (PKR)</label>
+          <input id="tr-amount" type="number" min="1" required placeholder="e.g. 15000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white mono" />
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Note</label>
+          <input id="tr-note" type="text" placeholder="Optional transfer note" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('transfer-modal')" class="px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Transfer Funds</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SPLIT EXPENSE -->
+  <div id="split-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-semibold text-white text-sm">Add Shared Bill (Splitwise)</h3>
+        <button onclick="closeModal('split-modal')" class="text-slate-400 hover:text-white text-sm">✕</button>
+      </div>
+      <form onsubmit="submitSplitBill(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Description</label>
+          <input id="sp-desc" type="text" required placeholder="e.g. Shared Dinner, Utilities, Trip Fuel" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Total Bill (PKR)</label>
+            <input id="sp-amount" type="number" min="1" required placeholder="e.g. 6000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white mono" />
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Paid By</label>
+            <select id="sp-payer" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Split Equally With (select people involved alongside You)</label>
+          <div id="sp-friends-checkboxes" class="grid grid-cols-2 gap-2 bg-slate-950 p-3 rounded-lg border border-slate-800"></div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('split-modal')" class="px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Save Split</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Wipe legacy dummy-data key if present
+    localStorage.removeItem('PAISAFLOW_PKR_STATE_V1');
+
+    const TOKEN_KEY = 'PAISAFLOW_AUTH_TOKEN_V2';
+    const USER_KEY = 'PAISAFLOW_AUTH_USER_V2';
+    const API_BASE = (window.location.protocol === 'capacitor:' || window.location.protocol === 'file:' || (window.location.hostname === 'localhost' && !window.location.port))
+      ? 'https://paisaflow-pkr.pages.dev'
+      : '';
+
+    let currentUser = null;
+    let authToken = localStorage.getItem(TOKEN_KEY) || null;
+    let activeTab = 'dashboard';
+
+    function getFreshState() {
+      return {
+        accounts: [],
+        categories: [
+          { id: 'cat-inc-1', name: 'Salary & Income', type: 'income', budgeted: 0, target: 0 },
+          { id: 'cat-exp-1', name: 'Groceries & Supermarkets', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-2', name: 'Rent & Housing', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-3', name: 'Electricity, Gas & Utilities', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-4', name: 'Fuel & Transport', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-5', name: 'Dining Out & Food Delivery', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-6', name: 'Internet & Mobile', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-7', name: 'Zakat & Charity', type: 'expense', budgeted: 0, target: 0 },
+          { id: 'cat-exp-8', name: 'Healthcare & Personal', type: 'expense', budgeted: 0, target: 0 }
+        ],
+        transactions: [],
+        friends: [],
+        splits: [],
+        goals: [],
+        investments: [],
+        subscriptions: []
+      };
+    }
+
+    let state = getFreshState();
+
+    function formatPKR(num) {
+      const n = Number(num) || 0;
+      const sign = n < 0 ? '-' : '';
+      return sign + 'Rs. ' + Math.abs(Math.round(n)).toLocaleString('en-PK');
+    }
+
+    function getUserStorageKey() {
+      return currentUser ? `PAISAFLOW_USER_STATE_${currentUser.id}` : 'PAISAFLOW_GUEST';
+    }
+
+    // =========================================================================
+    // AUTHENTICATION & SESSION HANDLERS
+    // =========================================================================
+    function setAuthMode(mode) {
+      const loginForm = document.getElementById('login-form');
+      const regForm = document.getElementById('register-form');
+      const loginBtn = document.getElementById('tab-btn-login');
+      const regBtn = document.getElementById('tab-btn-register');
+      document.getElementById('auth-error').classList.add('hidden');
+
+      if (mode === 'login') {
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+        loginBtn.className = 'py-2 rounded-lg transition bg-emerald-600 text-white';
+        regBtn.className = 'py-2 rounded-lg transition text-slate-400 hover:text-white';
+      } else {
+        loginForm.classList.add('hidden');
+        regForm.classList.remove('hidden');
+        regBtn.className = 'py-2 rounded-lg transition bg-emerald-600 text-white';
+        loginBtn.className = 'py-2 rounded-lg transition text-slate-400 hover:text-white';
+      }
+    }
+
+    function showAuthError(msg) {
+      const el = document.getElementById('auth-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    async function handleAuthSubmit(e, action) {
+      e.preventDefault();
+      document.getElementById('auth-error').classList.add('hidden');
+
+      const payload = { action };
+      if (action === 'register') {
+        payload.name = document.getElementById('reg-name').value.trim();
+        payload.email = document.getElementById('reg-email').value.trim();
+        payload.password = document.getElementById('reg-password').value;
+      } else {
+        payload.email = document.getElementById('login-email').value.trim();
+        payload.password = document.getElementById('login-password').value;
+      }
+
+      try {
+        const res = await fetch(API_BASE + '/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          return showAuthError(data.error || 'Authentication failed. Please try again.');
+        }
+
+        authToken = data.token;
+        currentUser = data.user;
+        state = data.state || getFreshState();
+
+        localStorage.setItem(TOKEN_KEY, authToken);
+        localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+        localStorage.setItem(getUserStorageKey(), JSON.stringify(state));
+
+        enterAuthenticatedApp();
+      } catch (err) {
+        showAuthError('Network error connecting to server: ' + err.message);
+      }
+    }
+
+    function enterAuthenticatedApp() {
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('logout-screen').classList.add('hidden');
+      document.getElementById('app-shell').classList.remove('hidden');
+
+      document.getElementById('sidebar-user-name').textContent = currentUser.name;
+      document.getElementById('sidebar-user-email').textContent = currentUser.email;
+
+      switchTab('dashboard');
+      renderAll();
+    }
+
+    async function logoutUser() {
+      try {
+        if (authToken) {
+          await fetch(API_BASE + '/api/auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + authToken
+            },
+            body: JSON.stringify({ action: 'logout', token: authToken })
+          });
+        }
+      } catch (e) {}
+
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      authToken = null;
+      currentUser = null;
+      state = getFreshState();
+
+      document.getElementById('app-shell').classList.add('hidden');
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('logout-screen').classList.remove('hidden');
+    }
+
+    function showAuthFromLogout(mode) {
+      document.getElementById('logout-screen').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      setAuthMode(mode);
+    }
+
+    async function checkInitialSession() {
+      if (!authToken) {
+        document.getElementById('auth-screen').classList.remove('hidden');
+        return;
+      }
+      try {
+        const res = await fetch(API_BASE + '/api/auth', {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!res.ok) throw new Error('Invalid session');
+        const data = await res.json();
+        if (!data.user) throw new Error('No user');
+        currentUser = data.user;
+
+        // Fetch user's state from D1
+        const stateRes = await fetch(API_BASE + '/api/state', {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        if (stateRes.ok) {
+          const remoteState = await stateRes.json();
+          if (remoteState && Array.isArray(remoteState.categories)) {
+            state = remoteState;
+          } else {
+            state = getFreshState();
+          }
+        }
+        enterAuthenticatedApp();
+      } catch (e) {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+        authToken = null;
+        currentUser = null;
+        document.getElementById('auth-screen').classList.remove('hidden');
+      }
+    }
+
+    async function persistToCloudD1() {
+      if (!authToken) return;
+      const badge = document.getElementById('sync-status-badge');
+      try {
+        const res = await fetch(API_BASE + '/api/state', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken
+          },
+          body: JSON.stringify(state)
+        });
+        if (res.ok && badge) {
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>Cloudflare D1 Synced</span>`;
+        }
+      } catch (e) {
+        if (badge) {
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span><span>Saved Locally (Offline)</span>`;
+        }
+      }
+    }
+
+    function saveState() {
+      if (currentUser) {
+        localStorage.setItem(getUserStorageKey(), JSON.stringify(state));
+      }
+      persistToCloudD1();
+      renderAll();
+    }
+
+    function clearAllMyData() {
+      if (confirm('Are you sure you want to wipe all data in your account and start completely fresh at Rs. 0?')) {
+        state = getFreshState();
+        saveState();
+      }
+    }
+
+    // =========================================================================
+    // UI RENDERING
+    // =========================================================================
+    function switchTab(tab) {
+      activeTab = tab;
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.tab === tab) {
+          btn.className = 'nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+        } else {
+          btn.className = 'nav-btn w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2.5 whitespace-nowrap text-slate-400 hover:bg-slate-800/60 hover:text-slate-200';
+        }
+      });
+
+      const titles = {
+        dashboard: ['Dashboard & Analytics', 'Real-time overview of your PKR accounts, budgets, and cash flow'],
+        accounts: ['Accounts & Wallets', 'Manage Pakistani bank accounts, digital wallets, cash, and credit cards'],
+        transactions: ['Transactions & CSV Manager', 'Search, filter, import, and export all income, expenses, and transfers'],
+        budgets: ['Zero-Based Envelope Budgeting', 'YNAB-style monthly category envelopes with overspend protection'],
+        splits: ['Bill & Shared Expense Splitter', 'Splitwise-style group bills, roommate balances, and 1-click settle up'],
+        goals: ['Savings Goals & Sinking Funds', 'Track dedicated targets with automatic progress calculation'],
+        wealth: ['Net Worth, Investments & Subscriptions', 'Track assets, unrealized gains, and recurring monthly bills']
+      };
+      document.getElementById('page-title').textContent = titles[tab][0];
+      document.getElementById('page-subtitle').textContent = titles[tab][1];
+    }
+
+    function getCategorySpent(catName) {
+      return state.transactions
+        .filter(t => t.type === 'expense' && t.category === catName)
+        .reduce((s, t) => s + Number(t.amount), 0);
+    }
+
+    function renderAll() {
+      const onboarding = document.getElementById('dashboard-onboarding');
+      if (state.accounts.length === 0) {
+        onboarding.classList.remove('hidden');
+      } else {
+        onboarding.classList.add('hidden');
+      }
+
+      const liquidTotal = state.accounts.reduce((s, a) => s + Number(a.balance), 0);
+      const investTotal = state.investments.reduce((s, i) => s + Number(i.currentValue), 0);
+      const netWorth = liquidTotal + investTotal;
+
+      document.getElementById('sidebar-networth').textContent = formatPKR(netWorth);
+
+      const monthIncome = state.transactions.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+      const monthExpense = state.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+      const totalBudgeted = state.categories.filter(c => c.type === 'expense').reduce((s, c) => s + Number(c.budgeted), 0);
+      const readyToAssign = monthIncome - totalBudgeted;
+      const splitNet = state.friends.reduce((s, f) => s + Number(f.balance), 0);
+
+      document.getElementById('kpi-liquid').textContent = formatPKR(liquidTotal);
+      document.getElementById('kpi-income').textContent = formatPKR(monthIncome);
+      const savRate = monthIncome > 0 ? Math.round(((monthIncome - monthExpense) / monthIncome) * 100) : 0;
+      document.getElementById('kpi-savings-rate').textContent = `Savings Rate: ${savRate}%`;
+      document.getElementById('kpi-expense').textContent = formatPKR(monthExpense);
+      const budgetPct = totalBudgeted > 0 ? Math.round((monthExpense / totalBudgeted) * 100) : 0;
+      document.getElementById('kpi-budget-used').textContent = `${budgetPct}% of ${formatPKR(totalBudgeted)} budget`;
+      document.getElementById('kpi-rta').textContent = formatPKR(readyToAssign);
+      document.getElementById('kpi-splits').textContent = (splitNet > 0 ? '+' : '') + formatPKR(splitNet);
+      document.getElementById('kpi-splits-sub').textContent = splitNet > 0 ? 'Friends owe you net' : splitNet < 0 ? 'You owe friends net' : 'All settled up';
+
+      renderDashboardAlerts();
+      renderCharts();
+      renderDashboardLists();
+      populateFilterAndModalSelects();
+      renderTransactions();
+      renderBudgets(readyToAssign);
+      renderAccounts();
+      renderSplits();
+      renderGoals();
+      renderWealth();
+    }
+
+    function renderDashboardAlerts() {
+      const alerts = [];
+      state.categories.filter(c => c.type === 'expense').forEach(c => {
+        const spent = getCategorySpent(c.name);
+        if (c.budgeted > 0 && spent > c.budgeted) {
+          alerts.push(`<div class="bg-rose-950/50 border border-rose-500/40 text-rose-200 px-4 py-2.5 rounded-xl text-xs flex items-center justify-between">
+            <span>⚠️ <strong>Overspend Alert:</strong> Envelope <em>${c.name}</em> exceeded its budget by <strong class="mono">${formatPKR(spent - c.budgeted)}</strong>.</span>
+            <button onclick="switchTab('budgets')" class="underline text-rose-300 font-medium">Cover Overspending →</button>
+          </div>`);
+        }
+      });
+      document.getElementById('dashboard-alerts').innerHTML = alerts.join('');
+    }
+
+    function renderCharts() {
+      // Compute last 6 months strictly from the user's real transactions (0 dummy data)
+      const now = new Date();
+      const months = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const label = d.toLocaleString('en-US', { month: 'short' });
+        const inc = state.transactions
+          .filter(t => t.type === 'income' && String(t.date).startsWith(ym))
+          .reduce((s, t) => s + Number(t.amount), 0);
+        const exp = state.transactions
+          .filter(t => t.type === 'expense' && String(t.date).startsWith(ym))
+          .reduce((s, t) => s + Number(t.amount), 0);
+        months.push({ label, inc, exp });
+      }
+
+      const maxVal = Math.max(...months.map(m => Math.max(m.inc, m.exp)), 1);
+      document.getElementById('cashflow-chart').innerHTML = months.map(m => {
+        const incH = m.inc > 0 ? Math.max(6, Math.round((m.inc / maxVal) * 160)) : 2;
+        const expH = m.exp > 0 ? Math.max(6, Math.round((m.exp / maxVal) * 160)) : 2;
+        return `<div class="flex-1 flex flex-col items-center gap-2">
+          <div class="w-full flex items-end justify-center gap-1.5 h-40">
+            <div title="Income: ${formatPKR(m.inc)}" style="height:${incH}px" class="w-5 ${m.inc > 0 ? 'bg-emerald-500/80 hover:bg-emerald-400' : 'bg-slate-800'} rounded-t transition-all"></div>
+            <div title="Expense: ${formatPKR(m.exp)}" style="height:${expH}px" class="w-5 ${m.exp > 0 ? 'bg-rose-500/80 hover:bg-rose-400' : 'bg-slate-800'} rounded-t transition-all"></div>
+          </div>
+          <span class="text-[11px] text-slate-400 font-medium">${m.label}</span>
+        </div>`;
+      }).join('');
+
+      const expCats = state.categories
+        .filter(c => c.type === 'expense')
+        .map(c => ({ name: c.name, spent: getCategorySpent(c.name) }))
+        .filter(c => c.spent > 0)
+        .sort((a, b) => b.spent - a.spent);
+      const totalExp = expCats.reduce((s, c) => s + c.spent, 0) || 1;
+      const colors = ['bg-emerald-500', 'bg-sky-500', 'bg-amber-500', 'bg-purple-500', 'bg-rose-500', 'bg-indigo-500'];
+
+      document.getElementById('category-breakdown-list').innerHTML = expCats.slice(0, 6).map((c, idx) => {
+        const pct = Math.round((c.spent / totalExp) * 100);
+        return `<div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-300 truncate pr-2">${c.name}</span>
+            <span class="mono text-slate-200 font-medium">${formatPKR(c.spent)} <span class="text-slate-500">(${pct}%)</span></span>
+          </div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="${colors[idx % colors.length]} h-full rounded-full" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+      }).join('') || `<p class="text-xs text-slate-500 py-8 text-center">No expenses logged yet.</p>`;
+    }
+
+    function renderDashboardLists() {
+      const recent = [...state.transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
+      document.getElementById('dashboard-recent-tx').innerHTML = recent.map(t => `
+        <div class="py-2.5 flex items-center justify-between text-xs">
+          <div>
+            <div class="font-medium text-slate-200">${t.payee}</div>
+            <div class="text-[11px] text-slate-500">${t.date} • ${t.category}</div>
+          </div>
+          <div class="mono font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+            ${t.type === 'income' ? '+' : '-'}${formatPKR(t.amount)}
+          </div>
+        </div>
+      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No transactions logged yet.</p>`;
+
+      document.getElementById('dashboard-upcoming-bills').innerHTML = state.subscriptions.map(s => `
+        <div class="py-2.5 flex items-center justify-between text-xs">
+          <div>
+            <div class="font-medium text-slate-200">${s.name}</div>
+            <div class="text-[11px] text-slate-500">Due Day ${s.dueDay} of month • ${s.cycle}</div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="mono font-semibold text-amber-400">${formatPKR(s.amount)}</span>
+            <button onclick="paySubscription('${s.id}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-2 py-1 rounded text-[11px] transition">Pay & Log</button>
+          </div>
+        </div>
+      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No recurring bills added yet.</p>`;
+    }
+
+    function populateFilterAndModalSelects() {
+      const accOpts = state.accounts.map(a => `<option value="${a.id}">${a.name} (${formatPKR(a.balance)})</option>`).join('');
+      document.getElementById('tx-account').innerHTML = accOpts;
+      document.getElementById('tr-from').innerHTML = accOpts;
+      document.getElementById('tr-to').innerHTML = state.accounts.map((a, i) => `<option value="${a.id}" ${i === 1 ? 'selected' : ''}>${a.name}</option>`).join('');
+
+      const filterAcc = document.getElementById('tx-filter-account');
+      const curAccVal = filterAcc.value || 'all';
+      filterAcc.innerHTML = `<option value="all">All Accounts</option>` + state.accounts.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+      filterAcc.value = curAccVal;
+
+      const catOpts = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      document.getElementById('tx-category').innerHTML = catOpts;
+
+      const filterCat = document.getElementById('tx-filter-category');
+      const curCatVal = filterCat.value || 'all';
+      filterCat.innerHTML = `<option value="all">All Categories</option>` + catOpts;
+      filterCat.value = curCatVal;
+    }
+
+    function renderTransactions() {
+      const q = (document.getElementById('tx-search')?.value || '').toLowerCase();
+      const fType = document.getElementById('tx-filter-type')?.value || 'all';
+      const fAcc = document.getElementById('tx-filter-account')?.value || 'all';
+      const fCat = document.getElementById('tx-filter-category')?.value || 'all';
+
+      const rows = [...state.transactions]
+        .filter(t => {
+          if (fType !== 'all' && t.type !== fType) return false;
+          if (fAcc !== 'all' && t.accountId !== fAcc) return false;
+          if (fCat !== 'all' && t.category !== fCat) return false;
+          if (q && !(`${t.payee} ${t.category}`).toLowerCase().includes(q)) return false;
+          return true;
+        })
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+      document.getElementById('tx-table-body').innerHTML = rows.map(t => {
+        const acc = state.accounts.find(a => a.id === t.accountId);
+        return `<tr class="hover:bg-slate-800/40">
+          <td class="py-3 px-4 mono text-slate-400">${t.date}</td>
+          <td class="py-3 px-4 font-medium text-white">${t.payee}</td>
+          <td class="py-3 px-4"><span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[11px]">${t.category}</span></td>
+          <td class="py-3 px-4 text-slate-300">${acc ? acc.name : 'Account'}</td>
+          <td class="py-3 px-4 text-right mono font-semibold ${t.type === 'income' ? 'text-emerald-400' : t.type === 'transfer' ? 'text-sky-400' : 'text-rose-400'}">
+            ${t.type === 'income' ? '+' : t.type === 'expense' ? '-' : '⇄ '}${formatPKR(t.amount)}
+          </td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="deleteTransaction('${t.id}')" class="text-slate-500 hover:text-rose-400">Delete</button>
+          </td>
+        </tr>`;
+      }).join('') || `<tr><td colspan="6" class="py-8 text-center text-slate-500">No transactions yet. Click <strong>"＋ Log Transaction"</strong> to add your first entry.</td></tr>`;
+    }
+
+    function renderBudgets(readyToAssign) {
+      const banner = document.getElementById('budget-rta-banner');
+      banner.textContent = `${formatPKR(readyToAssign)} Ready to Assign`;
+      banner.className = `text-2xl font-bold mono mt-1 ${readyToAssign >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      document.getElementById('budget-table-body').innerHTML = state.categories
+        .filter(c => c.type === 'expense')
+        .map(c => {
+          const spent = getCategorySpent(c.name);
+          const avail = c.budgeted - spent;
+          const pct = c.budgeted > 0 ? Math.min(100, Math.round((spent / c.budgeted) * 100)) : (spent > 0 ? 100 : 0);
+          const barColor = avail < 0 ? 'bg-rose-500' : pct > 85 ? 'bg-amber-500' : 'bg-emerald-500';
+          return `<tr class="hover:bg-slate-800/40">
+            <td class="py-3.5 px-4 font-medium text-white">${c.name}</td>
+            <td class="py-3.5 px-4 text-right">
+              <input type="number" value="${c.budgeted}" onchange="updateCategoryBudget('${c.id}', this.value)"
+                class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1 text-right mono text-xs text-white w-28 focus:border-emerald-500 focus:outline-none" />
+            </td>
+            <td class="py-3.5 px-4 text-right mono text-slate-300">${formatPKR(spent)}</td>
+            <td class="py-3.5 px-4 text-right mono font-semibold ${avail < 0 ? 'text-rose-400' : 'text-emerald-400'}">
+              ${formatPKR(avail)}
+            </td>
+            <td class="py-3.5 px-4">
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="${barColor} h-full rounded-full transition-all" style="width:${pct}%"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">${pct}% used ${avail < 0 ? '• OVERBUDGET!' : ''}</div>
+            </td>
+          </tr>`;
+        }).join('');
+    }
+
+    function renderAccounts() {
+      document.getElementById('accounts-grid').innerHTML = state.accounts.map(a => `
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-400">${a.type}</span>
+              <h4 class="text-base font-semibold text-white mt-2">${a.name}</h4>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="adjustAccountBalance('${a.id}')" class="text-xs text-slate-400 hover:text-emerald-400">Adjust</button>
+              <button onclick="deleteAccount('${a.id}')" class="text-xs text-slate-500 hover:text-rose-400">✕</button>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-baseline justify-between">
+            <span class="text-xs text-slate-400">Current Balance</span>
+            <span class="text-lg font-bold mono ${a.balance >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatPKR(a.balance)}</span>
+          </div>
+        </div>
+      `).join('') || `
+        <div class="col-span-3 bg-slate-900/60 border border-dashed border-slate-800 rounded-xl p-8 text-center space-y-3">
+          <p class="text-xs text-slate-400">You haven't added any bank accounts or wallets yet.</p>
+          <button onclick="promptAddAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-4 py-2 rounded-lg">＋ Add Your First Account</button>
+        </div>
+      `;
+    }
+
+    function renderSplits() {
+      document.getElementById('split-friends-list').innerHTML = state.friends.map(f => `
+        <div class="bg-slate-950/60 border border-slate-800 rounded-lg p-3 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-medium text-white">${f.name}</div>
+            <div class="text-[11px] ${f.balance > 0 ? 'text-emerald-400' : f.balance < 0 ? 'text-rose-400' : 'text-slate-500'}">
+              ${f.balance > 0 ? `Owes you ${formatPKR(f.balance)}` : f.balance < 0 ? `You owe ${formatPKR(Math.abs(f.balance))}` : 'Settled up'}
+            </div>
+          </div>
+          ${f.balance !== 0 ? `<button onclick="settleFriend('${f.id}')" class="text-[11px] bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-2.5 py-1 rounded border border-emerald-500/30 transition">Settle Up</button>` : ''}
+        </div>
+      `).join('') || `<p class="text-xs text-slate-500 py-4 text-center">Click "＋ Person" to add friends or roommates.</p>`;
+
+      document.getElementById('split-bills-list').innerHTML = state.splits.map(s => `
+        <div class="py-3 flex items-center justify-between text-xs">
+          <div>
+            <div class="font-medium text-white">${s.desc}</div>
+            <div class="text-[11px] text-slate-400">${s.date} • Paid by <strong>${s.payer}</strong> • Split with: ${(s.participants || []).join(', ')}</div>
+          </div>
+          <div class="text-right">
+            <div class="mono font-semibold text-white">Total: ${formatPKR(s.total)}</div>
+            <div class="text-[11px] mono text-emerald-400">${formatPKR(s.sharePerPerson)} / person</div>
+          </div>
+        </div>
+      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No shared bills logged yet.</p>`;
+    }
+
+    function renderGoals() {
+      document.getElementById('goals-grid').innerHTML = state.goals.map(g => {
+        const pct = g.target > 0 ? Math.min(100, Math.round((g.saved / g.target) * 100)) : 0;
+        const rem = Math.max(0, g.target - g.saved);
+        return `<div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-white text-sm">${g.name}</h4>
+              <span class="text-xs mono text-emerald-400 font-bold">${pct}%</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Target Date: ${g.deadline} • Remaining: ${formatPKR(rem)}</p>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mt-3">
+              <div class="bg-emerald-500 h-full rounded-full transition-all" style="width:${pct}%"></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
+            <div class="mono">
+              <span class="text-white font-semibold">${formatPKR(g.saved)}</span>
+              <span class="text-slate-500"> / ${formatPKR(g.target)}</span>
+            </div>
+            <button onclick="contributeGoal('${g.id}')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-3 py-1 rounded-lg border border-emerald-500/30 transition">
+              ＋ Contribute
+            </button>
+          </div>
+        </div>`;
+      }).join('') || `
+        <div class="col-span-3 bg-slate-900/60 border border-dashed border-slate-800 rounded-xl p-8 text-center space-y-3">
+          <p class="text-xs text-slate-400">No savings goals created yet.</p>
+          <button onclick="promptAddGoal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-4 py-2 rounded-lg">＋ Create First Savings Goal</button>
+        </div>
+      `;
+    }
+
+    function renderWealth() {
+      document.getElementById('investments-list').innerHTML = state.investments.map(inv => {
+        const gain = inv.currentValue - inv.costBasis;
+        const gainPct = inv.costBasis > 0 ? ((gain / inv.costBasis) * 100).toFixed(1) : 0;
+        return `<div class="py-3 flex items-center justify-between text-xs">
+          <div>
+            <span class="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${inv.category}</span>
+            <div class="font-medium text-white mt-1">${inv.name}</div>
+            <div class="text-[11px] text-slate-500">Cost Basis: ${formatPKR(inv.costBasis)} • <button onclick="updateAssetValue('${inv.id}')" class="text-emerald-400 hover:underline">Update Value</button></div>
+          </div>
+          <div class="text-right">
+            <div class="mono font-bold text-white text-sm">${formatPKR(inv.currentValue)}</div>
+            <div class="text-[11px] mono ${gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+              ${gain >= 0 ? '+' : ''}${formatPKR(gain)} (${gainPct}%)
+            </div>
+          </div>
+        </div>`;
+      }).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No investments or assets added yet.</p>`;
+
+      document.getElementById('subscriptions-list').innerHTML = state.subscriptions.map(s => `
+        <div class="py-3 flex items-center justify-between text-xs">
+          <div>
+            <div class="font-medium text-white">${s.name}</div>
+            <div class="text-[11px] text-slate-400">${s.category} • Due day ${s.dueDay} (${s.cycle})</div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="mono font-semibold text-amber-400">${formatPKR(s.amount)}</span>
+            <button onclick="paySubscription('${s.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-[11px]">Pay & Log</button>
+          </div>
+        </div>
+      `).join('') || `<p class="text-xs text-slate-500 py-6 text-center">No recurring bills or subscriptions added yet.</p>`;
+    }
+
+    // =========================================================================
+    // USER ACTIONS & MODALS
+    // =========================================================================
+    function openTransactionModal() {
+      if (state.accounts.length === 0) {
+        alert('Please add your first Bank Account or Wallet before logging a transaction.');
+        return promptAddAccount();
+      }
+      document.getElementById('tx-date').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('tx-modal').classList.remove('hidden');
+      document.getElementById('tx-modal').classList.add('flex');
+    }
+
+    function openTransferModal() {
+      if (state.accounts.length < 2) {
+        return alert('Please add at least 2 accounts to transfer funds between them.');
+      }
+      document.getElementById('transfer-modal').classList.remove('hidden');
+      document.getElementById('transfer-modal').classList.add('flex');
+    }
+
+    function openSplitModal() {
+      if (state.friends.length === 0) {
+        alert('Please add at least one person ("＋ Person") first to split a bill.');
+        return promptAddFriend();
+      }
+      document.getElementById('sp-payer').innerHTML = `<option value="You">You</option>` + state.friends.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+      document.getElementById('sp-friends-checkboxes').innerHTML = state.friends.map(f => `
+        <label class="flex items-center gap-2 text-slate-200 cursor-pointer">
+          <input type="checkbox" name="sp-friend" value="${f.name}" checked class="accent-emerald-500" />
+          <span>${f.name}</span>
+        </label>
+      `).join('');
+      document.getElementById('split-modal').classList.remove('hidden');
+      document.getElementById('split-modal').classList.add('flex');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+      document.getElementById(id).classList.remove('flex');
+    }
+
+    function submitTransaction(e) {
+      e.preventDefault();
+      const type = document.getElementById('tx-type').value;
+      const date = document.getElementById('tx-date').value;
+      const amount = Number(document.getElementById('tx-amount').value);
+      const accountId = document.getElementById('tx-account').value;
+      const category = document.getElementById('tx-category').value;
+      const payee = document.getElementById('tx-payee').value.trim();
+
+      state.transactions.push({ id: 'tx-' + Date.now(), date, payee, category, accountId, type, amount });
+      const acc = state.accounts.find(a => a.id === accountId);
+      if (acc) acc.balance += (type === 'income' ? amount : -amount);
+
+      closeModal('tx-modal');
+      e.target.reset();
+      saveState();
+    }
+
+    function submitTransfer(e) {
+      e.preventDefault();
+      const fromId = document.getElementById('tr-from').value;
+      const toId = document.getElementById('tr-to').value;
+      const amount = Number(document.getElementById('tr-amount').value);
+      const note = document.getElementById('tr-note').value.trim() || 'Account Transfer';
+      if (fromId === toId) return alert('Please choose two different accounts.');
+
+      const fromAcc = state.accounts.find(a => a.id === fromId);
+      const toAcc = state.accounts.find(a => a.id === toId);
+      if (fromAcc) fromAcc.balance -= amount;
+      if (toAcc) toAcc.balance += amount;
+
+      state.transactions.push({
+        id: 'tx-' + Date.now(),
+        date: new Date().toISOString().slice(0, 10),
+        payee: `${note} (${fromAcc?.name} → ${toAcc?.name})`,
+        category: 'Account Transfer',
+        accountId: fromId,
+        type: 'transfer',
+        amount
+      });
+      closeModal('transfer-modal');
+      e.target.reset();
+      saveState();
+    }
+
+    function deleteTransaction(id) {
+      const idx = state.transactions.findIndex(t => t.id === id);
+      if (idx === -1) return;
+      const tx = state.transactions[idx];
+      const acc = state.accounts.find(a => a.id === tx.accountId);
+      if (acc && tx.type !== 'transfer') {
+        acc.balance -= (tx.type === 'income' ? tx.amount : -tx.amount);
+      }
+      state.transactions.splice(idx, 1);
+      saveState();
+    }
+
+    function updateCategoryBudget(id, val) {
+      const cat = state.categories.find(c => c.id === id);
+      if (cat) cat.budgeted = Math.max(0, Number(val) || 0);
+      saveState();
+    }
+
+    function coverOverspending() {
+      state.categories.filter(c => c.type === 'expense').forEach(c => {
+        const spent = getCategorySpent(c.name);
+        if (spent > c.budgeted) c.budgeted = spent;
+      });
+      saveState();
+    }
+
+    function promptAddCategory() {
+      const name = prompt('Enter new envelope category name (e.g., Education, Car Maintenance):');
+      if (!name) return;
+      const budget = Number(prompt('Monthly PKR budget target:', '0')) || 0;
+      state.categories.push({ id: 'cat-' + Date.now(), name: name.trim(), type: 'expense', budgeted: budget, target: budget });
+      saveState();
+    }
+
+    function promptAddAccount() {
+      const name = prompt('Account or Wallet Name (e.g., Meezan Bank, SadaPay, Cash Wallet):');
+      if (!name) return;
+      const type = prompt('Type (Bank, Wallet, Cash, Savings, Credit Card):', 'Bank') || 'Bank';
+      const balance = Number(prompt('Opening Balance in PKR:', '0')) || 0;
+      state.accounts.push({ id: 'acc-' + Date.now(), name: name.trim(), type, balance });
+      saveState();
+    }
+
+    function adjustAccountBalance(id) {
+      const acc = state.accounts.find(a => a.id === id);
+      if (!acc) return;
+      const next = prompt(`Update current balance for ${acc.name} (PKR):`, acc.balance);
+      if (next !== null) {
+        acc.balance = Number(next) || 0;
+        saveState();
+      }
+    }
+
+    function deleteAccount(id) {
+      const acc = state.accounts.find(a => a.id === id);
+      if (!acc) return;
+      if (confirm(`Delete account "${acc.name}"?`)) {
+        state.accounts = state.accounts.filter(a => a.id !== id);
+        saveState();
+      }
+    }
+
+    function promptAddFriend() {
+      const name = prompt('Friend or roommate name:');
+      if (!name) return;
+      state.friends.push({ id: 'fr-' + Date.now(), name: name.trim(), balance: 0 });
+      saveState();
+    }
+
+    function submitSplitBill(e) {
+      e.preventDefault();
+      const desc = document.getElementById('sp-desc').value.trim();
+      const total = Number(document.getElementById('sp-amount').value);
+      const payer = document.getElementById('sp-payer').value;
+      const selected = Array.from(document.querySelectorAll('input[name="sp-friend"]:checked')).map(el => el.value);
+      if (selected.length === 0) return alert('Select at least one person to split with.');
+
+      const totalPeople = selected.length + 1;
+      const share = Math.round(total / totalPeople);
+
+      if (payer === 'You') {
+        selected.forEach(name => {
+          const fr = state.friends.find(f => f.name === name);
+          if (fr) fr.balance += share;
+        });
+      } else {
+        const fr = state.friends.find(f => f.name === payer);
+        if (fr) fr.balance -= share;
+      }
+
+      state.splits.unshift({
+        id: 'sp-' + Date.now(),
+        date: new Date().toISOString().slice(0, 10),
+        desc,
+        total,
+        payer,
+        participants: selected,
+        sharePerPerson: share
+      });
+      closeModal('split-modal');
+      e.target.reset();
+      saveState();
+    }
+
+    function settleFriend(id) {
+      const fr = state.friends.find(f => f.id === id);
+      if (!fr || fr.balance === 0) return;
+      const amt = Math.abs(fr.balance);
+      const isIncoming = fr.balance > 0;
+      if (state.accounts.length > 0) {
+        state.transactions.push({
+          id: 'tx-' + Date.now(),
+          date: new Date().toISOString().slice(0, 10),
+          payee: `Splitwise Settlement — ${fr.name}`,
+          category: isIncoming ? 'Salary & Income' : 'Dining Out & Food Delivery',
+          accountId: state.accounts[0].id,
+          type: isIncoming ? 'income' : 'expense',
+          amount: amt
+        });
+        state.accounts[0].balance += (isIncoming ? amt : -amt);
+      }
+      fr.balance = 0;
+      saveState();
+    }
+
+    function promptAddGoal() {
+      const name = prompt('Goal / Sinking Fund Name:');
+      if (!name) return;
+      const target = Number(prompt('Target Amount (PKR):', '100000')) || 100000;
+      const deadline = prompt('Target Date (YYYY-MM-DD):', '2027-06-30') || '2027-06-30';
+      state.goals.push({ id: 'gl-' + Date.now(), name: name.trim(), target, saved: 0, deadline });
+      saveState();
+    }
+
+    function contributeGoal(id) {
+      const g = state.goals.find(x => x.id === id);
+      if (!g) return;
+      const amt = Number(prompt(`Contribute PKR to "${g.name}":`, '10000'));
+      if (!amt || amt <= 0) return;
+      g.saved += amt;
+      saveState();
+    }
+
+    function promptAddInvestment() {
+      const name = prompt('Asset Name (e.g., 1 Tola Gold, Al Meezan Mutual Fund):');
+      if (!name) return;
+      const category = prompt('Asset Class (Gold, Mutual Fund, Stocks, Real Estate, Crypto):', 'Mutual Fund') || 'Asset';
+      const costBasis = Number(prompt('Purchase Cost Basis (PKR):', '0')) || 0;
+      const currentValue = Number(prompt('Current Market Value (PKR):', String(costBasis))) || costBasis;
+      state.investments.push({ id: 'inv-' + Date.now(), name: name.trim(), category, costBasis, currentValue });
+      saveState();
+    }
+
+    function updateAssetValue(id) {
+      const inv = state.investments.find(x => x.id === id);
+      if (!inv) return;
+      const next = prompt(`Update current PKR market value for "${inv.name}":`, inv.currentValue);
+      if (next !== null) {
+        inv.currentValue = Number(next) || 0;
+        saveState();
+      }
+    }
+
+    function promptAddSubscription() {
+      const name = prompt('Recurring Bill / Subscription Name:');
+      if (!name) return;
+      const amount = Number(prompt('Monthly Amount (PKR):', '0')) || 0;
+      const dueDay = Number(prompt('Billing Day of Month (1-31):', '15')) || 15;
+      state.subscriptions.push({ id: 'sub-' + Date.now(), name: name.trim(), amount, cycle: 'Monthly', dueDay, category: state.categories[1]?.name || 'General' });
+      saveState();
+    }
+
+    function paySubscription(id) {
+      const sub = state.subscriptions.find(s => s.id === id);
+      if (!sub) return;
+      if (state.accounts.length === 0) {
+        alert('Please add a Bank Account or Wallet first.');
+        return promptAddAccount();
+      }
+      state.transactions.push({
+        id: 'tx-' + Date.now(),
+        date: new Date().toISOString().slice(0, 10),
+        payee: `${sub.name} (Recurring Bill)`,
+        category: sub.category,
+        accountId: state.accounts[0].id,
+        type: 'expense',
+        amount: sub.amount
+      });
+      state.accounts[0].balance -= sub.amount;
+      saveState();
+      alert(`Logged ${formatPKR(sub.amount)} payment for ${sub.name}!`);
+    }
+
+    function exportTransactionsCSV() {
+      const headers = ['Date', 'Payee', 'Category', 'Type', 'Amount_PKR', 'Account'];
+      const rows = state.transactions.map(t => {
+        const acc = state.accounts.find(a => a.id === t.accountId)?.name || 'Default';
+        return [t.date, `"${t.payee.replace(/"/g, '""')}"`, `"${t.category}"`, t.type, t.amount, `"${acc}"`].join(',');
+      });
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `paisaflow-pkr-transactions-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    function importTransactionsCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (state.accounts.length === 0) {
+        state.accounts.push({ id: 'acc-' + Date.now(), name: 'Primary Account', type: 'Bank', balance: 0 });
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lines = e.target.result.split(/\r?\n/).filter(Boolean);
+        let imported = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+          if (cols.length >= 5) {
+            const [date, payee, category, type, amountStr] = cols;
+            const amount = Number(amountStr) || 0;
+            if (amount > 0) {
+              state.transactions.push({
+                id: 'tx-' + Date.now() + '-' + i,
+                date: date || new Date().toISOString().slice(0, 10),
+                payee: payee || 'Imported Transaction',
+                category: category || 'Groceries & Supermarkets',
+                accountId: state.accounts[0].id,
+                type: type === 'income' ? 'income' : 'expense',
+                amount
+              });
+              imported++;
+            }
+          }
+        }
+        saveState();
+        alert(`Imported ${imported} transactions in PKR!`);
+      };
+      reader.readAsText(file);
+    }
+
+    function exportBackupJSON() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `paisaflow-pkr-backup.json`;
+      a.click();
+    }
+
+    // Initialize session check on load
+    checkInitialSession();
+  </script>
+</body>
+</html>

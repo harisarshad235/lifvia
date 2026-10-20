@@ -1,0 +1,7 @@
+node_modules/
+paisaflow.db
+paisaflow.db-journal
+paisaflow.db-wal
+paisaflow.db-shm
+.wrangler/
+.env

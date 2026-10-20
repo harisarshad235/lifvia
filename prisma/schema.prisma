@@ -1,0 +1,76 @@
+﻿datasource db {
+  provider = "sqlite"
+  url      = "file:./paisaflow.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Account {
+  id           String        @id @default(cuid())
+  name         String
+  type         String
+  balance      Float         @default(0)
+  transactions Transaction[]
+}
+
+model Category {
+  id       String @id @default(cuid())
+  name     String @unique
+  type     String // income | expense
+  budgeted Float  @default(0)
+  target   Float  @default(0)
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  date      String
+  payee     String
+  category  String
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  type      String   // income | expense | transfer
+  amount    Float
+}
+
+model Friend {
+  id      String @id @default(cuid())
+  name    String
+  balance Float  @default(0)
+}
+
+model SplitBill {
+  id             String @id @default(cuid())
+  date           String
+  desc           String
+  total          Float
+  payer          String
+  participants   String // JSON array
+  sharePerPerson Float
+}
+
+model SavingsGoal {
+  id       String @id @default(cuid())
+  name     String
+  target   Float
+  saved    Float  @default(0)
+  deadline String
+}
+
+model Investment {
+  id           String @id @default(cuid())
+  name         String
+  category     String
+  costBasis    Float
+  currentValue Float
+}
+
+model Subscription {
+  id       String @id @default(cuid())
+  name     String
+  amount   Float
+  cycle    String
+  dueDay   Int
+  category String
+}

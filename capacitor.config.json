@@ -1,0 +1,12 @@
+{
+  "appId": "site.harisarshad.paisaflow",
+  "appName": "PaisaFlow PKR",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "paisaflow-pkr.pages.dev",
+      "paisaflow.harisarshad.site"
+    ]
+  }
+}

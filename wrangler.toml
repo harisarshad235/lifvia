@@ -1,0 +1,8 @@
+name = "paisaflow-pkr"
+pages_build_output_dir = "public"
+compatibility_date = "2025-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "paisaflow-db"
+database_id = "b7dbcf0d-244d-4f92-a4c6-0ea08b2351a8"
