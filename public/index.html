@@ -31,6 +31,8 @@
     :root {
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
       --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     html[data-theme="light"] {
@@ -210,29 +212,59 @@
       font-weight: 600;
     }
 
+    .mobile-bottom-bar {
+      padding-top: 0.35rem;
+      padding-bottom: max(0.65rem, calc(0.45rem + var(--safe-bottom)));
+      padding-left: max(0.35rem, env(safe-area-inset-left, 0px));
+      padding-right: max(0.35rem, env(safe-area-inset-right, 0px));
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.18);
+    }
+
     .mobile-nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.2rem;
+      gap: 0.18rem;
       flex: 1;
-      padding: 0.45rem 0.2rem;
-      font-size: 0.65rem;
+      min-width: 0;
+      min-height: 48px;
+      padding: 0.35rem 0.15rem;
+      border-radius: 10px;
+      font-size: 0.625rem;
+      line-height: 1.1;
       font-weight: 600;
       color: var(--text-muted);
-      transition: transform 140ms var(--ease-out), color 140ms ease;
+      touch-action: manipulation;
+      transition: transform 140ms var(--ease-out), color 140ms ease, background-color 140ms ease;
+    }
+    .mobile-nav-item span {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .mobile-nav-item:active {
       transform: scale(0.94);
     }
     .mobile-nav-item.active {
       color: var(--accent);
+      background-color: var(--accent-soft);
+    }
+
+    @media (max-width: 767px) {
+      .app-main-scroll {
+        padding-bottom: calc(6.5rem + var(--safe-bottom)) !important;
+      }
     }
 
     .modal-backdrop {
       background-color: rgba(9, 13, 22, 0.65);
       backdrop-filter: blur(4px);
+      padding-top: max(1rem, var(--safe-top));
+      padding-bottom: calc(1.25rem + var(--safe-bottom));
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
 
     .modal-panel {
@@ -240,6 +272,8 @@
       border: 1px solid var(--border-strong);
       border-radius: 16px;
       box-shadow: var(--shadow-modal);
+      max-height: calc(100dvh - 2.5rem - var(--safe-top) - var(--safe-bottom));
+      overflow-y: auto;
       animation: modalEnter 200ms var(--ease-out) forwards;
     }
 
@@ -291,15 +325,15 @@
     }
   </style>
 </head>
-<body class="min-h-screen pb-20 md:pb-0">
+<body class="min-h-screen">
 
   <!-- TOAST STACK (Sonner-style feedback) -->
-  <div id="toast-container" class="fixed bottom-20 md:bottom-6 right-4 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+  <div id="toast-container" class="fixed bottom-24 md:bottom-6 left-4 right-4 sm:left-auto sm:right-4 z-[60] flex flex-col items-end gap-2 pointer-events-none"></div>
 
   <!-- ===================================================================== -->
   <!-- VIEW 1: AUTHENTICATION PAGE (LOGIN & REGISTRATION)                    -->
   <!-- ===================================================================== -->
-  <div id="auth-screen" class="min-h-screen flex flex-col justify-between p-4 sm:p-6">
+  <div id="auth-screen" class="min-h-screen flex flex-col justify-between p-4 sm:p-6" style="padding-top: max(1rem, var(--safe-top)); padding-bottom: max(1.25rem, var(--safe-bottom));">
     <!-- Top Bar with Theme Switcher -->
     <div class="max-w-5xl w-full mx-auto flex items-center justify-between py-2">
       <div class="flex items-center gap-2.5">
@@ -383,7 +417,7 @@
   <!-- ===================================================================== -->
   <!-- VIEW 2: DEDICATED LOGOUT PAGE                                         -->
   <!-- ===================================================================== -->
-  <div id="logout-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+  <div id="logout-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-4" style="padding-top: max(1rem, var(--safe-top)); padding-bottom: max(1.25rem, var(--safe-bottom));">
     <div class="w-full max-w-md surface-card p-8 text-center space-y-5" style="box-shadow: var(--shadow-modal);">
       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -485,37 +519,37 @@
     </aside>
 
     <!-- Main Content Column -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 overflow-y-auto app-main-scroll">
       <!-- Top Header -->
-      <header class="sticky top-0 z-20 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3" style="background: color-mix(in srgb, var(--bg-surface) 88%, transparent); border-color: var(--border-subtle);">
-        <div class="flex items-center gap-3">
-          <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo md:hidden w-8 h-8 rounded-lg shadow-sm" />
-          <div>
-            <h1 id="page-title" class="text-base sm:text-lg font-bold tracking-tight">Dashboard</h1>
-            <p id="page-subtitle" class="text-xs hidden sm:block" style="color: var(--text-muted);">Overview of your PKR accounts, budgets, and cash flow</p>
+      <header class="sticky top-0 z-20 backdrop-blur-md border-b px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2" style="background: color-mix(in srgb, var(--bg-surface) 88%, transparent); border-color: var(--border-subtle); padding-top: max(0.625rem, var(--safe-top));">
+        <div class="flex items-center gap-2.5 min-w-0 flex-1">
+          <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo md:hidden w-8 h-8 rounded-lg shadow-sm flex-shrink-0" />
+          <div class="min-w-0">
+            <h1 id="page-title" class="text-sm sm:text-lg font-bold tracking-tight truncate">Dashboard</h1>
+            <p id="page-subtitle" class="text-xs hidden sm:block truncate" style="color: var(--text-muted);">Overview of your PKR accounts, budgets, and cash flow</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
-          <button onclick="openTransactionModal()" class="btn btn-primary">
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <button onclick="openTransactionModal()" class="btn btn-primary px-2.5 sm:px-3.5 py-2 text-xs">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>Log Entry</span>
           </button>
-          <button onclick="openTransferModal()" class="btn btn-secondary hidden sm:inline-flex">
+          <button onclick="openTransferModal()" class="btn btn-secondary px-2.5 sm:px-3.5 py-2" aria-label="Transfer between accounts" title="Transfer Funds">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/></svg>
-            <span>Transfer</span>
+            <span class="hidden sm:inline">Transfer</span>
           </button>
-          <button onclick="toggleTheme()" class="btn btn-secondary px-2.5" aria-label="Toggle Light and Dark Theme" title="Toggle Light / Dark Theme">
+          <button onclick="toggleTheme()" class="btn btn-secondary px-2.5 py-2" aria-label="Toggle Light and Dark Theme" title="Toggle Light / Dark Theme">
             <span id="header-theme-icon"></span>
             <span id="header-theme-label" class="hidden lg:inline text-xs">Theme</span>
           </button>
           <button onclick="openProfileModal()" class="rounded-full flex-shrink-0 transition-transform active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style="outline-color: var(--accent);" aria-label="Open profile" title="Profile">
-            <span class="avatar-slot w-9 h-9 block" data-size="36"></span>
+            <span class="avatar-slot w-8 h-8 sm:w-9 sm:h-9 block" data-size="36"></span>
           </button>
         </div>
       </header>
 
-      <div class="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
+      <div class="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-5 sm:space-y-6">
 
         <!-- TAB 1: DASHBOARD -->
         <section id="tab-dashboard" class="tab-panel space-y-6">
@@ -524,7 +558,7 @@
               <h2 class="text-base font-bold">Add Your First Bank Account or Wallet</h2>
               <p class="text-xs" style="color: var(--text-secondary);">Your ledger starts clean at Rs. 0. Create an account (e.g., Meezan Bank, SadaPay, Cash) to begin tracking.</p>
             </div>
-            <button onclick="openPromptModal('account')" class="btn btn-primary">
+            <button onclick="openPromptModal('account')" class="btn btn-primary w-full sm:w-auto">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               <span>Add First Account</span>
             </button>
@@ -534,30 +568,30 @@
 
           <!-- KPI Ledger Strip -->
           <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-            <div class="surface-card p-4">
-              <div class="text-xs font-medium" style="color: var(--text-muted);">Liquid Balance</div>
-              <div id="kpi-liquid" class="text-lg sm:text-xl font-bold mono mt-1">Rs. 0</div>
-              <div class="text-[11px] mt-1" style="color: var(--text-muted);">Wallets & banks</div>
+            <div class="surface-card p-3.5 sm:p-4 min-w-0">
+              <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Liquid Balance</div>
+              <div id="kpi-liquid" class="text-base sm:text-xl font-bold mono mt-1 truncate">Rs. 0</div>
+              <div class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">Wallets & banks</div>
             </div>
-            <div class="surface-card p-4">
-              <div class="text-xs font-medium" style="color: var(--text-muted);">Total Income</div>
-              <div id="kpi-income" class="text-lg sm:text-xl font-bold mono mt-1" style="color: var(--accent);">Rs. 0</div>
-              <div id="kpi-savings-rate" class="text-[11px] mt-1" style="color: var(--text-muted);">Savings Rate: 0%</div>
+            <div class="surface-card p-3.5 sm:p-4 min-w-0">
+              <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Total Income</div>
+              <div id="kpi-income" class="text-base sm:text-xl font-bold mono mt-1 truncate" style="color: var(--accent);">Rs. 0</div>
+              <div id="kpi-savings-rate" class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">Savings Rate: 0%</div>
             </div>
-            <div class="surface-card p-4">
-              <div class="text-xs font-medium" style="color: var(--text-muted);">Total Expenses</div>
-              <div id="kpi-expense" class="text-lg sm:text-xl font-bold mono mt-1" style="color: var(--danger);">Rs. 0</div>
-              <div id="kpi-budget-used" class="text-[11px] mt-1" style="color: var(--text-muted);">0% of budget</div>
+            <div class="surface-card p-3.5 sm:p-4 min-w-0">
+              <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Total Expenses</div>
+              <div id="kpi-expense" class="text-base sm:text-xl font-bold mono mt-1 truncate" style="color: var(--danger);">Rs. 0</div>
+              <div id="kpi-budget-used" class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">0% of budget</div>
             </div>
-            <div class="surface-card p-4">
-              <div class="text-xs font-medium" style="color: var(--text-muted);">Ready to Assign</div>
-              <div id="kpi-rta" class="text-lg sm:text-xl font-bold mono mt-1" style="color: var(--warning);">Rs. 0</div>
-              <div class="text-[11px] mt-1" style="color: var(--text-muted);">Envelope pool</div>
+            <div class="surface-card p-3.5 sm:p-4 min-w-0">
+              <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Ready to Assign</div>
+              <div id="kpi-rta" class="text-base sm:text-xl font-bold mono mt-1 truncate" style="color: var(--warning);">Rs. 0</div>
+              <div class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">Envelope pool</div>
             </div>
-            <div class="surface-card p-4 col-span-2 lg:col-span-1">
-              <div class="text-xs font-medium" style="color: var(--text-muted);">Shared Split Net</div>
-              <div id="kpi-splits" class="text-lg sm:text-xl font-bold mono mt-1">Rs. 0</div>
-              <div id="kpi-splits-sub" class="text-[11px] mt-1" style="color: var(--text-muted);">All settled up</div>
+            <div class="surface-card p-3.5 sm:p-4 col-span-2 lg:col-span-1 min-w-0">
+              <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Shared Split Net</div>
+              <div id="kpi-splits" class="text-base sm:text-xl font-bold mono mt-1 truncate">Rs. 0</div>
+              <div id="kpi-splits-sub" class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">All settled up</div>
             </div>
           </div>
 
@@ -607,22 +641,24 @@
         </section>
 
         <!-- TAB 2: TRANSACTIONS & CSV -->
-        <section id="tab-transactions" class="tab-panel hidden space-y-5">
-          <div class="surface-card p-4 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-2.5 flex-1">
+        <section id="tab-transactions" class="tab-panel hidden space-y-4 sm:space-y-5">
+          <div class="surface-card p-3.5 sm:p-4 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+            <div class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 flex-1">
               <input id="tx-search" oninput="renderTransactions()" type="search" aria-label="Search transactions" placeholder="Search payee or category..." class="input-field sm:w-56" />
-              <select id="tx-filter-type" onchange="renderTransactions()" aria-label="Filter by type" class="input-field sm:w-36">
-                <option value="all">All Types</option>
-                <option value="income">Income (+)</option>
-                <option value="expense">Expense (-)</option>
-                <option value="transfer">Transfer (⇄)</option>
-              </select>
-              <select id="tx-filter-account" onchange="renderTransactions()" aria-label="Filter by account" class="input-field sm:w-44"></select>
-              <select id="tx-filter-category" onchange="renderTransactions()" aria-label="Filter by category" class="input-field sm:w-48"></select>
+              <div class="grid grid-cols-3 sm:flex items-center gap-2">
+                <select id="tx-filter-type" onchange="renderTransactions()" aria-label="Filter by type" class="input-field sm:w-36 px-2">
+                  <option value="all">All Types</option>
+                  <option value="income">Income (+)</option>
+                  <option value="expense">Expense (-)</option>
+                  <option value="transfer">Transfer (⇄)</option>
+                </select>
+                <select id="tx-filter-account" onchange="renderTransactions()" aria-label="Filter by account" class="input-field sm:w-44 px-2"></select>
+                <select id="tx-filter-category" onchange="renderTransactions()" aria-label="Filter by category" class="input-field sm:w-48 px-2"></select>
+              </div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="exportTransactionsCSV()" class="btn btn-secondary">Export CSV</button>
-              <label class="btn btn-secondary cursor-pointer">
+              <button onclick="exportTransactionsCSV()" class="btn btn-secondary flex-1 sm:flex-initial">Export CSV</button>
+              <label class="btn btn-secondary cursor-pointer flex-1 sm:flex-initial">
                 <span>Import CSV</span>
                 <input type="file" accept=".csv" onchange="importTransactionsCSV(event)" class="hidden" />
               </label>
@@ -630,7 +666,11 @@
           </div>
 
           <div class="surface-card overflow-hidden">
-            <div class="overflow-x-auto">
+            <!-- Mobile Card List (< 768px) -->
+            <div id="tx-mobile-list" class="md:hidden divide-y text-xs" style="border-color: var(--border-subtle);"></div>
+
+            <!-- Desktop Table (>= 768px) -->
+            <div class="hidden md:block overflow-x-auto">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="border-b text-[11px] uppercase tracking-wider font-semibold" style="border-color: var(--border-subtle); background: var(--bg-elevated); color: var(--text-muted);">
@@ -649,24 +689,28 @@
         </section>
 
         <!-- TAB 3: ZERO-BASED / ENVELOPE BUDGETING -->
-        <section id="tab-budgets" class="tab-panel hidden space-y-5">
-          <div class="surface-card p-5 flex flex-wrap items-center justify-between gap-4">
+        <section id="tab-budgets" class="tab-panel hidden space-y-4 sm:space-y-5">
+          <div class="surface-card p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
             <div>
-              <h2 class="text-xl font-bold mono" id="budget-rta-banner">Rs. 0 Ready to Assign</h2>
+              <h2 class="text-lg sm:text-xl font-bold mono" id="budget-rta-banner">Rs. 0 Ready to Assign</h2>
               <p class="text-xs mt-0.5" style="color: var(--text-muted);">Zero-based envelope budgeting: assign your income to category envelopes below.</p>
             </div>
-            <div class="flex items-center gap-2">
-              <button onclick="coverOverspending()" class="btn btn-secondary">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button onclick="coverOverspending()" class="btn btn-secondary flex-1 sm:flex-initial">
                 Cover Overspending
               </button>
-              <button onclick="openPromptModal('category')" class="btn btn-primary">
+              <button onclick="openPromptModal('category')" class="btn btn-primary flex-1 sm:flex-initial">
                 + New Envelope
               </button>
             </div>
           </div>
 
           <div class="surface-card overflow-hidden">
-            <div class="overflow-x-auto">
+            <!-- Mobile Envelope Cards (< 768px) -->
+            <div id="budget-mobile-list" class="md:hidden divide-y text-xs" style="border-color: var(--border-subtle);"></div>
+
+            <!-- Desktop Envelope Table (>= 768px) -->
+            <div class="hidden md:block overflow-x-auto">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="border-b text-[11px] uppercase tracking-wider font-semibold" style="border-color: var(--border-subtle); background: var(--bg-elevated); color: var(--text-muted);">
@@ -768,7 +812,7 @@
     </main>
 
     <!-- Mobile Bottom Navigation Bar (< 768px) -->
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 border-t flex items-center justify-around px-1 py-1" style="background: var(--bg-surface); border-color: var(--border-subtle);" aria-label="Mobile Navigation">
+    <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 z-30 border-t flex items-center justify-around gap-0.5 mobile-bottom-bar" style="background: var(--bg-surface); border-color: var(--border-subtle);" aria-label="Mobile Navigation">
       <button onclick="switchTab('dashboard')" data-tab="dashboard" class="mobile-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         <span>Home</span>
@@ -989,17 +1033,27 @@
         <div class="space-y-3 text-xs pt-5 border-t" style="border-color: var(--border-subtle);">
           <div class="flex items-center justify-between gap-3">
             <div>
+              <div class="font-semibold">Workspace Data</div>
+              <div class="text-[11px]" style="color: var(--text-muted);">Export JSON backup or reset ledger to Rs. 0.</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="exportBackupJSON()" class="btn btn-secondary py-1.5 px-2.5 text-[11px]">Backup</button>
+              <button type="button" onclick="clearAllMyData()" class="btn btn-secondary py-1.5 px-2.5 text-[11px]">Wipe All</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <div>
               <div class="font-semibold">Sign out</div>
               <div class="text-[11px]" style="color: var(--text-muted);">End this session on this device.</div>
             </div>
-            <button onclick="closeModal('profile-modal'); logoutUser();" class="btn btn-secondary">Log out</button>
+            <button type="button" onclick="closeModal('profile-modal'); logoutUser();" class="btn btn-secondary">Log out</button>
           </div>
           <div class="flex items-center justify-between gap-3 rounded-xl p-3" style="background: var(--danger-soft);">
             <div>
               <div class="font-semibold" style="color: var(--danger);">Delete account</div>
               <div class="text-[11px]" style="color: var(--text-secondary);">Permanently erases your profile and all ledger data.</div>
             </div>
-            <button onclick="deleteAccount()" class="btn btn-danger-ghost" style="border-color: var(--danger);">Delete</button>
+            <button type="button" onclick="deleteUserAccount()" class="btn btn-danger-ghost" style="border-color: var(--danger);">Delete</button>
           </div>
         </div>
       </div>
@@ -1394,7 +1448,7 @@
       }
     }
 
-    async function deleteAccount() {
+    async function deleteUserAccount() {
       const confirmText = prompt('This permanently deletes your profile and ALL ledger data.\n\nEnter your password to confirm:');
       if (!confirmText) return;
       try {
@@ -1725,6 +1779,31 @@
         })
         .sort((a, b) => b.date.localeCompare(a.date));
 
+      const mobileList = document.getElementById('tx-mobile-list');
+      if (mobileList) {
+        mobileList.innerHTML = rows.map(t => {
+          const acc = state.accounts.find(a => a.id === t.accountId);
+          const amtColor = t.type === 'income' ? 'var(--accent)' : t.type === 'transfer' ? 'var(--text-primary)' : 'var(--danger)';
+          const amtSign = t.type === 'income' ? '+' : t.type === 'expense' ? '-' : '⇄ ';
+          return `<div class="p-3.5 flex items-center justify-between gap-3">
+            <div class="min-w-0 flex-1 space-y-1">
+              <div class="font-semibold truncate">${t.payee}</div>
+              <div class="flex flex-wrap items-center gap-1.5 text-[11px]" style="color: var(--text-muted);">
+                <span class="mono">${t.date}</span>
+                <span>•</span>
+                <span class="px-1.5 py-0.5 rounded font-medium" style="background: var(--bg-subtle); color: var(--text-secondary);">${t.category}</span>
+                <span>•</span>
+                <span class="truncate">${acc ? acc.name : 'Account'}</span>
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+              <span class="mono font-bold text-xs" style="color: ${amtColor};">${amtSign}${formatPKR(t.amount)}</span>
+              <button onclick="deleteTransaction('${t.id}')" class="text-[11px] font-medium px-2 py-0.5 rounded" style="background: var(--danger-soft); color: var(--danger);">Delete</button>
+            </div>
+          </div>`;
+        }).join('') || `<div class="py-8 px-4 text-center" style="color: var(--text-muted);">No transactions found. Tap <strong>"Log Entry"</strong> to record a transaction.</div>`;
+      }
+
       document.getElementById('tx-table-body').innerHTML = rows.map(t => {
         const acc = state.accounts.find(a => a.id === t.accountId);
         return `<tr>
@@ -1747,8 +1826,40 @@
       banner.textContent = `${formatPKR(readyToAssign)} Ready to Assign`;
       banner.style.color = readyToAssign >= 0 ? 'var(--accent)' : 'var(--danger)';
 
-      document.getElementById('budget-table-body').innerHTML = state.categories
-        .filter(c => c.type === 'expense')
+      const expCategories = state.categories.filter(c => c.type === 'expense');
+
+      const budgetMobile = document.getElementById('budget-mobile-list');
+      if (budgetMobile) {
+        budgetMobile.innerHTML = expCategories.map(c => {
+          const spent = getCategorySpent(c.name);
+          const avail = c.budgeted - spent;
+          const pct = c.budgeted > 0 ? Math.min(100, Math.round((spent / c.budgeted) * 100)) : (spent > 0 ? 100 : 0);
+          const barColor = avail < 0 ? 'var(--danger)' : pct > 85 ? 'var(--warning)' : 'var(--accent)';
+          return `<div class="p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="font-semibold truncate">${c.name}</div>
+                <div class="text-[11px] mono mt-0.5" style="color: var(--text-muted);">
+                  Spent: <span style="color: var(--text-secondary);">${formatPKR(spent)}</span> • Avail: <strong style="color: ${avail < 0 ? 'var(--danger)' : 'var(--accent)'};">${formatPKR(avail)}</strong>
+                </div>
+              </div>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="text-[10px] font-medium mb-0.5" style="color: var(--text-muted);">Assigned (PKR)</span>
+                <input type="number" value="${c.budgeted}" aria-label="Assigned budget for ${c.name}" onchange="updateCategoryBudget('${c.id}', this.value)"
+                  class="input-field text-right mono w-28 py-1 px-2 text-xs" />
+              </div>
+            </div>
+            <div>
+              <div class="w-full h-2 rounded-full overflow-hidden" style="background: var(--bg-subtle);">
+                <div class="h-full rounded-full transition-all" style="width:${pct}%; background: ${barColor};"></div>
+              </div>
+              <div class="text-[10px] mt-1" style="color: var(--text-muted);">${pct}% used ${avail < 0 ? '• Overbudget' : ''}</div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      document.getElementById('budget-table-body').innerHTML = expCategories
         .map(c => {
           const spent = getCategorySpent(c.name);
           const avail = c.budgeted - spent;
@@ -1793,7 +1904,7 @@
           </div>
         </div>
       `).join('') || `
-        <div class="col-span-3 surface-card p-8 text-center space-y-3">
+        <div class="md:col-span-3 surface-card p-8 text-center space-y-3">
           <p class="text-xs" style="color: var(--text-muted);">No bank accounts or wallets added yet.</p>
           <button onclick="openPromptModal('account')" class="btn btn-primary">+ Add Your First Account</button>
         </div>
@@ -1853,7 +1964,7 @@
           </div>
         </div>`;
       }).join('') || `
-        <div class="col-span-3 surface-card p-8 text-center space-y-3">
+        <div class="md:col-span-2 lg:col-span-3 surface-card p-8 text-center space-y-3">
           <p class="text-xs" style="color: var(--text-muted);">No savings goals created yet.</p>
           <button onclick="openPromptModal('goal')" class="btn btn-primary">+ Create First Savings Goal</button>
         </div>
