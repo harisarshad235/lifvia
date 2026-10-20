@@ -6,6 +6,9 @@
   <meta name="theme-color" id="meta-theme-color" content="#090D16" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
   <title>PaisaFlow PKR — Personal Finance & Budgeting</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -300,7 +303,7 @@
     <!-- Top Bar with Theme Switcher -->
     <div class="max-w-5xl w-full mx-auto flex items-center justify-between py-2">
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base mono" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">₨</div>
+        <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo w-9 h-9 rounded-xl shadow-sm" />
         <span class="font-bold text-sm tracking-tight">PaisaFlow PKR</span>
       </div>
       <button onclick="toggleTheme()" class="btn btn-secondary" aria-label="Toggle color theme">
@@ -412,7 +415,7 @@
       <div>
         <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border-subtle);">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base mono" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">₨</div>
+            <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo w-9 h-9 rounded-xl shadow-sm" />
             <div>
               <div class="font-bold text-sm tracking-tight flex items-center gap-1.5">
                 <span>PaisaFlow</span>
@@ -487,7 +490,7 @@
       <!-- Top Header -->
       <header class="sticky top-0 z-20 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3" style="background: color-mix(in srgb, var(--bg-surface) 88%, transparent); border-color: var(--border-subtle);">
         <div class="flex items-center gap-3">
-          <div class="md:hidden w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm mono" style="background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);">₨</div>
+          <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo md:hidden w-8 h-8 rounded-lg shadow-sm" />
           <div>
             <h1 id="page-title" class="text-base sm:text-lg font-bold tracking-tight">Dashboard</h1>
             <p id="page-subtitle" class="text-xs hidden sm:block" style="color: var(--text-muted);">Overview of your PKR accounts, budgets, and cash flow</p>
@@ -975,6 +978,10 @@
       const headerLabel = document.getElementById('header-theme-label');
       if (headerIcon) headerIcon.innerHTML = nextIcon;
       if (headerLabel) headerLabel.textContent = nextLabel;
+
+      document.querySelectorAll('.brand-logo').forEach(img => {
+        img.src = theme === 'light' ? '/logo-light.svg' : '/logo.svg';
+      });
 
       localStorage.setItem(THEME_KEY, theme);
     }
