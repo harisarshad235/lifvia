@@ -442,10 +442,10 @@
   <!-- ===================================================================== -->
   <!-- VIEW 3: MAIN APPLICATION SHELL                                        -->
   <!-- ===================================================================== -->
-  <div id="app-shell" class="hidden min-h-screen flex flex-col md:flex-row">
+  <div id="app-shell" class="hidden h-screen overflow-hidden flex flex-col md:flex-row" style="height: 100dvh;">
 
     <!-- Desktop Sidebar Navigation (pinned: does not scroll with page) -->
-    <aside class="hidden md:flex md:w-64 flex-shrink-0 flex-col justify-between border-r md:sticky md:top-0 md:h-screen md:self-start" style="background: var(--bg-surface); border-color: var(--border-subtle);">
+    <aside class="hidden md:flex md:w-64 flex-shrink-0 flex-col justify-between border-r h-full overflow-hidden" style="background: var(--bg-surface); border-color: var(--border-subtle);">
       <div class="min-h-0 flex flex-col">
         <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border-subtle);">
           <div class="flex items-center gap-3">
@@ -518,10 +518,10 @@
       </div>
     </aside>
 
-    <!-- Main Content Column -->
-    <main class="flex-1 overflow-y-auto app-main-scroll">
-      <!-- Top Header -->
-      <header class="sticky top-0 z-20 backdrop-blur-md border-b px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2" style="background: color-mix(in srgb, var(--bg-surface) 88%, transparent); border-color: var(--border-subtle); padding-top: max(0.625rem, var(--safe-top));">
+    <!-- Main Content Column (Pinned Top Header + Scrollable Main Body) -->
+    <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+      <!-- Top Header (Pinned outside scroll container: never scrolls) -->
+      <header class="flex-shrink-0 z-20 backdrop-blur-md border-b px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2" style="background: color-mix(in srgb, var(--bg-surface) 92%, transparent); border-color: var(--border-subtle); padding-top: max(0.625rem, var(--safe-top));">
         <div class="flex items-center gap-2.5 min-w-0 flex-1">
           <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo md:hidden w-8 h-8 rounded-lg shadow-sm flex-shrink-0" />
           <div class="min-w-0">
@@ -549,7 +549,8 @@
         </div>
       </header>
 
-      <div class="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-5 sm:space-y-6">
+      <main class="flex-1 overflow-y-auto min-h-0 app-main-scroll">
+        <div class="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-5 sm:space-y-6">
 
         <!-- TAB 1: DASHBOARD -->
         <section id="tab-dashboard" class="tab-panel space-y-6">
@@ -808,8 +809,9 @@
           </div>
         </section>
 
-      </div>
-    </main>
+        </div>
+      </main>
+    </div>
 
     <!-- Mobile Bottom Navigation Bar (< 768px) -->
     <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 z-30 border-t flex items-center justify-around gap-0.5 mobile-bottom-bar" style="background: var(--bg-surface); border-color: var(--border-subtle);" aria-label="Mobile Navigation">
@@ -1580,6 +1582,8 @@
       activeTab = tab;
       document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
       document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      const mainEl = document.querySelector('#app-shell main');
+      if (mainEl) mainEl.scrollTop = 0;
 
       document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(btn => {
         if (btn.dataset.tab === tab) {
