@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">PaisaFlow PKR</string>
-    <string name="title_activity_main">PaisaFlow PKR</string>
+    <string name="app_name">Lifvia</string>
+    <string name="title_activity_main">Lifvia</string>
     <string name="package_name">site.harisarshad.paisaflow</string>
     <string name="custom_url_scheme">site.harisarshad.paisaflow</string>
 </resources>

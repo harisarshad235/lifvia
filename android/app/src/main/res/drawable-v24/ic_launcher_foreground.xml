@@ -4,54 +4,22 @@
     android:height="108dp"
     android:viewportWidth="512"
     android:viewportHeight="512">
-    <!-- Safe-zone centered PaisaFlow PKR Geometric Crest -->
     <group
-        android:scaleX="0.62"
-        android:scaleY="0.62"
-        android:translateX="97.28"
-        android:translateY="97.28">
-        <!-- Ascending Flow Bars -->
+        android:scaleX="0.68"
+        android:scaleY="0.68"
+        android:translateX="81.92"
+        android:translateY="81.92">
         <path
-            android:fillColor="#10B981"
-            android:fillAlpha="0.22"
-            android:pathData="M108,290h36v102h-36z" />
-        <path
-            android:fillColor="#10B981"
-            android:fillAlpha="0.32"
-            android:pathData="M164,240h36v152h-36z" />
-        <path
-            android:fillColor="#10B981"
-            android:fillAlpha="0.32"
-            android:pathData="M312,180h36v212h-36z" />
-        <path
-            android:fillColor="#10B981"
-            android:fillAlpha="0.45"
-            android:pathData="M368,128h36v264h-36z" />
-
-        <!-- Main Rupee Geometric Glyph -->
-        <path
-            android:fillColor="#10B981"
-            android:pathData="M156,132H268C314.39,132 348,162.61 348,206C348,246.4 318.5,275.2 276,279.5L354,380H296L224,282H198V380H156V132ZM198,170V244H264C289.4,244 306,228.8 306,207C306,185.2 289.4,170 264,170H198Z" />
-
-        <!-- PKR Double Strike Bars -->
-        <path
-            android:fillColor="#F8FAFC"
-            android:pathData="M128,184h244v18h-244z" />
-        <path
-            android:fillColor="#F8FAFC"
-            android:pathData="M128,216h212v18h-212z" />
-
-        <!-- Upward Arrow Accent -->
-        <path
-            android:strokeColor="#34D399"
-            android:strokeWidth="22"
+            android:strokeColor="#06B6D4"
+            android:strokeWidth="38"
             android:strokeLineCap="round"
             android:strokeLineJoin="round"
-            android:pathData="M336,116H404V184" />
+            android:pathData="M120,290C160,210 210,210 256,290C302,370 352,370 392,290" />
         <path
-            android:strokeColor="#34D399"
-            android:strokeWidth="22"
+            android:strokeColor="#10B981"
+            android:strokeWidth="38"
             android:strokeLineCap="round"
-            android:pathData="M402,118L318,202" />
+            android:strokeLineJoin="round"
+            android:pathData="M120,220C160,140 210,140 256,220C302,300 352,300 392,220" />
     </group>
 </vector>

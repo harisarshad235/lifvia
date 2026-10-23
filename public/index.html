@@ -7,10 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" href="/icon-512.svg" />
   <link rel="manifest" href="/manifest.json" />
-  <title>PaisaFlow PKR — Personal Finance & Budgeting</title>
+  <title>Lifvia — Track your cash flow. Simulate your tomorrow.</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -317,6 +316,46 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
+    /* What-If Simulator Touch-Friendly Range Sliders */
+    .sim-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-strong);
+      outline: none;
+      cursor: pointer;
+      touch-action: pan-y;
+    }
+    .sim-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #06B6D4;
+      border: 3px solid var(--bg-surface);
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.45);
+      cursor: pointer;
+      transition: transform 120ms ease, background-color 120ms ease;
+    }
+    .sim-slider::-webkit-slider-thumb:hover,
+    .sim-slider::-webkit-slider-thumb:active {
+      transform: scale(1.14);
+      background: #10B981;
+    }
+    .sim-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #06B6D4;
+      border: 3px solid var(--bg-surface);
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.45);
+      cursor: pointer;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, ::before, ::after {
         animation-duration: 0.01ms !important;
@@ -336,9 +375,16 @@
   <div id="auth-screen" class="min-h-screen flex flex-col justify-between p-4 sm:p-6" style="padding-top: max(1rem, var(--safe-top)); padding-bottom: max(1.25rem, var(--safe-bottom));">
     <!-- Top Bar with Theme Switcher -->
     <div class="max-w-5xl w-full mx-auto flex items-center justify-between py-2">
-      <div class="flex items-center gap-2.5">
-        <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo w-9 h-9 rounded-xl shadow-sm" />
-        <span class="font-bold text-sm tracking-tight">PaisaFlow PKR</span>
+      <div class="inline-flex items-center gap-2.5 select-none">
+        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+          <rect width="48" height="48" rx="12" fill="#090D16" stroke="#1E293B" stroke-width="1.5" />
+          <path d="M11 27C15 20 19 20 24 27C29 34 33 34 37 27" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" />
+          <path d="M11 21C15 14 19 14 24 21C29 28 33 28 37 21" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
+        </svg>
+        <div>
+          <span class="font-bold text-base tracking-tight block leading-none">Lifvia</span>
+          <span class="text-[10px] block mt-0.5" style="color: var(--text-muted);">Track your cash flow. Simulate your tomorrow.</span>
+        </div>
       </div>
       <button onclick="toggleTheme()" class="btn btn-secondary" aria-label="Toggle color theme">
         <span id="auth-theme-icon"></span>
@@ -348,8 +394,8 @@
 
     <div class="w-full max-w-[420px] mx-auto surface-card p-6 sm:p-8 space-y-6 my-6" style="box-shadow: var(--shadow-modal);">
       <div class="space-y-1.5">
-        <h1 class="font-bold text-xl tracking-tight">Personal Finance Ledger</h1>
-        <p class="text-xs" style="color: var(--text-muted);">Zero-based envelopes, multi-account balances, shared bills, and net worth in PKR.</p>
+        <h1 class="font-bold text-xl tracking-tight">Lifvia Financial Workspace</h1>
+        <p class="text-xs" style="color: var(--text-muted);">Track your cash flow. Simulate your tomorrow — zero-based budgets, multi-account balances, shared bills, and 12-month life runway simulator.</p>
       </div>
 
       <!-- Auth Mode Switcher -->
@@ -394,23 +440,23 @@
           <input id="reg-password" type="password" required minlength="6" placeholder="At least 6 characters" class="input-field" />
         </div>
         <button id="reg-submit-btn" type="submit" class="btn btn-primary w-full py-2.5 text-xs">
-          Create Fresh PKR Account
+          Create Lifvia Account
         </button>
       </form>
 
       <div class="pt-4 border-t text-[11px] text-center space-y-2.5" style="border-color: var(--border-subtle); color: var(--text-muted);">
         <p>Isolated per-user database on Cloudflare D1 • Starts fresh at <span class="mono font-semibold" style="color: var(--accent);">Rs. 0</span></p>
         <div>
-          <a href="https://github.com/harisarshad235/paisaflow-pkr/releases/download/v1.0.0/PaisaFlow-PKR.apk" download="PaisaFlow-PKR.apk" class="btn btn-secondary w-full py-2 text-xs">
+          <a href="https://github.com/harisarshad235/paisaflow-pkr/releases/download/v1.0.0/PaisaFlow-PKR.apk" download="Lifvia-Android.apk" class="btn btn-secondary w-full py-2 text-xs">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>Download Android APK (3.95 MB)</span>
+            <span>Download Lifvia Android APK</span>
           </a>
         </div>
       </div>
     </div>
 
     <div class="text-center text-[11px] py-2" style="color: var(--text-muted);">
-      PaisaFlow PKR • Built for Web & Android
+      Lifvia • Track your cash flow. Simulate your tomorrow.
     </div>
   </div>
 
@@ -448,14 +494,17 @@
     <aside class="hidden md:flex md:w-64 flex-shrink-0 flex-col justify-between border-r h-full overflow-hidden" style="background: var(--bg-surface); border-color: var(--border-subtle);">
       <div class="min-h-0 flex flex-col">
         <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border-subtle);">
-          <div class="flex items-center gap-3">
-            <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo w-9 h-9 rounded-xl shadow-sm" />
+          <div class="inline-flex items-center gap-2.5 select-none">
+            <svg width="38" height="38" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+              <rect width="48" height="48" rx="12" fill="#090D16" stroke="#1E293B" stroke-width="1.5" />
+              <path d="M11 27C15 20 19 20 24 27C29 34 33 34 37 27" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" />
+              <path d="M11 21C15 14 19 14 24 21C29 28 33 28 37 21" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
+            </svg>
             <div>
-              <div class="font-bold text-sm tracking-tight flex items-center gap-1.5">
-                <span>PaisaFlow</span>
-                <span class="text-[10px] mono px-1.5 py-0.5 rounded font-semibold" style="background: var(--accent-soft); color: var(--accent);">PKR</span>
+              <div class="font-bold text-base tracking-tight flex items-center gap-1.5 leading-none">
+                <span>Lifvia</span>
               </div>
-              <p class="text-xs truncate max-w-[140px]" style="color: var(--text-muted);" id="sidebar-user-name">Workspace</p>
+              <p class="text-[11px] truncate max-w-[145px] mt-1" style="color: var(--text-muted);" id="sidebar-user-name">Workspace</p>
             </div>
           </div>
         </div>
@@ -464,6 +513,11 @@
           <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
             <span>Dashboard</span>
+          </button>
+          <button onclick="switchTab('simulator')" data-tab="simulator" class="nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15C6 10 9 10 12 15C15 20 18 20 21 15" stroke="#06B6D4"/><path d="M3 9C6 4 9 4 12 9C15 14 18 14 21 9" stroke="#10B981"/></svg>
+            <span class="flex-1 text-left">What-If Simulator</span>
+            <span class="text-[9px] mono px-1.5 py-0.5 rounded font-bold uppercase" style="background: rgba(6, 182, 212, 0.14); color: #06B6D4;">Lab</span>
           </button>
           <button onclick="switchTab('accounts')" data-tab="accounts" class="nav-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
@@ -523,14 +577,24 @@
       <!-- Top Header (Pinned outside scroll container: never scrolls) -->
       <header class="flex-shrink-0 z-20 backdrop-blur-md border-b px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2" style="background: color-mix(in srgb, var(--bg-surface) 92%, transparent); border-color: var(--border-subtle); padding-top: max(0.625rem, var(--safe-top));">
         <div class="flex items-center gap-2.5 min-w-0 flex-1">
-          <img src="/logo.svg" alt="PaisaFlow PKR Logo" class="brand-logo md:hidden w-8 h-8 rounded-lg shadow-sm flex-shrink-0" />
+          <div class="md:hidden inline-flex items-center gap-2 select-none flex-shrink-0">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+              <rect width="48" height="48" rx="12" fill="#090D16" stroke="#1E293B" stroke-width="1.5" />
+              <path d="M11 27C15 20 19 20 24 27C29 34 33 34 37 27" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" />
+              <path d="M11 21C15 14 19 14 24 21C29 28 33 28 37 21" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
+            </svg>
+          </div>
           <div class="min-w-0">
             <h1 id="page-title" class="text-sm sm:text-lg font-bold tracking-tight truncate">Dashboard</h1>
-            <p id="page-subtitle" class="text-xs hidden sm:block truncate" style="color: var(--text-muted);">Overview of your PKR accounts, budgets, and cash flow</p>
+            <p id="page-subtitle" class="text-xs hidden sm:block truncate" style="color: var(--text-muted);">Track your cash flow. Simulate your tomorrow.</p>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <button onclick="switchTab('simulator')" class="btn btn-secondary hidden sm:inline-flex px-2.5 sm:px-3 py-2 text-xs" style="border-color: rgba(6, 182, 212, 0.4); color: #06B6D4;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15C6 10 9 10 12 15C15 20 18 20 21 15" stroke="#06B6D4"/><path d="M3 9C6 4 9 4 12 9C15 14 18 14 21 9" stroke="#10B981"/></svg>
+            <span>Simulate</span>
+          </button>
           <button onclick="openTransactionModal()" class="btn btn-primary px-2.5 sm:px-3.5 py-2 text-xs">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>Log Entry</span>
@@ -809,6 +873,237 @@
           </div>
         </section>
 
+        <!-- TAB 8: "WHAT-IF" LIFE & CASH RUNWAY SIMULATOR -->
+        <section id="tab-simulator" class="tab-panel hidden space-y-5">
+          <!-- Mobile Sticky Top Summary Card (< 768px) -->
+          <div class="md:hidden sticky top-0 z-10 surface-card p-3.5 space-y-2.5 backdrop-blur-md" style="background: color-mix(in srgb, var(--bg-surface) 95%, transparent); border-color: rgba(6, 182, 212, 0.35); box-shadow: var(--shadow-modal);">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div class="text-[10px] uppercase tracking-wider font-bold" style="color: var(--text-muted);">Projected Cash Runway</div>
+                <div id="sim-mobile-runway-value" class="text-base font-bold mono mt-0.5">12+ Months</div>
+              </div>
+              <div id="sim-mobile-runway-badge"></div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] pt-1.5 border-t" style="border-color: var(--border-subtle);">
+              <span style="color: var(--text-muted);">Month 12 Projected Reserve:</span>
+              <span id="sim-mobile-m12-balance" class="mono font-bold">Rs. 0</span>
+            </div>
+          </div>
+
+          <!-- Top Header Banner & 1-Click Scenario Presets -->
+          <div class="surface-card p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4" style="border-color: rgba(6, 182, 212, 0.28);">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mono" style="background: rgba(6, 182, 212, 0.14); color: #06B6D4;">Non-Destructive Sandbox</span>
+                <span class="text-xs font-medium" style="color: var(--text-muted);">Lifvia Forecasting Engine</span>
+              </div>
+              <h2 class="text-base sm:text-lg font-bold tracking-tight">"What-If" Life & Cash Runway Simulator</h2>
+              <p class="text-xs" style="color: var(--text-muted);">Simulate major life decisions (career move, relocation, major purchase) over the next 12 months using your real liquid balances (<span class="mono">S₀</span>) without modifying your actual accounts.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="applySimPreset('new-job')" id="preset-btn-new-job" class="btn btn-secondary text-xs py-2 px-3">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <span>New Job</span>
+              </button>
+              <button type="button" onclick="applySimPreset('move-home')" id="preset-btn-move-home" class="btn btn-secondary text-xs py-2 px-3">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Move Home</span>
+              </button>
+              <button type="button" onclick="applySimPreset('big-purchase')" id="preset-btn-big-purchase" class="btn btn-secondary text-xs py-2 px-3">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                <span>Big Purchase</span>
+              </button>
+              <button type="button" onclick="resetSimulator()" class="btn btn-secondary text-xs py-2 px-3" title="Reset all sliders to 0">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Two-Column Split View (Sliders Left, Dual-Line Chart & Runway Right) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LEFT COLUMN: Interactive Sandbox Controls -->
+            <div class="lg:col-span-5 surface-card p-5 space-y-5">
+              <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-subtle);">
+                <div>
+                  <h3 class="text-sm font-bold">Life Variable Controls</h3>
+                  <p class="text-[11px]" style="color: var(--text-muted);">Drag sliders or type exact amounts to test scenarios</p>
+                </div>
+                <span id="sim-active-preset-tag" class="text-[10px] mono px-2 py-0.5 rounded font-semibold" style="background: var(--bg-subtle); color: var(--text-secondary);">Custom</span>
+              </div>
+
+              <!-- Auto-Detected Baseline Summary -->
+              <div class="surface-elevated p-3.5 space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold" style="color: var(--text-secondary);">Auto-Read Account Baseline</span>
+                  <span class="text-[10px] mono px-1.5 py-0.5 rounded" style="background: var(--accent-soft); color: var(--accent);" id="sim-accounts-count">0 Accounts</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <div class="p-2 rounded-lg" style="background: var(--bg-surface); border: 1px solid var(--border-subtle);">
+                    <div class="text-[10px]" style="color: var(--text-muted);">Starting Liquid (S₀)</div>
+                    <div id="sim-base-s0" class="mono font-bold text-xs mt-0.5">Rs. 0</div>
+                  </div>
+                  <div class="p-2 rounded-lg" style="background: var(--bg-surface); border: 1px solid var(--border-subtle);">
+                    <div class="text-[10px]" style="color: var(--text-muted);">Base Net Flow (F_base)</div>
+                    <div id="sim-base-flow" class="mono font-bold text-xs mt-0.5">Rs. 0/mo</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slider 1: incomeDelta -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <label for="sim-income-slider" class="text-xs font-semibold block">Monthly Income Change (<span class="mono">incomeDelta</span>)</label>
+                    <span class="text-[11px]" style="color: var(--text-muted);">Promotion, new job, side business, or pay cut</span>
+                  </div>
+                  <input id="sim-income-num" type="number" step="500" value="0" oninput="updateSimParam('incomeDelta', this.value)" class="input-field mono text-right w-28 py-1 px-2 text-xs font-bold" style="color: #10B981;" aria-label="Monthly Income Change numeric input" />
+                </div>
+                <input id="sim-income-slider" type="range" min="-200000" max="500000" step="1000" value="0" oninput="updateSimParam('incomeDelta', this.value)" class="sim-slider" />
+                <div class="flex justify-between text-[10px] mono" style="color: var(--text-muted);">
+                  <span>-200k</span>
+                  <span id="sim-income-badge" class="font-semibold" style="color: #10B981;">+Rs. 0 / mo</span>
+                  <span>+500k</span>
+                </div>
+              </div>
+
+              <!-- Slider 2: expenseDelta -->
+              <div class="space-y-2 pt-2 border-t" style="border-color: var(--border-subtle);">
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <label for="sim-expense-slider" class="text-xs font-semibold block">Monthly Expense Change (<span class="mono">expenseDelta</span>)</label>
+                    <span class="text-[11px]" style="color: var(--text-muted);">Higher apartment rent, new EMI, or cost cutting</span>
+                  </div>
+                  <input id="sim-expense-num" type="number" step="500" value="0" oninput="updateSimParam('expenseDelta', this.value)" class="input-field mono text-right w-28 py-1 px-2 text-xs font-bold" style="color: #F87171;" aria-label="Monthly Expense Change numeric input" />
+                </div>
+                <input id="sim-expense-slider" type="range" min="-150000" max="350000" step="1000" value="0" oninput="updateSimParam('expenseDelta', this.value)" class="sim-slider" />
+                <div class="flex justify-between text-[10px] mono" style="color: var(--text-muted);">
+                  <span>-150k (Save)</span>
+                  <span id="sim-expense-badge" class="font-semibold" style="color: #F87171;">+Rs. 0 / mo</span>
+                  <span>+350k</span>
+                </div>
+              </div>
+
+              <!-- Slider 3: oneTimeHit -->
+              <div class="space-y-2 pt-2 border-t" style="border-color: var(--border-subtle);">
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <label for="sim-onetime-slider" class="text-xs font-semibold block">One-Time Immediate Cost (<span class="mono">oneTimeHit</span>)</label>
+                    <span class="text-[11px]" style="color: var(--text-muted);">Relocation deposit, vehicle purchase, medical/repair</span>
+                  </div>
+                  <input id="sim-onetime-num" type="number" min="0" step="500" value="0" oninput="updateSimParam('oneTimeHit', this.value)" class="input-field mono text-right w-28 py-1 px-2 text-xs font-bold" style="color: #FBBF24;" aria-label="One-Time Immediate Cost numeric input" />
+                </div>
+                <input id="sim-onetime-slider" type="range" min="0" max="1000000" step="2500" value="0" oninput="updateSimParam('oneTimeHit', this.value)" class="sim-slider" />
+                <div class="flex justify-between text-[10px] mono" style="color: var(--text-muted);">
+                  <span>Rs. 0</span>
+                  <span id="sim-onetime-badge" class="font-semibold" style="color: #FBBF24;">-Rs. 0 upfront</span>
+                  <span>1,000k</span>
+                </div>
+              </div>
+
+              <!-- Slider 4: investmentShift -->
+              <div class="space-y-2 pt-2 border-t" style="border-color: var(--border-subtle);">
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <label for="sim-invest-slider" class="text-xs font-semibold block">Monthly Investment Shift (<span class="mono">investmentShift</span>)</label>
+                    <span class="text-[11px]" style="color: var(--text-muted);">Extra cash moved from liquid into long-term wealth</span>
+                  </div>
+                  <input id="sim-invest-num" type="number" min="0" step="500" value="0" oninput="updateSimParam('investmentShift', this.value)" class="input-field mono text-right w-28 py-1 px-2 text-xs font-bold" style="color: #06B6D4;" aria-label="Monthly Investment Shift numeric input" />
+                </div>
+                <input id="sim-invest-slider" type="range" min="0" max="250000" step="1000" value="0" oninput="updateSimParam('investmentShift', this.value)" class="sim-slider" />
+                <div class="flex justify-between text-[10px] mono" style="color: var(--text-muted);">
+                  <span>Rs. 0</span>
+                  <span id="sim-invest-badge" class="font-semibold" style="color: #06B6D4;">Rs. 0 / mo</span>
+                  <span>250k</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Runway Status, Dual-Line Projection Chart & 12-Month Breakdown -->
+            <div class="lg:col-span-7 space-y-5">
+
+              <!-- Runway Status Card -->
+              <div class="surface-card p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <div class="text-xs font-medium" style="color: var(--text-muted);">12-Month Cash Runway Assessment</div>
+                    <div class="flex items-baseline gap-2.5 mt-1">
+                      <span id="sim-desktop-runway-months" class="text-2xl font-bold mono">12+ Months</span>
+                      <span id="sim-runway-subtext" class="text-xs" style="color: var(--text-secondary);">Reserve remains positive all year</span>
+                    </div>
+                  </div>
+                  <div id="sim-desktop-runway-badge"></div>
+                </div>
+
+                <!-- 3 Comparison KPIs -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t" style="border-color: var(--border-subtle);">
+                  <div class="surface-elevated p-3">
+                    <div class="text-[11px]" style="color: var(--text-muted);">Simulated Monthly Net Flow</div>
+                    <div id="sim-kpi-monthly-net" class="text-sm font-bold mono mt-0.5">Rs. 0 / mo</div>
+                    <div id="sim-kpi-monthly-delta" class="text-[10px] mt-0.5" style="color: var(--text-muted);">vs. current path</div>
+                  </div>
+                  <div class="surface-elevated p-3">
+                    <div class="text-[11px]" style="color: var(--text-muted);">Month 12 Current Path</div>
+                    <div id="sim-kpi-m12-base" class="text-sm font-bold mono mt-0.5">Rs. 0</div>
+                    <div class="text-[10px] mt-0.5" style="color: var(--text-muted);">Baseline[12]</div>
+                  </div>
+                  <div class="surface-elevated p-3">
+                    <div class="text-[11px]" style="color: var(--text-muted);">Month 12 New Life Path</div>
+                    <div id="sim-kpi-m12-sim" class="text-sm font-bold mono mt-0.5">Rs. 0</div>
+                    <div id="sim-kpi-m12-diff" class="text-[10px] mono mt-0.5" style="color: var(--text-muted);">Net difference: Rs. 0</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dual-Line SVG Projection Chart -->
+              <div class="surface-card p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h3 class="text-sm font-bold">12-Month Cash Reserve Projection</h3>
+                    <p class="text-xs" style="color: var(--text-muted);">Comparing Current Path vs. Simulated New Life Path (Months 0–12)</p>
+                  </div>
+                  <div class="flex items-center gap-4 text-xs font-semibold">
+                    <span class="flex items-center gap-1.5">
+                      <span class="w-4 h-0.5 inline-block" style="background: #10B981; border-top: 2px dashed #10B981;"></span>
+                      <span>Current Path</span>
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                      <span class="w-4 h-1 rounded-full inline-block" style="background: #06B6D4;"></span>
+                      <span>New Life Path</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div id="sim-chart-container" class="w-full overflow-x-auto pt-2"></div>
+              </div>
+
+              <!-- Month-by-Month Projection Table -->
+              <div class="surface-card overflow-hidden">
+                <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: var(--border-subtle); background: var(--bg-elevated);">
+                  <span class="text-xs font-bold">Month-by-Month Trajectory (M1 – M12)</span>
+                  <span id="sim-invest-accumulated" class="text-[11px] mono font-semibold" style="color: #06B6D4;">Extra Invested (12m): Rs. 0</span>
+                </div>
+                <div class="overflow-x-auto max-h-64">
+                  <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr class="border-b text-[10px] uppercase tracking-wider font-semibold" style="border-color: var(--border-subtle); color: var(--text-muted);">
+                        <th class="py-2.5 px-4">Month</th>
+                        <th class="py-2.5 px-4 text-right">Current Path</th>
+                        <th class="py-2.5 px-4 text-right">New Life Path</th>
+                        <th class="py-2.5 px-4 text-right">Variance</th>
+                        <th class="py-2.5 px-4 text-right">Runway State</th>
+                      </tr>
+                    </thead>
+                    <tbody id="sim-table-body" class="divide-y mono text-[11px]" style="border-color: var(--border-subtle);"></tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         </div>
       </main>
     </div>
@@ -818,6 +1113,10 @@
       <button onclick="switchTab('dashboard')" data-tab="dashboard" class="mobile-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         <span>Home</span>
+      </button>
+      <button onclick="switchTab('simulator')" data-tab="simulator" class="mobile-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15C6 10 9 10 12 15C15 20 18 20 21 15" stroke="#06B6D4"/><path d="M3 9C6 4 9 4 12 9C15 14 18 14 21 9" stroke="#10B981"/></svg>
+        <span>Simulate</span>
       </button>
       <button onclick="switchTab('accounts')" data-tab="accounts" class="mobile-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
@@ -1594,8 +1893,9 @@
       });
 
       const titles = {
-        dashboard: ['Dashboard', 'Overview of your PKR accounts, budgets, and cash flow'],
-        accounts: ['Accounts & Wallets', 'Manage Pakistani bank accounts, digital wallets, cash, and credit cards'],
+        dashboard: ['Dashboard', 'Track your cash flow. Simulate your tomorrow.'],
+        simulator: ['What-If Simulator', '12-month cash runway & life choice projection engine'],
+        accounts: ['Accounts & Wallets', 'Manage bank accounts, digital wallets, cash, and credit cards'],
         transactions: ['Transactions & CSV', 'Search, filter, import, and export all income, expenses, and transfers'],
         budgets: ['Envelope Budgets', 'Zero-based monthly category envelopes with overspend protection'],
         splits: ['Bill Splitter', 'Track shared group bills, roommate balances, and 1-click settlements'],
@@ -1604,6 +1904,7 @@
       };
       document.getElementById('page-title').textContent = titles[tab][0];
       document.getElementById('page-subtitle').textContent = titles[tab][1];
+      if (tab === 'simulator') renderSimulator();
     }
 
     function getCategorySpent(catName) {
@@ -1653,6 +1954,352 @@
       renderSplits();
       renderGoals();
       renderWealth();
+      renderSimulator();
+    }
+
+    // =========================================================================
+    // "WHAT-IF" LIFE & CASH RUNWAY SIMULATOR ENGINE
+    // =========================================================================
+    const simState = {
+      incomeDelta: 0,
+      expenseDelta: 0,
+      oneTimeHit: 0,
+      investmentShift: 0,
+      presetName: 'Baseline'
+    };
+
+    function getSimulatorBaseline() {
+      // S_0: Sum of all active manual liquid accounts tracked by the user
+      const S0 = state.accounts.reduce((sum, a) => sum + Number(a.balance || 0), 0);
+
+      // F_base = Average Monthly Income - Average Monthly Expenses
+      const monthBuckets = new Set();
+      let totalInc = 0;
+      let totalExp = 0;
+      state.transactions.forEach(t => {
+        if (t.type === 'income' || t.type === 'expense') {
+          const ym = String(t.date || '').slice(0, 7);
+          if (ym) monthBuckets.add(ym);
+          if (t.type === 'income') totalInc += Number(t.amount || 0);
+          if (t.type === 'expense') totalExp += Number(t.amount || 0);
+        }
+      });
+      const numMonths = Math.max(1, monthBuckets.size);
+      const avgIncome = Math.round(totalInc / numMonths);
+      const avgExpense = Math.round(totalExp / numMonths);
+      const F_base = avgIncome - avgExpense;
+
+      return { S0, F_base, avgIncome, avgExpense, accountCount: state.accounts.length };
+    }
+
+    function updateSimParam(key, rawValue) {
+      const val = Number(rawValue) || 0;
+      simState[key] = key === 'oneTimeHit' || key === 'investmentShift' ? Math.max(0, val) : val;
+      simState.presetName = 'Custom';
+      syncSimInputs();
+      renderSimulator();
+    }
+
+    function syncSimInputs() {
+      const map = [
+        ['incomeDelta', 'sim-income-slider', 'sim-income-num'],
+        ['expenseDelta', 'sim-expense-slider', 'sim-expense-num'],
+        ['oneTimeHit', 'sim-onetime-slider', 'sim-onetime-num'],
+        ['investmentShift', 'sim-invest-slider', 'sim-invest-num']
+      ];
+      map.forEach(([key, sliderId, numId]) => {
+        const s = document.getElementById(sliderId);
+        const n = document.getElementById(numId);
+        if (s && document.activeElement !== s) s.value = simState[key];
+        if (n && document.activeElement !== n) n.value = simState[key];
+      });
+    }
+
+    function applySimPreset(preset) {
+      const { S0 } = getSimulatorBaseline();
+      // Adapt preset scale if user has small balances vs standard PKR balances
+      const isSmallScale = S0 > 0 && S0 < 10000;
+      if (preset === 'new-job') {
+        simState.incomeDelta = isSmallScale ? 1500 : 45000;
+        simState.expenseDelta = isSmallScale ? 300 : 8000;
+        simState.oneTimeHit = 0;
+        simState.investmentShift = isSmallScale ? 400 : 12000;
+        simState.presetName = 'New Job';
+      } else if (preset === 'move-home') {
+        simState.incomeDelta = 0;
+        simState.expenseDelta = isSmallScale ? 500 : 25000;
+        simState.oneTimeHit = isSmallScale ? 1500 : Math.min(150000, Math.max(30000, Math.round(S0 * 0.45)));
+        simState.investmentShift = 0;
+        simState.presetName = 'Move Home';
+      } else if (preset === 'big-purchase') {
+        simState.incomeDelta = 0;
+        simState.expenseDelta = isSmallScale ? 250 : 6000;
+        simState.oneTimeHit = isSmallScale ? 2500 : Math.min(250000, Math.max(40000, Math.round(S0 * 0.65)));
+        simState.investmentShift = 0;
+        simState.presetName = 'Big Purchase';
+      }
+      syncSimInputs();
+      renderSimulator();
+      showToast(`Simulated "${simState.presetName}" scenario`);
+    }
+
+    function resetSimulator() {
+      simState.incomeDelta = 0;
+      simState.expenseDelta = 0;
+      simState.oneTimeHit = 0;
+      simState.investmentShift = 0;
+      simState.presetName = 'Baseline';
+      syncSimInputs();
+      renderSimulator();
+      showToast('Simulator reset to baseline');
+    }
+
+    function renderSimulator() {
+      const panel = document.getElementById('tab-simulator');
+      if (!panel) return;
+
+      const { S0, F_base, accountCount } = getSimulatorBaseline();
+      const { incomeDelta, expenseDelta, oneTimeHit, investmentShift, presetName } = simState;
+
+      // Update Baseline Readout
+      const accCountEl = document.getElementById('sim-accounts-count');
+      if (accCountEl) accCountEl.textContent = `${accountCount} Account${accountCount === 1 ? '' : 's'}`;
+      const baseS0El = document.getElementById('sim-base-s0');
+      if (baseS0El) baseS0El.textContent = formatPKR(S0);
+      const baseFlowEl = document.getElementById('sim-base-flow');
+      if (baseFlowEl) {
+        baseFlowEl.textContent = `${F_base >= 0 ? '+' : ''}${formatPKR(F_base)}/mo`;
+        baseFlowEl.style.color = F_base >= 0 ? 'var(--accent)' : 'var(--danger)';
+      }
+
+      const presetTag = document.getElementById('sim-active-preset-tag');
+      if (presetTag) presetTag.textContent = presetName;
+
+      // Update Slider Value Captions
+      const incBadge = document.getElementById('sim-income-badge');
+      if (incBadge) incBadge.textContent = `${incomeDelta >= 0 ? '+' : ''}${formatPKR(incomeDelta)} / mo`;
+      const expBadge = document.getElementById('sim-expense-badge');
+      if (expBadge) expBadge.textContent = `${expenseDelta >= 0 ? '+' : ''}${formatPKR(expenseDelta)} / mo`;
+      const oneBadge = document.getElementById('sim-onetime-badge');
+      if (oneBadge) oneBadge.textContent = `-${formatPKR(oneTimeHit)} upfront`;
+      const invBadge = document.getElementById('sim-invest-badge');
+      if (invBadge) invBadge.textContent = `${formatPKR(investmentShift)} / mo`;
+
+      // 12-Month Projection Engine
+      // Baseline[m] = S_0 + (m * F_base)
+      // Simulated[m] = (S_0 - oneTimeHit) + (m * (F_base + incomeDelta - expenseDelta - investmentShift))
+      const F_sim = F_base + incomeDelta - expenseDelta - investmentShift;
+      const monthlyDelta = F_sim - F_base;
+
+      const baselineSeries = [];
+      const simulatedSeries = [];
+      let depletionMonth = null; // First month m (0..12) where Simulated[m] <= 0
+
+      for (let m = 0; m <= 12; m++) {
+        const bVal = S0 + (m * F_base);
+        const sVal = (S0 - oneTimeHit) + (m * F_sim);
+        baselineSeries.push(bVal);
+        simulatedSeries.push(sVal);
+        if (depletionMonth === null && sVal <= 0 && (S0 > 0 || oneTimeHit > 0 || F_sim < 0)) {
+          depletionMonth = m;
+        }
+      }
+
+      // Compute exact runway months
+      let runwayMonths = 12.5; // 12+ months default
+      const startAfterHit = S0 - oneTimeHit;
+      if (startAfterHit <= 0 && (oneTimeHit > 0 || F_sim < 0)) {
+        runwayMonths = 0;
+      } else if (F_sim < 0) {
+        runwayMonths = startAfterHit / Math.abs(F_sim);
+      } else if (S0 === 0 && F_sim === 0 && oneTimeHit === 0) {
+        runwayMonths = 12.5;
+      }
+
+      // Runway Badge Classification
+      let badgeHTML = '';
+      let runwayTitle = '';
+      let runwaySub = '';
+      if (runwayMonths >= 12) {
+        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style="background: rgba(16, 185, 129, 0.14); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.35);">
+          <span class="w-2 h-2 rounded-full" style="background: #10B981;"></span>
+          Safe Runway (12+ Months)
+        </span>`;
+        runwayTitle = '12+ Months';
+        runwaySub = F_sim >= 0
+          ? `Cash-flow positive (${F_sim >= 0 ? '+' : ''}${formatPKR(F_sim)}/mo)`
+          : `Reserve lasts ~${Math.floor(runwayMonths)} months at current burn`;
+      } else if (runwayMonths >= 3) {
+        const mRounded = Math.max(3, Math.round(runwayMonths * 10) / 10);
+        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.38);">
+          <span class="w-2 h-2 rounded-full" style="background: #F59E0B;"></span>
+          Caution (3 to 6 Months)
+        </span>`;
+        runwayTitle = `${mRounded} Months`;
+        runwaySub = `Reserve depletes in Month ${depletionMonth ?? Math.ceil(runwayMonths)}`;
+      } else {
+        const mRounded = Math.max(0, Math.round(runwayMonths * 10) / 10);
+        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style="background: rgba(244, 63, 94, 0.15); color: #F43F5E; border: 1px solid rgba(244, 63, 94, 0.38);">
+          <span class="w-2 h-2 rounded-full" style="background: #F43F5E;"></span>
+          Critical (&lt; 3 Months)
+        </span>`;
+        runwayTitle = mRounded === 0 ? '0 Months (Immediate)' : `${mRounded} Months`;
+        runwaySub = depletionMonth === 0
+          ? 'One-time hit exceeds starting liquid balance!'
+          : `Reserve runs out in Month ${depletionMonth ?? Math.ceil(runwayMonths)}`;
+      }
+
+      // Populate Mobile Sticky Bar & Desktop Runway Header
+      const mobVal = document.getElementById('sim-mobile-runway-value');
+      const mobBadge = document.getElementById('sim-mobile-runway-badge');
+      const mobM12 = document.getElementById('sim-mobile-m12-balance');
+      if (mobVal) mobVal.textContent = runwayTitle;
+      if (mobBadge) mobBadge.innerHTML = badgeHTML;
+      if (mobM12) {
+        mobM12.textContent = formatPKR(simulatedSeries[12]);
+        mobM12.style.color = simulatedSeries[12] >= 0 ? '#06B6D4' : '#F43F5E';
+      }
+
+      const deskMonths = document.getElementById('sim-desktop-runway-months');
+      const deskSub = document.getElementById('sim-runway-subtext');
+      const deskBadge = document.getElementById('sim-desktop-runway-badge');
+      if (deskMonths) deskMonths.textContent = runwayTitle;
+      if (deskSub) deskSub.textContent = runwaySub;
+      if (deskBadge) deskBadge.innerHTML = badgeHTML;
+
+      // Populate 3 Comparison KPIs
+      const kpiNet = document.getElementById('sim-kpi-monthly-net');
+      const kpiDelta = document.getElementById('sim-kpi-monthly-delta');
+      const kpiBase12 = document.getElementById('sim-kpi-m12-base');
+      const kpiSim12 = document.getElementById('sim-kpi-m12-sim');
+      const kpiDiff12 = document.getElementById('sim-kpi-m12-diff');
+
+      if (kpiNet) {
+        kpiNet.textContent = `${F_sim >= 0 ? '+' : ''}${formatPKR(F_sim)} / mo`;
+        kpiNet.style.color = F_sim >= 0 ? '#10B981' : '#F43F5E';
+      }
+      if (kpiDelta) {
+        kpiDelta.textContent = `${monthlyDelta >= 0 ? '+' : ''}${formatPKR(monthlyDelta)}/mo vs. current path`;
+      }
+      if (kpiBase12) kpiBase12.textContent = formatPKR(baselineSeries[12]);
+      if (kpiSim12) {
+        kpiSim12.textContent = formatPKR(simulatedSeries[12]);
+        kpiSim12.style.color = simulatedSeries[12] >= 0 ? '#06B6D4' : '#F43F5E';
+      }
+      const m12Variance = simulatedSeries[12] - baselineSeries[12];
+      if (kpiDiff12) {
+        kpiDiff12.textContent = `${m12Variance >= 0 ? '+' : ''}${formatPKR(m12Variance)} vs. baseline`;
+        kpiDiff12.style.color = m12Variance >= 0 ? '#10B981' : '#F43F5E';
+      }
+
+      const invAcc = document.getElementById('sim-invest-accumulated');
+      if (invAcc) invAcc.textContent = `Extra Invested (12m): ${formatPKR(investmentShift * 12)}`;
+
+      // Render Dual-Line SVG Chart (Months 0..12)
+      const chartContainer = document.getElementById('sim-chart-container');
+      if (chartContainer) {
+        const allVals = [...baselineSeries, ...simulatedSeries, 0];
+        const minVal = Math.min(...allVals);
+        const maxVal = Math.max(...allVals, 1000);
+        const span = Math.max(maxVal - minVal, 1000);
+
+        const W = 680;
+        const H = 240;
+        const padL = 62;
+        const padR = 20;
+        const padT = 20;
+        const padB = 34;
+        const plotW = W - padL - padR;
+        const plotH = H - padT - padB;
+
+        const xFor = m => padL + (m / 12) * plotW;
+        const yFor = v => padT + plotH - ((v - minVal) / span) * plotH;
+
+        const zeroY = yFor(0);
+        const basePoints = baselineSeries.map((v, m) => `${xFor(m).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ');
+        const simPoints = simulatedSeries.map((v, m) => `${xFor(m).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ');
+        const areaPoints = `${xFor(0).toFixed(1)},${zeroY.toFixed(1)} ${simPoints} ${xFor(12).toFixed(1)},${zeroY.toFixed(1)}`;
+
+        const simLineColor = simulatedSeries[12] < 0 ? '#F43F5E' : '#06B6D4';
+
+        // Y-axis grid ticks (4 levels)
+        let gridLines = '';
+        for (let i = 0; i <= 3; i++) {
+          const val = minVal + (span * (i / 3));
+          const y = yFor(val);
+          const shortLabel = Math.abs(val) >= 1000 ? `${Math.round(val / 1000)}k` : Math.round(val);
+          gridLines += `
+            <line x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}" stroke="var(--border-subtle)" stroke-width="1" />
+            <text x="${padL - 8}" y="${(y + 3).toFixed(1)}" text-anchor="end" fill="var(--text-muted)" font-size="10" font-family="JetBrains Mono, monospace">${shortLabel}</text>
+          `;
+        }
+
+        // Month labels & data dots
+        let xLabelsAndDots = '';
+        for (let m = 0; m <= 12; m++) {
+          const cx = xFor(m).toFixed(1);
+          const bY = yFor(baselineSeries[m]).toFixed(1);
+          const sY = yFor(simulatedSeries[m]).toFixed(1);
+          const isDepleted = simulatedSeries[m] <= 0 && m === depletionMonth;
+          const dotColor = simulatedSeries[m] < 0 ? '#F43F5E' : '#06B6D4';
+          xLabelsAndDots += `
+            <text x="${cx}" y="${H - 10}" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="JetBrains Mono, monospace">M${m}</text>
+            <circle cx="${cx}" cy="${bY}" r="3" fill="#10B981">
+              <title>Month ${m} Current Path: ${formatPKR(baselineSeries[m])}</title>
+            </circle>
+            <circle cx="${cx}" cy="${sY}" r="${isDepleted ? 5.5 : 3.8}" fill="${dotColor}" stroke="var(--bg-surface)" stroke-width="1.5">
+              <title>Month ${m} New Life Path: ${formatPKR(simulatedSeries[m])}</title>
+            </circle>
+          `;
+        }
+
+        chartContainer.innerHTML = `
+          <svg viewBox="0 0 ${W} ${H}" class="w-full h-56 overflow-visible">
+            <defs>
+              <linearGradient id="simAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${simLineColor}" stop-opacity="0.22" />
+                <stop offset="100%" stop-color="${simLineColor}" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+            ${gridLines}
+            <!-- Zero Reserve Threshold Line -->
+            <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W - padR}" y2="${zeroY.toFixed(1)}" stroke="#F43F5E" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.65" />
+            <!-- Area under Simulated Curve -->
+            <polygon points="${areaPoints}" fill="url(#simAreaGrad)" />
+            <!-- Current Path (Baseline) -->
+            <polyline fill="none" stroke="#10B981" stroke-width="2.2" stroke-dasharray="6 4" stroke-linecap="round" stroke-linejoin="round" points="${basePoints}" />
+            <!-- New Life Path (Simulated) -->
+            <polyline fill="none" stroke="${simLineColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${simPoints}" />
+            ${xLabelsAndDots}
+          </svg>
+        `;
+      }
+
+      // Render Month 1..12 Trajectory Table
+      const tbody = document.getElementById('sim-table-body');
+      if (tbody) {
+        const rowsHTML = [];
+        for (let m = 1; m <= 12; m++) {
+          const bVal = baselineSeries[m];
+          const sVal = simulatedSeries[m];
+          const diff = sVal - bVal;
+          const isZero = sVal <= 0;
+          rowsHTML.push(`
+            <tr>
+              <td class="py-2 px-4 font-semibold">Month ${m}</td>
+              <td class="py-2 px-4 text-right" style="color: var(--text-secondary);">${formatPKR(bVal)}</td>
+              <td class="py-2 px-4 text-right font-bold" style="color: ${isZero ? '#F43F5E' : '#06B6D4'};">${formatPKR(sVal)}</td>
+              <td class="py-2 px-4 text-right" style="color: ${diff >= 0 ? '#10B981' : '#F43F5E'};">${diff >= 0 ? '+' : ''}${formatPKR(diff)}</td>
+              <td class="py-2 px-4 text-right">
+                ${isZero
+                  ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold" style="background: rgba(244,63,94,0.15); color: #F43F5E;">Depleted</span>`
+                  : `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold" style="background: rgba(16,185,129,0.12); color: #10B981;">Solvent</span>`}
+              </td>
+            </tr>
+          `);
+        }
+        tbody.innerHTML = rowsHTML.join('');
+      }
     }
 
     function renderDashboardAlerts() {
@@ -2422,7 +3069,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `paisaflow-pkr-transactions-${new Date().toISOString().slice(0,10)}.csv`;
+      a.download = `lifvia-transactions-${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
       showToast('Exported CSV');
     }
@@ -2466,7 +3113,7 @@
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `paisaflow-pkr-backup.json`;
+      a.download = `lifvia-backup.json`;
       a.click();
       showToast('Backup JSON downloaded');
     }
