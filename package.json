@@ -1,14 +1,14 @@
 {
-  "name": "paisaflow-pkr",
-  "version": "1.0.0",
-  "description": "All-in-One PKR Money Management App (Web + Capacitor Android APK) with Cloudflare D1 & Local-First Persistence",
+  "name": "lifvia",
+  "version": "2.0.0",
+  "description": "Lifvia - Track your cash flow. Simulate your tomorrow. (Web + Capacitor Android APK)",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
     "cap:sync": "npx cap sync android",
     "cap:open": "npx cap open android",
-    "deploy": "npx wrangler pages deploy public --project-name=paisaflow-pkr --branch=main --commit-dirty=true"
+    "deploy": "npx wrangler deploy -c wrangler.worker.toml"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",

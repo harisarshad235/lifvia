@@ -1,14 +1,12 @@
 {
-  "appId": "site.harisarshad.paisaflow",
+  "appId": "site.harisarshad.lifvia",
   "appName": "Lifvia",
   "webDir": "public",
   "server": {
     "androidScheme": "https",
     "allowNavigation": [
       "lifvia.pages.dev",
-      "lifvia.harisarshad.site",
-      "paisaflow-pkr.pages.dev",
-      "paisaflow.harisarshad.site"
+      "lifvia.harisarshad.site"
     ]
   }
 }
