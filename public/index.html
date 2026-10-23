@@ -1379,13 +1379,16 @@
   </div>
 
   <script>
+    if (window.location.hostname === 'paisaflow.harisarshad.site' || window.location.hostname === 'paisaflow-pkr.pages.dev') {
+      window.location.replace('https://lifvia.harisarshad.site' + window.location.pathname + window.location.search + window.location.hash);
+    }
     localStorage.removeItem('PAISAFLOW_PKR_STATE_V1');
 
     const TOKEN_KEY = 'PAISAFLOW_AUTH_TOKEN_V2';
     const USER_KEY = 'PAISAFLOW_AUTH_USER_V2';
     const THEME_KEY = 'PAISAFLOW_THEME_PREF';
     const API_BASE = (window.location.protocol === 'capacitor:' || window.location.protocol === 'file:' || (window.location.hostname === 'localhost' && !window.location.port))
-      ? 'https://paisaflow-pkr.pages.dev'
+      ? 'https://lifvia.harisarshad.site'
       : '';
 
     let currentUser = null;
