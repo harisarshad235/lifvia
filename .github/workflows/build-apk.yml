@@ -29,6 +29,7 @@ jobs:
       - name: Install dependencies & sync Capacitor
         run: |
           npm install
+          rm -f public/Lifvia.apk
           npx cap sync android
 
       - name: Build Debug APK with Gradle
