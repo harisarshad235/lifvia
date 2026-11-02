@@ -750,6 +750,23 @@
             <button type="button" onclick="switchTab('goals')" class="quick-action"><span class="qa-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Goals</button>
           </div>
 
+          <!-- Goal Progress Card (shows the goal closest to completion) -->
+          <button type="button" id="dashboard-goal-card" onclick="switchTab('goals')" class="hidden w-full text-left rounded-[24px] p-4 sm:p-5 transition-transform active:scale-[0.99]" style="background: var(--lime); color: var(--on-lime);" aria-label="View savings goals">
+            <div class="flex items-center gap-3">
+              <span class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background: rgba(17,17,19,0.1);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              </span>
+              <div class="min-w-0 flex-1">
+                <div id="dash-goal-name" class="text-sm font-bold truncate">Goal</div>
+                <div id="dash-goal-amounts" class="text-[11px] mono" style="opacity: 0.7;">Rs. 0 of Rs. 0</div>
+              </div>
+              <div id="dash-goal-pct" class="text-xl font-bold mono">0%</div>
+            </div>
+            <div class="h-2 rounded-full mt-3.5 overflow-hidden" style="background: rgba(17,17,19,0.14);">
+              <div id="dash-goal-bar" class="h-full rounded-full" style="width: 0%; background: #111113;"></div>
+            </div>
+          </button>
+
           <!-- KPI Ledger Strip -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div class="surface-card p-3.5 sm:p-4 min-w-0">
@@ -2487,7 +2504,25 @@
       }).join('') || `<p class="text-xs py-8 text-center" style="color: var(--text-muted);">No expenses logged yet.</p>`;
     }
 
+    function renderDashboardGoalCard() {
+      const card = document.getElementById('dashboard-goal-card');
+      if (!card) return;
+      const goals = (state.goals || []).filter(g => Number(g.target) > 0);
+      if (!goals.length) { card.classList.add('hidden'); return; }
+      const pctOf = g => Math.min(100, Math.round((Number(g.saved) || 0) / Number(g.target) * 100));
+      const open = goals.filter(g => pctOf(g) < 100);
+      const pool = open.length ? open : goals;
+      const g = pool.reduce((best, cur) => pctOf(cur) > pctOf(best) ? cur : best, pool[0]);
+      const pct = pctOf(g);
+      document.getElementById('dash-goal-name').textContent = g.name;
+      document.getElementById('dash-goal-amounts').textContent = `${formatPKR(g.saved)} of ${formatPKR(g.target)}`;
+      document.getElementById('dash-goal-pct').textContent = pct + '%';
+      document.getElementById('dash-goal-bar').style.width = pct + '%';
+      card.classList.remove('hidden');
+    }
+
     function renderDashboardLists() {
+      renderDashboardGoalCard();
       const recent = [...state.transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
       document.getElementById('dashboard-recent-tx').innerHTML = recent.map(t => `
         <div class="py-3 flex items-center justify-between gap-3 text-xs">
