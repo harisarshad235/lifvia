@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" id="meta-theme-color" content="#090D16" />
+  <meta name="theme-color" id="meta-theme-color" content="#0E0E10" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -35,48 +35,58 @@
     }
 
     html[data-theme="light"] {
-      --bg-canvas: #F4F6F9;
+      --bg-canvas: #F1F1EC;
       --bg-surface: #FFFFFF;
-      --bg-elevated: #F8FAFC;
-      --bg-subtle: #EEF2F6;
-      --border-subtle: #E2E8F0;
-      --border-strong: #CBD5E1;
-      --text-primary: #0F172A;
-      --text-secondary: #334155;
-      --text-muted: #64748B;
-      --accent: #059669;
-      --accent-hover: #047857;
-      --accent-soft: rgba(5, 150, 105, 0.10);
-      --accent-border: rgba(5, 150, 105, 0.28);
-      --danger: #DC2626;
-      --danger-soft: rgba(220, 38, 38, 0.08);
-      --warning: #D97706;
-      --warning-soft: rgba(217, 119, 6, 0.10);
-      --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
-      --shadow-modal: 0 20px 40px -12px rgba(15, 23, 42, 0.18);
+      --bg-elevated: #F6F6F2;
+      --bg-subtle: #ECECE6;
+      --border-subtle: #ECECE6;
+      --border-strong: #DADAD2;
+      --text-primary: #111113;
+      --text-secondary: #3D3D42;
+      --text-muted: #85858C;
+      --accent: #3F6B0E;
+      --accent-hover: #345A0B;
+      --accent-soft: rgba(214, 242, 107, 0.45);
+      --accent-border: rgba(110, 150, 20, 0.35);
+      --lime: #D6F26B;
+      --lime-hover: #CBE95A;
+      --on-lime: #111113;
+      --danger: #C8473A;
+      --danger-soft: rgba(200, 71, 58, 0.09);
+      --warning: #B7791F;
+      --warning-soft: rgba(183, 121, 31, 0.12);
+      --nav-bg: #111113;
+      --nav-fg: #9A9AA2;
+      --shadow-card: 0 1px 2px rgba(17, 17, 19, 0.04), 0 6px 16px -8px rgba(17, 17, 19, 0.08);
+      --shadow-modal: 0 24px 48px -16px rgba(17, 17, 19, 0.28);
       color-scheme: light;
     }
 
     html[data-theme="dark"] {
-      --bg-canvas: #090D16;
-      --bg-surface: #111827;
-      --bg-elevated: #172033;
-      --bg-subtle: #1E293B;
-      --border-subtle: #1E293B;
-      --border-strong: #334155;
-      --text-primary: #F8FAFC;
-      --text-secondary: #CBD5E1;
-      --text-muted: #64748B;
-      --accent: #10B981;
-      --accent-hover: #059669;
-      --accent-soft: rgba(16, 185, 129, 0.12);
-      --accent-border: rgba(16, 185, 129, 0.30);
-      --danger: #F87171;
-      --danger-soft: rgba(248, 113, 113, 0.12);
-      --warning: #FBBF24;
-      --warning-soft: rgba(251, 191, 36, 0.12);
-      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
-      --shadow-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.65);
+      --bg-canvas: #0E0E10;
+      --bg-surface: #18181B;
+      --bg-elevated: #202024;
+      --bg-subtle: #27272B;
+      --border-subtle: #232327;
+      --border-strong: #34343A;
+      --text-primary: #F5F5F2;
+      --text-secondary: #C9C9CE;
+      --text-muted: #8A8A92;
+      --accent: #D6F26B;
+      --accent-hover: #CBE95A;
+      --accent-soft: rgba(214, 242, 107, 0.14);
+      --accent-border: rgba(214, 242, 107, 0.30);
+      --lime: #D6F26B;
+      --lime-hover: #CBE95A;
+      --on-lime: #111113;
+      --danger: #FF8A7A;
+      --danger-soft: rgba(255, 138, 122, 0.12);
+      --warning: #F5C451;
+      --warning-soft: rgba(245, 196, 81, 0.12);
+      --nav-bg: #1E1E22;
+      --nav-fg: #8A8A92;
+      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
       color-scheme: dark;
     }
 
@@ -107,21 +117,22 @@
     .surface-card {
       background-color: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      border-radius: 14px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-card);
     }
 
     .surface-elevated {
       background-color: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
+      border-radius: 18px;
     }
 
     .input-field {
       background-color: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
+      border: 1px solid var(--border-subtle);
       color: var(--text-primary);
-      border-radius: 10px;
-      padding: 0.55rem 0.75rem;
+      border-radius: 14px;
+      padding: 0.7rem 0.95rem;
       font-size: 0.8125rem;
       width: 100%;
       transition: border-color 150ms ease, box-shadow 150ms ease;
@@ -142,8 +153,8 @@
       gap: 0.45rem;
       font-weight: 600;
       font-size: 0.78rem;
-      border-radius: 10px;
-      padding: 0.52rem 0.9rem;
+      border-radius: 999px;
+      padding: 0.6rem 1.05rem;
       cursor: pointer;
       user-select: none;
       transition: transform 150ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, color 150ms ease;
@@ -157,16 +168,16 @@
     }
 
     .btn-primary {
-      background-color: var(--accent);
-      color: #FFFFFF;
+      background-color: var(--lime);
+      color: var(--on-lime);
       border: 1px solid transparent;
     }
     .btn-primary:hover {
-      background-color: var(--accent-hover);
+      background-color: var(--lime-hover);
     }
 
     .btn-secondary {
-      background-color: var(--bg-elevated);
+      background-color: var(--bg-surface);
       color: var(--text-primary);
       border: 1px solid var(--border-strong);
     }
@@ -189,8 +200,8 @@
       align-items: center;
       gap: 0.65rem;
       width: 100%;
-      padding: 0.6rem 0.8rem;
-      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      border-radius: 999px;
       font-size: 0.8125rem;
       font-weight: 500;
       color: var(--text-secondary);
@@ -205,56 +216,148 @@
       color: var(--text-primary);
     }
     .nav-item.active {
-      background-color: var(--accent-soft);
-      color: var(--accent);
-      border-color: var(--accent-border);
+      background-color: var(--lime);
+      color: var(--on-lime);
+      border-color: transparent;
       font-weight: 600;
     }
 
+    /* Floating pill bottom navigation (mobile) */
     .mobile-bottom-bar {
-      padding-top: 0.35rem;
-      padding-bottom: max(0.65rem, calc(0.45rem + var(--safe-bottom)));
-      padding-left: max(0.35rem, env(safe-area-inset-left, 0px));
-      padding-right: max(0.35rem, env(safe-area-inset-right, 0px));
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.18);
+      left: 0.75rem !important;
+      right: 0.75rem !important;
+      bottom: max(0.75rem, calc(0.4rem + var(--safe-bottom))) !important;
+      padding: 0.4rem;
+      border-radius: 999px;
+      border: none !important;
+      background: var(--nav-bg) !important;
+      box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.45);
+      overflow-x: auto;
+      scrollbar-width: none;
+      justify-content: flex-start !important;
+      gap: 0.05rem !important;
     }
+    .mobile-bottom-bar::-webkit-scrollbar { display: none; }
 
     .mobile-nav-item {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 0.18rem;
-      flex: 1;
-      min-width: 0;
-      min-height: 48px;
-      padding: 0.35rem 0.15rem;
-      border-radius: 10px;
-      font-size: 0.625rem;
-      line-height: 1.1;
-      font-weight: 600;
-      color: var(--text-muted);
+      gap: 0.4rem;
+      flex: 1 0 auto;
+      min-width: 38px;
+      height: 44px;
+      padding: 0 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      line-height: 1;
+      font-weight: 700;
+      color: var(--nav-fg);
       touch-action: manipulation;
       transition: transform 140ms var(--ease-out), color 140ms ease, background-color 140ms ease;
     }
     .mobile-nav-item span {
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      display: none;
       white-space: nowrap;
     }
     .mobile-nav-item:active {
       transform: scale(0.94);
     }
     .mobile-nav-item.active {
-      color: var(--accent);
-      background-color: var(--accent-soft);
+      color: var(--on-lime);
+      background-color: var(--lime);
+      padding: 0 0.9rem;
+    }
+    .mobile-nav-item.active span {
+      display: inline;
+    }
+
+    /* Hero balance card */
+    .hero-card {
+      --text-primary: #F5F5F2;
+      --text-secondary: #D4D4D8;
+      --text-muted: #A1A1A8;
+      --accent: #D6F26B;
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+      background: #111113;
+      color: #F5F5F2;
+      border: none;
+      border-radius: 28px;
+    }
+    html[data-theme="dark"] .hero-card {
+      background: #1E1E22;
+      border: 1px solid #2A2A2F;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      right: -46px;
+      bottom: -64px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      border: 26px solid rgba(214, 242, 107, 0.16);
+      pointer-events: none;
+    }
+
+    /* Quick actions */
+    .quick-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      touch-action: manipulation;
+    }
+    .quick-action .qa-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card);
+      transition: transform 140ms var(--ease-out);
+    }
+    .quick-action:first-child .qa-icon {
+      background: var(--lime);
+      color: var(--on-lime);
+      border-color: transparent;
+    }
+    .quick-action:active .qa-icon { transform: scale(0.92); }
+
+    .tx-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+    }
+    .tx-avatar.income {
+      background: var(--lime);
+      color: var(--on-lime);
     }
 
     @media (max-width: 767px) {
       .app-main-scroll {
-        padding-bottom: calc(6.5rem + var(--safe-bottom)) !important;
+        padding-bottom: calc(7.5rem + var(--safe-bottom)) !important;
       }
+      body[data-tab="dashboard"] #page-title { display: none; }
+      body:not([data-tab="dashboard"]) #mobile-greeting-name,
+      body:not([data-tab="dashboard"]) #mobile-greeting-label { display: none; }
     }
 
     .modal-backdrop {
@@ -268,8 +371,8 @@
 
     .modal-panel {
       background-color: var(--bg-surface);
-      border: 1px solid var(--border-strong);
-      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 28px;
       box-shadow: var(--shadow-modal);
       max-height: calc(100dvh - 2.5rem - var(--safe-top) - var(--safe-bottom));
       overflow-y: auto;
@@ -367,7 +470,7 @@
 <body class="min-h-screen">
 
   <!-- TOAST STACK (Sonner-style feedback) -->
-  <div id="toast-container" class="fixed bottom-24 md:bottom-6 left-4 right-4 sm:left-auto sm:right-4 z-[60] flex flex-col items-end gap-2 pointer-events-none"></div>
+  <div id="toast-container" class="fixed bottom-28 md:bottom-6 left-4 right-4 sm:left-auto sm:right-4 z-[60] flex flex-col items-end gap-2 pointer-events-none"></div>
 
   <!-- ===================================================================== -->
   <!-- VIEW 1: AUTHENTICATION PAGE (LOGIN & REGISTRATION)                    -->
@@ -575,17 +678,15 @@
     <!-- Main Content Column (Pinned Top Header + Scrollable Main Body) -->
     <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
       <!-- Top Header (Pinned outside scroll container: never scrolls) -->
-      <header class="flex-shrink-0 z-20 backdrop-blur-md border-b px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2" style="background: color-mix(in srgb, var(--bg-surface) 92%, transparent); border-color: var(--border-subtle); padding-top: max(0.625rem, var(--safe-top));">
-        <div class="flex items-center gap-2.5 min-w-0 flex-1">
-          <div class="md:hidden inline-flex items-center gap-2 select-none flex-shrink-0">
-            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
-              <rect width="48" height="48" rx="12" fill="#090D16" stroke="#1E293B" stroke-width="1.5" />
-              <path d="M11 27C15 20 19 20 24 27C29 34 33 34 37 27" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" />
-              <path d="M11 21C15 14 19 14 24 21C29 28 33 28 37 21" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
-            </svg>
-          </div>
+      <header class="flex-shrink-0 z-20 backdrop-blur-md border-b px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2" style="background: color-mix(in srgb, var(--bg-canvas) 90%, transparent); border-color: transparent; padding-top: max(0.625rem, var(--safe-top));">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <button onclick="openProfileModal()" class="md:hidden rounded-full flex-shrink-0 transition-transform active:scale-95" aria-label="Open profile">
+            <span class="avatar-slot w-11 h-11 block" data-size="44"></span>
+          </button>
           <div class="min-w-0">
-            <h1 id="page-title" class="text-sm sm:text-lg font-bold tracking-tight truncate">Dashboard</h1>
+            <p class="md:hidden text-[11px] leading-none mb-1" style="color: var(--text-muted);" id="mobile-greeting-label">Welcome back</p>
+            <span id="mobile-greeting-name" class="md:hidden block text-base font-bold tracking-tight truncate leading-tight">Your Name</span>
+            <h1 id="page-title" class="text-base sm:text-lg font-bold tracking-tight truncate">Dashboard</h1>
             <p id="page-subtitle" class="text-xs hidden sm:block truncate" style="color: var(--text-muted);">Track your cash flow. Simulate your tomorrow.</p>
           </div>
         </div>
@@ -595,19 +696,19 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15C6 10 9 10 12 15C15 20 18 20 21 15" stroke="#06B6D4"/><path d="M3 9C6 4 9 4 12 9C15 14 18 14 21 9" stroke="#10B981"/></svg>
             <span>Simulate</span>
           </button>
-          <button onclick="openTransactionModal()" class="btn btn-primary px-2.5 sm:px-3.5 py-2 text-xs">
+          <button onclick="openTransactionModal()" class="btn btn-primary px-3 sm:px-4 py-2.5 text-xs">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>Log Entry</span>
+            <span class="hidden sm:inline">Log Entry</span>
           </button>
-          <button onclick="openTransferModal()" class="btn btn-secondary px-2.5 sm:px-3.5 py-2" aria-label="Transfer between accounts" title="Transfer Funds">
+          <button onclick="openTransferModal()" class="btn btn-secondary px-3 sm:px-4 py-2.5" aria-label="Transfer between accounts" title="Transfer Funds">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/></svg>
             <span class="hidden sm:inline">Transfer</span>
           </button>
-          <button onclick="toggleTheme()" class="btn btn-secondary px-2.5 py-2" aria-label="Toggle Light and Dark Theme" title="Toggle Light / Dark Theme">
+          <button onclick="toggleTheme()" class="btn btn-secondary px-3 py-2.5" aria-label="Toggle Light and Dark Theme" title="Toggle Light / Dark Theme">
             <span id="header-theme-icon"></span>
             <span id="header-theme-label" class="hidden lg:inline text-xs">Theme</span>
           </button>
-          <button onclick="openProfileModal()" class="rounded-full flex-shrink-0 transition-transform active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style="outline-color: var(--accent);" aria-label="Open profile" title="Profile">
+          <button onclick="openProfileModal()" class="hidden md:block rounded-full flex-shrink-0 transition-transform active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style="outline-color: var(--accent);" aria-label="Open profile" title="Profile">
             <span class="avatar-slot w-8 h-8 sm:w-9 sm:h-9 block" data-size="36"></span>
           </button>
         </div>
@@ -617,7 +718,7 @@
         <div class="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-5 sm:space-y-6">
 
         <!-- TAB 1: DASHBOARD -->
-        <section id="tab-dashboard" class="tab-panel space-y-6">
+        <section id="tab-dashboard" class="tab-panel space-y-4 sm:space-y-6">
           <div id="dashboard-onboarding" class="hidden surface-card p-5 flex flex-wrap items-center justify-between gap-4" style="border-color: var(--accent-border); background: var(--accent-soft);">
             <div class="space-y-1">
               <h2 class="text-base font-bold">Add Your First Bank Account or Wallet</h2>
@@ -631,13 +732,26 @@
 
           <div id="dashboard-alerts" class="space-y-2"></div>
 
-          <!-- KPI Ledger Strip -->
-          <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-            <div class="surface-card p-3.5 sm:p-4 min-w-0">
-              <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Liquid Balance</div>
-              <div id="kpi-liquid" class="text-base sm:text-xl font-bold mono mt-1 truncate">Rs. 0</div>
-              <div class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">Wallets & banks</div>
+          <!-- Hero Balance Card -->
+          <div class="hero-card p-5 sm:p-6">
+            <div class="relative z-10 flex items-center justify-between gap-2">
+              <div class="text-xs font-medium" style="color: var(--text-muted);">Liquid Balance</div>
+              <span class="text-[10px] font-bold px-2.5 py-1 rounded-full" style="background: var(--lime); color: var(--on-lime);">PKR</span>
             </div>
+            <div id="kpi-liquid" class="relative z-10 text-3xl sm:text-4xl font-bold mono mt-3 truncate">Rs. 0</div>
+            <div class="relative z-10 text-[11px] mt-2" style="color: var(--text-muted);">Across wallets & banks</div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="grid grid-cols-4 gap-2 md:hidden">
+            <button type="button" onclick="openTransactionModal()" class="quick-action"><span class="qa-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Log entry</button>
+            <button type="button" onclick="openTransferModal()" class="quick-action"><span class="qa-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/></svg></span>Transfer</button>
+            <button type="button" onclick="switchTab('simulator')" class="quick-action"><span class="qa-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15C6 10 9 10 12 15C15 20 18 20 21 15"/><path d="M3 9C6 4 9 4 12 9C15 14 18 14 21 9"/></svg></span>Simulate</button>
+            <button type="button" onclick="switchTab('goals')" class="quick-action"><span class="qa-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Goals</button>
+          </div>
+
+          <!-- KPI Ledger Strip -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div class="surface-card p-3.5 sm:p-4 min-w-0">
               <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Total Income</div>
               <div id="kpi-income" class="text-base sm:text-xl font-bold mono mt-1 truncate" style="color: var(--accent);">Rs. 0</div>
@@ -653,7 +767,7 @@
               <div id="kpi-rta" class="text-base sm:text-xl font-bold mono mt-1 truncate" style="color: var(--warning);">Rs. 0</div>
               <div class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">Envelope pool</div>
             </div>
-            <div class="surface-card p-3.5 sm:p-4 col-span-2 lg:col-span-1 min-w-0">
+            <div class="surface-card p-3.5 sm:p-4 min-w-0">
               <div class="text-xs font-medium truncate" style="color: var(--text-muted);">Shared Split Net</div>
               <div id="kpi-splits" class="text-base sm:text-xl font-bold mono mt-1 truncate">Rs. 0</div>
               <div id="kpi-splits-sub" class="text-[11px] mt-1 truncate" style="color: var(--text-muted);">All settled up</div>
@@ -1109,7 +1223,7 @@
     </div>
 
     <!-- Mobile Bottom Navigation Bar (< 768px) -->
-    <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 z-30 border-t flex items-center justify-around gap-0.5 mobile-bottom-bar" style="background: var(--bg-surface); border-color: var(--border-subtle);" aria-label="Mobile Navigation">
+    <nav id="mobile-bottom-nav" class="md:hidden fixed z-30 flex items-center mobile-bottom-bar" aria-label="Mobile Navigation">
       <button onclick="switchTab('dashboard')" data-tab="dashboard" class="mobile-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         <span>Home</span>
@@ -1411,7 +1525,7 @@
         root.classList.remove('dark');
       }
       const metaTheme = document.getElementById('meta-theme-color');
-      if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#090D16' : '#F4F6F9');
+      if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#0E0E10' : '#F1F1EC');
 
       const nextIcon = theme === 'dark' ? SUN_SVG : MOON_SVG;
       const nextLabel = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
@@ -1616,6 +1730,8 @@
       const display = document.getElementById('sidebar-user-display');
       if (display) display.textContent = currentUser.name;
       document.getElementById('sidebar-user-name').textContent = currentUser.name;
+      const mobileName = document.getElementById('mobile-greeting-name');
+      if (mobileName) mobileName.textContent = (currentUser.name || '').trim().split(/\s+/)[0] || 'there';
       document.getElementById('sidebar-user-email').textContent = currentUser.email;
       localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
     }
@@ -1882,6 +1998,7 @@
     // =========================================================================
     function switchTab(tab) {
       activeTab = tab;
+      document.body.dataset.tab = tab;
       document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
       document.getElementById(`tab-${tab}`).classList.remove('hidden');
       const mainEl = document.querySelector('#app-shell main');
@@ -1890,6 +2007,7 @@
       document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(btn => {
         if (btn.dataset.tab === tab) {
           btn.classList.add('active');
+          if (btn.classList.contains('mobile-nav-item') && btn.scrollIntoView) btn.scrollIntoView({ inline: 'center', block: 'nearest' });
         } else {
           btn.classList.remove('active');
         }
@@ -2372,12 +2490,15 @@
     function renderDashboardLists() {
       const recent = [...state.transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
       document.getElementById('dashboard-recent-tx').innerHTML = recent.map(t => `
-        <div class="py-2.5 flex items-center justify-between text-xs">
-          <div>
-            <div class="font-semibold">${t.payee}</div>
-            <div class="text-[11px]" style="color: var(--text-muted);">${t.date} • ${t.category}</div>
+        <div class="py-3 flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="tx-avatar ${t.type === 'income' ? 'income' : ''}">${escapeHTML(getInitials(String(t.payee || '?')))}</span>
+            <div class="min-w-0">
+              <div class="font-semibold text-[13px] truncate">${t.payee}</div>
+              <div class="text-[11px]" style="color: var(--text-muted);">${t.category} • ${t.date}</div>
+            </div>
           </div>
-          <div class="mono font-semibold" style="color: ${t.type === 'income' ? 'var(--accent)' : 'var(--danger)'};">
+          <div class="mono font-semibold flex-shrink-0" style="color: ${t.type === 'income' ? 'var(--accent)' : 'var(--danger)'};">
             ${t.type === 'income' ? '+' : '-'}${formatPKR(t.amount)}
           </div>
         </div>
