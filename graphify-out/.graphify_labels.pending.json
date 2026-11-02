@@ -1,0 +1,21 @@
+{
+  "0": "with",
+  "1": "server.mjs",
+  "2": "ExampleInstrumentedTest.java",
+  "3": "package.json",
+  "4": "MainActivity.java",
+  "5": "build-apk.yml",
+  "6": "state.js",
+  "7": "manifest.json",
+  "8": "auth.js",
+  "9": "scripts",
+  "10": "gradlew",
+  "11": "LifviaLogo.tsx",
+  "12": "app/build.gradle",
+  "13": "capacitor.build.gradle",
+  "14": "android/build.gradle",
+  "15": "capacitor.settings.gradle",
+  "16": "settings.gradle",
+  "17": "variables.gradle",
+  "18": "sw.js"
+}
