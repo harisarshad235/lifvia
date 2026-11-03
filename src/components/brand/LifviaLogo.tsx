@@ -10,10 +10,13 @@ export const LifviaLogo: React.FC<{ className?: string; showWordmark?: boolean; 
 
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      <svg width={dims} height={dims} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-        <rect width="48" height="48" rx="12" fill="#090D16" stroke="#1E293B" strokeWidth="1.5" />
-        <path d="M11 27C15 20 19 20 24 27C29 34 33 34 37 27" stroke="#06B6D4" strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M11 21C15 14 19 14 24 21C29 28 33 28 37 21" stroke="#10B981" strokeWidth="3.5" strokeLinecap="round" />
+      <svg width={dims} height={dims} viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+        <rect width="96" height="96" rx="22" fill="#111113" />
+        <g transform="translate(26.4 26.4) scale(.6)">
+          <rect x="14.75" y="8" width="13" height="48" rx="6.5" fill="#F5F5F2" />
+          <rect x="35.75" y="28" width="13" height="28" rx="6.5" fill="#F5F5F2" />
+          <circle cx="42.25" cy="16" r="7" fill="#D6F26B" />
+        </g>
       </svg>
       {showWordmark && (
         <span className={`font-bold tracking-tight text-white ${textClass}`}>

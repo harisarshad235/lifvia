@@ -4,8 +4,8 @@
   "description": "Lifvia Personal Finance & What-If Cash Runway Simulator",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#090D16",
-  "theme_color": "#090D16",
+  "background_color": "#0E0E10",
+  "theme_color": "#0E0E10",
   "orientation": "portrait-primary",
   "icons": [
     {
