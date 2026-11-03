@@ -95,6 +95,8 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html body * { border-color: var(--border-subtle); }
+
     ::selection {
       background: var(--accent-soft);
       color: var(--accent);
@@ -301,6 +303,13 @@
       border-radius: 50%;
       border: 26px solid rgba(214, 242, 107, 0.16);
       pointer-events: none;
+    }
+
+    @media (min-width: 1024px) {
+      .dash-top .hero-card { grid-column: span 2; padding: 1.75rem 2rem; }
+      .dash-top:has(#dashboard-goal-card.hidden) .hero-card { grid-column: 1 / -1; }
+      #dashboard-goal-card:not(.hidden) { display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; padding: 1.5rem; }
+      #dashboard-goal-card .h-2 { margin-top: 0; }
     }
 
     /* Quick actions */
@@ -684,7 +693,7 @@
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-          <button onclick="switchTab('simulator')" class="btn btn-secondary hidden sm:inline-flex px-2.5 sm:px-3 py-2 text-xs" style="border-color: rgba(6, 182, 212, 0.4); color: #06B6D4;">
+          <button onclick="switchTab('simulator')" class="btn btn-secondary hidden sm:inline-flex px-3 sm:px-4 py-2.5 text-xs">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15C6 10 9 10 12 15C15 20 18 20 21 15" stroke="#06B6D4"/><path d="M3 9C6 4 9 4 12 9C15 14 18 14 21 9" stroke="#10B981"/></svg>
             <span>Simulate</span>
           </button>
@@ -724,6 +733,7 @@
 
           <div id="dashboard-alerts" class="space-y-2"></div>
 
+          <div class="dash-top grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           <!-- Hero Balance Card -->
           <div class="hero-card p-5 sm:p-6">
             <div class="relative z-10 flex items-center justify-between gap-2">
@@ -758,6 +768,8 @@
               <div id="dash-goal-bar" class="h-full rounded-full" style="width: 0%; background: #111113;"></div>
             </div>
           </button>
+
+          </div>
 
           <!-- KPI Ledger Strip -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
