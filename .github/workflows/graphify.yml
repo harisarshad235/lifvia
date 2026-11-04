@@ -1,0 +1,31 @@
+name: Update graphify knowledge graph
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  graphify:
+    runs-on: ubuntu-latest
+    # Skip forks (no write access) and the bot's own commits
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: astral-sh/setup-uv@v5
+      - name: Rebuild graph (AST only, no API cost)
+        run: |
+          uv tool install graphifyy
+          graphify update .
+      - name: Commit updated graph
+        run: |
+          git config user.name "graphify-bot"
+          git config user.email "graphify-bot@users.noreply.github.com"
+          git add graphify-out
+          git diff --cached --quiet || (git commit -m "chore: update graphify graph [skip ci]" && git push)

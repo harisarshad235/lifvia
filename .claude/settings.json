@@ -9,5 +9,40 @@
   },
   "enabledPlugins": {
     "humanizer@humanizer": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/root/.local/bin/graphify hook-guard search",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/root/.local/bin/graphify hook-guard read",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v graphify >/dev/null 2>&1 || (command -v uv >/dev/null 2>&1 || pip install -q uv) && (command -v graphify >/dev/null 2>&1 || uv tool install -q graphifyy); export PATH=\"$HOME/.local/bin:$PATH\"; graphify hook install >/dev/null 2>&1; graphify update . >/dev/null 2>&1; true",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
   }
 }
