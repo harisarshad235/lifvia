@@ -402,9 +402,9 @@
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1793826414.4852772,
-    "seen": 1793826438.6942515,
-    "ast_hash": "c4d313309cd026f908bed3e7cc0193c9",
+    "mtime": 1793826462.8863235,
+    "seen": 1793826463.7837732,
+    "ast_hash": "2a8f208e48d4d17a81f3e96dbd9752de",
     "semantic_hash": ""
   },
   ".claude/CLAUDE.md": {
@@ -423,6 +423,18 @@
     "mtime": 1793826039.2225387,
     "seen": 1793826438.6949487,
     "ast_hash": "12610f23a75c2f17126964086784bc01",
+    "semantic_hash": ""
+  },
+  ".github/workflows/graphify.yml": {
+    "mtime": 1793826462.8698182,
+    "seen": 1793826463.7837896,
+    "ast_hash": "32d238b90d92af50a1a940d304db9316",
+    "semantic_hash": ""
+  },
+  "schema.sql": {
+    "mtime": 1793826039.3582983,
+    "seen": 1793826463.783829,
+    "ast_hash": "09ad358ff6ced769626cf1cc26d9932f",
     "semantic_hash": ""
   },
   "package-lock.json": {
