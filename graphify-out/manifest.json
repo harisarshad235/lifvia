@@ -402,9 +402,9 @@
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1793826509.8903263,
-    "seen": 1793826510.7010086,
-    "ast_hash": "2a8f208e48d4d17a81f3e96dbd9752de",
+    "mtime": 1793826682.5924428,
+    "seen": 1793826683.6431775,
+    "ast_hash": "866325707db5f169ba24cb7e29f16f0c",
     "semantic_hash": ""
   },
   ".claude/CLAUDE.md": {
@@ -426,15 +426,27 @@
     "semantic_hash": ""
   },
   ".github/workflows/graphify.yml": {
-    "mtime": 1793826509.8903263,
-    "seen": 1793826510.7010996,
-    "ast_hash": "32d238b90d92af50a1a940d304db9316",
+    "mtime": 1793826682.5821667,
+    "seen": 1793826683.6432576,
+    "ast_hash": "e58313cff5610ad5f2aed7153c4c53d1",
     "semantic_hash": ""
   },
   "schema.sql": {
     "mtime": 1793826039.3582983,
     "seen": 1793826463.783829,
     "ast_hash": "",
+    "semantic_hash": ""
+  },
+  "scripts/extract-inline-js.py": {
+    "mtime": 1793826682.5294883,
+    "seen": 1793826683.6436312,
+    "ast_hash": "78cab4700be7798d0c0b5eeef7263fa9",
+    "semantic_hash": ""
+  },
+  "ui-src/app.inline.js": {
+    "mtime": 1793826682.5601742,
+    "seen": 1793826683.6436903,
+    "ast_hash": "dfb347b113505ca74ff06f32474aa025",
     "semantic_hash": ""
   },
   "package-lock.json": {

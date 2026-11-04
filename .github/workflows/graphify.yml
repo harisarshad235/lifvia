@@ -22,6 +22,7 @@ jobs:
       - name: Rebuild graph (AST only, no API cost)
         run: |
           uv tool install graphifyy
+          python3 scripts/extract-inline-js.py
           graphify update .
       - name: Commit updated graph
         run: |

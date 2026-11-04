@@ -5,3 +5,4 @@ paisaflow.db-wal
 paisaflow.db-shm
 .wrangler/
 .env
+graphify-out/cache/last_query_stamp
