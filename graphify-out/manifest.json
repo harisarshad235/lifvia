@@ -433,8 +433,8 @@
   },
   "schema.sql": {
     "mtime": 1793826039.3582983,
-    "seen": 1793826463.783829,
-    "ast_hash": "",
+    "seen": 1793826690.461034,
+    "ast_hash": "09ad358ff6ced769626cf1cc26d9932f",
     "semantic_hash": ""
   },
   "scripts/extract-inline-js.py": {
