@@ -6,12 +6,12 @@
 - Unclassified: 24 file(s) not represented in the graph (top: .xml 10, (none) 5, .properties 2)
 
 ## Summary
-- 149 nodes · 149 edges · 23 communities (8 shown, 15 thin omitted)
+- 147 nodes · 149 edges · 21 communities (8 shown, 13 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a01dd004`
+- Built from commit: `817afcaa`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -39,7 +39,7 @@
 7. `onRequestPost()` - 4 edges
 8. `server` - 4 edges
 9. `on` - 3 edges
-10. `MainActivity` - 3 edges
+10. `build-apk` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -47,7 +47,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (23 total, 15 thin omitted)
+## Communities (21 total, 13 thin omitted)
 
 ### Community 0 - "with"
 Cohesion: 0.13
@@ -82,7 +82,7 @@ Cohesion: 0.11
 Nodes (18): if, runs-on, steps, jobs, graphify, name, on, pull_request (+10 more)
 
 ## Knowledge Gaps
-- **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
